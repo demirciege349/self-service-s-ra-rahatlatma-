@@ -80,6 +80,16 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 .c-main{display:flex;flex-direction:column;gap:26px;padding-block:20px 40px}
 .c-main.has-bar{padding-bottom:200px}
 .c-intro{font-family:var(--f-display);font-style:italic;font-size:1.15rem;color:var(--soft);text-align:center}
+.eta-list{display:flex;flex-direction:column;gap:8px}
+.eta-banner{display:flex;align-items:center;gap:12px;background:var(--ink);color:var(--cream);border-radius:6px;padding:12px 14px}
+.eta-banner svg{flex-shrink:0;color:var(--sand)}
+.eta-txt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.eta-txt b{font-family:var(--f-display);font-size:1.2rem;font-weight:600}
+.eta-txt span{font-size:.8rem;color:#C9AE95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eta-num{display:flex;flex-direction:column;align-items:flex-end;line-height:1}
+.eta-num strong{font-family:var(--f-display);font-size:2rem;font-weight:700;color:var(--sand)}
+.eta-num strong.soon{font-size:1.15rem}
+.eta-num small{font-size:.68rem;letter-spacing:.08em;color:#C9AE95;margin-top:2px}
 .cat-h{display:flex;align-items:center;gap:12px;font-family:var(--f-display);font-size:1.6rem;font-weight:600;margin-bottom:6px}
 .cat-h::after{content:"";flex:1;height:1px;background:var(--line-2)}
 .dish{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -522,13 +532,23 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + 'Ortalama ' + mins + ' dakikada hazır' + (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
         buy + '</div></article>';
     }
+    function etaBanner(){
+      var act = st.orders.filter(function(o){ return o.status === "new"; }).sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); });
+      if (!act.length) return "";
+      return '<section class="eta-list" aria-live="polite">' + act.map(function(o){
+        var left = Math.ceil(((o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000 - Date.now()) / 60000);
+        return '<div class="eta-banner">' + CLOCK.replace('width="13" height="13"', 'width="20" height="20"') +
+          '<div class="eta-txt"><b>Siparişiniz hazırlanıyor</b><span>' + S.esc(S.summary(o.items)) + '</span></div>' +
+          '<div class="eta-num">' + (left > 0 ? '<strong>~' + left + '</strong><small>dk kaldı</small>' : '<strong class="soon">Az kaldı</strong>') + '</div></div>';
+      }).join("") + '</section>';
+    }
     function menuView(){
       var items = menu();
       if (!items.length) return '<main class="c-wrap c-main"><div class="empty-card"><h2>Menü hazırlanıyor</h2><p>Siparişinizi garsonumuza verebilirsiniz.</p></div></main>';
       var cats = []; items.forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
       var sel = cartItems(), total = S.sum(sel), count = sel.reduce(function(s, i){ return s + i.qty; }, 0);
       var tableTotal = S.sum([].concat.apply([], st.orders.map(function(o){ return o.items || []; })));
-      return '<main class="c-wrap c-main has-bar"><p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>' +
+      return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') +
         cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</section>'; }).join("") +
         '<p class="c-foot">Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.</p></main>' +
         '<div class="c-bar"><div class="c-wrap c-bar-in">' +
@@ -606,7 +626,8 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       }
       render();
     };
-    return function(){ alive = false; unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
+    var tick = setInterval(function(){ if (st.view === "menu") render(); }, 30000);
+    return function(){ alive = false; clearInterval(tick); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
   };
 })();
 
