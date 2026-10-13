@@ -52,6 +52,8 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 .btn-sm{min-height:36px;padding:.3rem .75rem;font-size:.88rem}
 .btn-lg{min-height:54px;font-size:1.02rem;letter-spacing:.04em}
 .row-btns{display:flex;flex-wrap:wrap;gap:10px}
+.sound-bar{display:block;width:100%;border:0;background:var(--red);color:#fff;font-weight:500;padding:12px 16px;text-align:center}
+@media (max-width:820px){input,textarea,select{font-size:16px}}
 .toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:.7rem 1.1rem;border-radius:4px;font-weight:500;z-index:50;max-width:calc(100% - 32px);text-align:center;box-shadow:0 10px 30px -10px rgba(58,10,10,.5)}
 .empty-card{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:8px}
 .empty-card h2{font-size:1.6rem}
@@ -73,6 +75,10 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 .c-head{background:var(--cream);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:10}
 .c-head-in{display:flex;align-items:center;gap:12px;padding-block:14px 10px}
 .c-name{flex:1;min-width:0;font-family:var(--f-display);font-weight:700;font-size:1.65rem;line-height:1.05;overflow-wrap:anywhere}
+.waiter-btn{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;border:1px solid var(--wine);background:var(--white);color:var(--wine);border-radius:999px;padding:7px 12px;font-size:.82rem;font-weight:500;white-space:nowrap}
+.waiter-btn.on{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+@media (max-width:420px){.c-name{font-size:1.35rem}}
+@media (max-width:380px){.waiter-btn{padding:7px 9px;font-size:.76rem}}
 .c-table{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);background:var(--wine);padding:6px 10px;border-radius:3px;white-space:nowrap}
 .c-chips{display:flex;gap:6px;overflow-x:auto;padding-block:4px 12px;scrollbar-width:none}
 .c-chips::-webkit-scrollbar{display:none}
@@ -373,10 +379,18 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   };
 
   /* ses (ilk dokunuşta açılır) */
-  var AC = null;
+  var AC = null, unlockCbs = [];
+  S.audioReady = false;
   document.addEventListener("pointerdown", function(){
     try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); } catch(e){}
+    if (!S.audioReady) { S.audioReady = true; unlockCbs.splice(0).forEach(function(f){ try { f(); } catch(e){} }); }
   }, { passive: true });
+  S.onAudioReady = function(f){ if (S.audioReady) f(); else unlockCbs.push(f); };
+  /* Kasa tableti uykuya geçmesin (destekleyen tarayıcılarda). */
+  var wake = null;
+  S.keepAwake = function(){
+    try { if (navigator.wakeLock && !wake && document.visibilityState === "visible") navigator.wakeLock.request("screen").then(function(w){ wake = w; w.addEventListener("release", function(){ wake = null; }); }).catch(function(){}); } catch(e){}
+  };
   S.beep = function(times, freq){
     try {
       if (!AC) return;
@@ -528,6 +542,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   "use strict";
   window.SiralaApp = window.SiralaApp || {};
   var FIRE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-3 2-4 2-7 1.5 1 2 2.5 2 4 1-2 1-5 1-8z"/></svg>';
+  var BELL = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>';
   var SCALE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 20h14l-2-11H7z"/><path d="M9 9a3 3 0 0 1 6 0"/></svg>';
   var CLOCK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 
@@ -543,11 +558,19 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     render();
     B.ready.then(function(){ return B.ensureCustomer(); }).then(function(){
       if (!alive) return;
-      unsubs.push(B.watchCafe(cafeId, function(d){ st.cafe = d; st.cafeLoaded = true; document.title = ((d && d.name) || "Menü") + " · " + tableLabel; render(); }, fail));
+      unsubs.push(B.watchCafe(cafeId, function(d){ st.cafe = d; st.cafeLoaded = true; dropSoldOut(); document.title = ((d && d.name) || "Menü") + " · " + tableLabel; render(); }, fail));
       unsubs.push(B.watchPhotos(cafeId, function(m){ st.photos = m; render(); }));
       unsubs.push(B.watchOrders(cafeId, { table: String(table) }, function(list){ st.orders = list; st.ordLoaded = true; render(); }, fail));
       unsubs.push(B.watchTables(cafeId, function(m){ st.tbl = m[String(table)] || {}; render(); }));
     }).catch(fail);
+    function dropSoldOut(){
+      var gone = [];
+      Object.keys(st.cart).forEach(function(k){
+        var it = menu().find(function(x){ return x.id === k.split("@")[0]; });
+        if (!it || it.out) { delete st.cart[k]; if (it && gone.indexOf(it.name) < 0) gone.push(it.name); }
+      });
+      if (gone.length) S.toast(gone.join(", ") + " az önce tükendi, sepetinizden çıkarıldı");
+    }
     function fail(e){ st.err = S.errText(e); render(); }
     window.addEventListener("online", function(){ st.offline = false; render(); });
     window.addEventListener("offline", function(){ st.offline = true; render(); });
@@ -557,7 +580,11 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (st.view === "menu") menu().forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
       return '<header class="c-head"><div class="c-wrap"><div class="c-head-in">' +
         (ctx.back ? '<button class="btn btn-sm btn-ghost" data-act="back">‹</button>' : '') +
-        '<div class="c-name">' + S.esc((st.cafe && st.cafe.name) || "Menü") + '</div><div class="c-table">' + S.esc(tableLabel) + '</div></div>' +
+        '<div class="c-name">' + S.esc((st.cafe && st.cafe.name) || "Menü") + '</div>' +
+        (st.cafeLoaded && st.cafe ? (st.tbl.waiter || st.tbl.billRequested
+          ? '<span class="waiter-btn on" role="status">' + BELL + 'Garson geliyor</span>'
+          : '<button class="waiter-btn" data-act="waiter">' + BELL + 'Garson çağır</button>') : '') +
+        '<div class="c-table">' + S.esc(tableLabel) + '</div></div>' +
         (cats.length > 1 ? '<nav class="c-chips" aria-label="Kategoriler">' + cats.map(function(c){ return '<a href="#kat-' + S.slugify(c) + '">' + S.esc(c) + '</a>'; }).join("") + '</nav>' : '') +
         '</div></header>' + (st.offline ? '<div class="offline">İnternet bağlantısı yok. Bağlantı gelince siparişinizi gönderebilirsiniz.</div>' : '');
     }
@@ -594,7 +621,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (!items.length) return '<main class="c-wrap c-main"><div class="empty-card"><h2>Menü hazırlanıyor</h2><p>Siparişinizi garsonumuza verebilirsiniz.</p></div></main>';
       var cats = []; items.forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
       var sel = cartItems(), total = S.sum(sel), count = sel.reduce(function(s, i){ return s + i.qty; }, 0);
-      var tableTotal = S.sum([].concat.apply([], st.orders.map(function(o){ return o.items || []; })));
+      var tableTotal = S.sum([].concat.apply([], st.orders.filter(function(o){ return o.status !== "cancelled"; }).map(function(o){ return o.items || []; })));
       return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') +
         cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</section>'; }).join("") +
         '<p class="c-foot">Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.</p></main>' +
@@ -618,7 +645,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     }
     function billView(){
       var lines = {}, order = [];
-      st.orders.slice().sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); }).forEach(function(o){
+      st.orders.filter(function(o){ return o.status !== "cancelled"; }).sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); }).forEach(function(o){
         (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!lines[k]) { lines[k] = { name: i.name, price: i.price, qty: 0 }; order.push(k); } lines[k].qty += i.qty; });
       });
       var all = order.map(function(k){ return lines[k]; }), total = S.sum(all);
@@ -630,7 +657,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         (waiter && !req ? '<p class="bill-state">Garsonumuz masanıza geliyor.</p>' : '') +
         '</section><div class="row-btns">' +
         (all.length && !req ? '<button class="btn btn-primary btn-lg" style="flex:1" data-act="askBill">Hesap iste</button>' : '') +
-        (!waiter && !req ? '<button class="btn btn-lg" style="flex:1" data-act="waiter">Garson çağır</button>' : '') +
+
         '</div><button class="btn btn-ghost" data-act="menu">‹ Menüye dön</button>' +
         '<p class="c-foot">Ödemenizi garsonumuza ya da kasaya yapabilirsiniz.</p></main>';
     }
@@ -789,14 +816,16 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
           return '<article class="ticket' + (late ? " late" : "") + '"><div class="t-top"><span class="t-table">Masa ' + S.esc(o.table) + '</span><span class="t-time">' + S.clock(o.createdAt) + '<br>' + (o.source === "garson" ? "garson" : "QR") + '</span></div>' +
             '<ul class="t-items">' + (o.items || []).map(function(i){ return '<li><b>' + i.qty + '×</b>' + S.esc(i.name) + '</li>'; }).join("") + '</ul>' +
             (o.note ? '<div class="t-note">Not: ' + S.esc(o.note) + '</div>' : '') + etaHtml(o) +
-            '<button class="btn btn-primary" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button></article>';
+            (st.confirmCancel === o.id
+              ? '<div class="row-btns"><button class="btn btn-bad" style="flex:1" data-act="cancelYes" data-v="' + S.esc(o.id) + '">Evet, iptal et</button><button class="btn" data-act="cancelNo">Vazgeç</button></div>'
+              : '<div class="row-btns"><button class="btn btn-primary" style="flex:1" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button><button class="btn btn-ghost" data-act="cancelAsk" data-v="' + S.esc(o.id) + '">İptal</button></div>') + '</article>';
         }).join("") + '</div>' : '<div class="empty-card"><p>Bekleyen sipariş yok. Masalardan gelen siparişler burada belirir ve ses çıkarır.</p></div>') +
         '</section><section><h2 class="k-h">Hazırlananlar</h2>' +
         (dn.length ? '<div class="done-list">' + dn.map(function(o){ return '<div class="done-row"><b>M' + S.esc(o.table) + '</b><span class="d">' + S.esc(S.summary(o.items)) + '</span><span class="small muted">' + S.clock(o.doneAt) + '</span><button class="btn btn-sm btn-ghost" data-act="undo" data-v="' + S.esc(o.id) + '" aria-label="Geri al">Geri al</button></div>'; }).join("") + '</div>' : '<p class="muted small">Henüz yok.</p>') +
         '</section></div>';
     }
     function tableAgg(t){
-      var list = st.orders.filter(function(o){ return String(o.table) === String(t); });
+      var list = st.orders.filter(function(o){ return String(o.table) === String(t) && o.status !== "cancelled"; });
       return { list: list, total: list.reduce(function(s, o){ return s + (Number(o.total) || S.sum(o.items)); }, 0) };
     }
     function tablesTab(){
@@ -869,7 +898,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (st.denied) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Erişim yok</h1><p class="muted">' + S.esc(st.denied) + '</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
       if (!st.cafeLoaded || !st.ordLoaded) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
       if (!st.cafe) { app.innerHTML = '<main class="login"><div class="login-card"><h1>İşletme bulunamadı</h1><p class="muted">"' + S.esc(cafeId) + '" kodlu işletme kayıtlı değil.</p></div></main>'; return; }
-      app.innerHTML = head() + '<main class="k-wrap">' + alertsHtml() + (st.tab === "siparis" ? ordersTab() : st.tab === "masalar" ? tablesTab() : st.tab === "garson" ? waiterTab() : menuTab()) + '</main>';
+      app.innerHTML = head() + (S.audioReady ? '' : '<button class="sound-bar" data-act="sound">Sipariş sesini ve ekranın açık kalmasını etkinleştirmek için buraya dokunun</button>') + '<main class="k-wrap">' + alertsHtml() + (st.tab === "siparis" ? ordersTab() : st.tab === "masalar" ? tablesTab() : st.tab === "garson" ? waiterTab() : menuTab()) + '</main>';
     }
     var tick = setInterval(function(){ if (st.tab === "siparis") render(); }, 30000);
 
@@ -884,6 +913,9 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "tab": st.tab = v; st.pinOk = v === "menu" && st.pinOk; st.openTable = null; st.confirmClose = false; break;
         case "done": if (o) upd(o, { status: "done", doneAt: Date.now() }); return;
         case "undo": if (o) upd(o, { status: "new" }); return;
+        case "cancelAsk": st.confirmCancel = v; break;
+        case "cancelNo": st.confirmCancel = null; break;
+        case "cancelYes": st.confirmCancel = null; if (o) upd(o, { status: "cancelled", cancelledAt: Date.now(), cancelledBy: "kasa" }).then(function(){ S.toast("Masa " + o.table + " siparişi iptal edildi"); }); return;
         case "openTable": st.tab = "masalar"; st.openTable = v; st.confirmClose = false; render(true); var d = S.$("detail"); if (d) d.scrollIntoView({ block: "nearest" }); return;
         case "closeDetail": st.openTable = null; st.confirmClose = false; break;
         case "closeAsk": st.confirmClose = true; break;
@@ -901,10 +933,14 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "lock": st.pinOk = false; break;
         case "saveItem": saveItem(v); return;
         case "logout": B.logout(); return;
+        case "sound": S.beep(1, 660); break;
       }
       render(true);
     };
-    return function(){ alive = false; clearInterval(tick); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
+    S.onAudioReady(function(){ S.keepAwake(); render(true); });
+    var onVis = function(){ if (document.visibilityState === "visible") S.keepAwake(); };
+    document.addEventListener("visibilitychange", onVis);
+    return function(){ alive = false; clearInterval(tick); document.removeEventListener("visibilitychange", onVis); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
   };
 })();
 
