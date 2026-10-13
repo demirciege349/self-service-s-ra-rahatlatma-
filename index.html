@@ -245,8 +245,9 @@ main.k-wrap{padding-block:20px 48px}
 .ed-photo img,.ed-photo .ph-svg{width:100%;height:100%;object-fit:cover}
 .ed-photo span{position:absolute;bottom:0;left:0;right:0;background:rgba(58,10,10,.72);color:var(--cream);font-size:.7rem;text-align:center;padding:3px}
 .ed-photo input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.ed-fields{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) 86px 96px 76px 80px;gap:8px;align-items:end}
-.ed-fields .fld-desc{grid-column:1 / 6}
+.ed-fields{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) 86px 96px;gap:8px;align-items:end}
+.ed-fields .fld-amt{grid-column:1 / 3}
+.ed-fields .fld-desc{grid-column:1 / 4}
 .ed-fields .del{align-self:end}
 @media (max-width:640px){
   .ed{grid-template-columns:76px minmax(0,1fr)}
@@ -290,7 +291,7 @@ main.k-wrap{padding-block:20px 48px}
 <div id="app"><p style="padding:40px 16px;text-align:center;color:#6E4A42">Yükleniyor…</p></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <script>
-window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "model": "", "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "model": "", "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "model": "", "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "model": "", "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
+window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "amount": "300 ml", "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "amount": "1 adet, 70 gr kıyma", "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "amount": "180 gr et", "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "amount": "200 gr köfte", "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "amount": "200 gr tavuk", "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "amount": "180 gr kuzu eti", "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "amount": "180 gr", "model": "", "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "amount": "100 gr", "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "amount": "300 ml", "model": "", "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "amount": "330 ml", "model": "", "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "amount": "1 fincan", "model": "", "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
 /* Sırala — ortak yardımcılar (klasik script; window.S altına yazar). */
 (function(){
   "use strict";
@@ -318,9 +319,18 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   /* Porsiyon: ürünün "p15" (1,5 porsiyon fiyatı) alanı doluysa iki seçenek olur. Sepet anahtarı: "id" ya da "id@15". */
   S.options = function(i){
     var k = Number(i.kcal) || 0;
-    var o = [{ key: i.id, label: "1 porsiyon", price: Number(i.price) || 0, kcal: k }];
-    if (Number(i.p15) > 0) o.push({ key: i.id + "@15", label: "1,5 porsiyon", price: Number(i.p15), kcal: Math.round(k * 1.5) });
+    var o = [{ key: i.id, label: "1 porsiyon", price: Number(i.price) || 0, kcal: k, amount: S.amountText(i, 1) }];
+    if (Number(i.p15) > 0) o.push({ key: i.id + "@15", label: "1,5 porsiyon", price: Number(i.p15), kcal: Math.round(k * 1.5), amount: S.amountText(i, 1.5) });
     return o;
+  };
+  /* Porsiyon miktarı serbest metin ("180 gr et", "300 ml"). Baştaki gr/ml sayısı 1,5 porsiyonda ölçeklenir. */
+  S.amountText = function(i, factor){
+    var t = String(i.amount || "").trim(); if (!t) return "";
+    if (!factor || factor === 1) return t;
+    var m = t.match(/^(\d+(?:[.,]\d+)?)\s*(gr|g|ml|cl|kg)\b(.*)$/i);
+    if (!m) return t + " × 1,5";
+    var n = Math.round(parseFloat(m[1].replace(",", ".")) * factor);
+    return n + " " + m[2] + m[3];
   };
   S.cartLines = function(cart, menu){
     var out = [];
@@ -420,7 +430,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     if (!lay) { lay = document.createElement("div"); lay.id = "arLayer"; document.body.appendChild(lay); }
     lay.hidden = false; document.body.style.overflow = "hidden";
     lay.innerHTML = '<div class="ar-box" role="dialog" aria-modal="true" aria-label="' + S.esc(item.name) + ' 3D görünüm">' +
-      '<div class="ar-head"><div><span class="label">Gerçek porsiyon</span><h2>' + S.esc(item.name) + '</h2></div><button class="btn btn-sm" data-ar="close">Kapat</button></div>' +
+      '<div class="ar-head"><div><span class="label">Gerçek porsiyon' + (item.amount ? ' · ' + S.esc(item.amount) : '') + '</span><h2>' + S.esc(item.name) + '</h2></div><button class="btn btn-sm" data-ar="close">Kapat</button></div>' +
       '<div class="ar-stage"><p class="ar-wait">3D model yükleniyor…</p></div>' +
       '<p class="ar-note">' + S.esc(info || "") + ' Parmağınızla çevirin. Telefonda <b>Masaya yerleştir</b>e basın, kamerayı masaya tutun; tabak gerçek boyutunda masanızda görünür.</p></div>';
     lay.onclick = function(e){ if (e.target === lay || (e.target.closest && e.target.closest('[data-ar="close"]'))) S.closeAR(); };
@@ -459,7 +469,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
 /* Sırala — yerel demo arka ucu: giriş yok, veriler bu telefonun tarayıcısında durur. Aynı arayüz. */
 (function(){
   "use strict";
-  var KEY = "sirala-local-v2", mem = null, subs = [];
+  var KEY = "sirala-local-v3", mem = null, subs = [];
   function load(){
     if (mem) return mem;
     try { mem = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ mem = null; }
@@ -518,6 +528,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   "use strict";
   window.SiralaApp = window.SiralaApp || {};
   var FIRE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-3 2-4 2-7 1.5 1 2 2.5 2 4 1-2 1-5 1-8z"/></svg>';
+  var SCALE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 20h14l-2-11H7z"/><path d="M9 9a3 3 0 0 1 6 0"/></svg>';
   var CLOCK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 
   window.SiralaApp.musteri = function(ctx){
@@ -560,10 +571,11 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       var mins = Number(i.mins) || S.DEFAULT_MINS, opts = S.options(i);
       var buy = i.out ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span></div>'
         : opts.length === 1 ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span>' + stepper(i.id, i.name) + '</div>'
-        : opts.map(function(o){ return '<div class="dish-meta portion"><span class="por-l">' + o.label + (o.kcal ? '<small>' + o.kcal + ' kcal</small>' : '') + '</span><span class="dish-price">' + S.fmt(o.price) + '</span>' + stepper(o.key, i.name + " " + o.label) + '</div>'; }).join("");
+        : opts.map(function(o){ return '<div class="dish-meta portion"><span class="por-l">' + o.label + ((o.amount || o.kcal) ? '<small>' + [o.amount, o.kcal ? o.kcal + ' kcal' : ''].filter(Boolean).map(S.esc).join(' · ') + '</small>' : '') + '</span><span class="dish-price">' + S.fmt(o.price) + '</span>' + stepper(o.key, i.name + " " + o.label) + '</div>'; }).join("");
       return '<article class="dish' + (i.out ? " out" : "") + '"><div class="dish-img">' + photo(i) + '</div><div class="dish-body">' +
         '<h3 class="dish-name">' + S.esc(i.name) + '</h3>' + (i.desc ? '<p class="dish-desc">' + S.esc(i.desc) + '</p>' : '') +
-        (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + 'Ortalama ' + mins + ' dakikada hazır' + (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
+        (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + 'Ortalama ' + mins + ' dakikada hazır' + (opts.length === 1 && i.amount ? '<span class="kcal">' + SCALE + 'Porsiyon: ' + S.esc(i.amount) + '</span>' : '') +
+        (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
         (i.model && !i.out ? '<button class="ar-open" data-act="ar" data-v="' + S.esc(i.id) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Porsiyonu masada gör · 3D</button>' : '') +
         buy + '</div></article>';
     }
@@ -653,7 +665,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "inc": st.cart[v] = (st.cart[v] || 0) + 1; break;
         case "dec": if (st.cart[v]) { st.cart[v]--; if (!st.cart[v]) delete st.cart[v]; } break;
         case "send": send(); return;
-        case "ar": { var it = menu().find(function(x){ return x.id === v; }); if (it) S.openAR(it, "1 porsiyon" + (Number(it.kcal) > 0 ? " · yaklaşık " + it.kcal + " kcal" : "") + "."); return; }
+        case "ar": { var it = menu().find(function(x){ return x.id === v; }); if (it) S.openAR(it, "1 porsiyon" + (it.amount ? " · " + it.amount : "") + (Number(it.kcal) > 0 ? " · yaklaşık " + it.kcal + " kcal" : "") + "."); return; }
         case "menu": st.view = "menu"; window.scrollTo(0, 0); break;
         case "bill": st.view = "bill"; window.scrollTo(0, 0); break;
         case "askBill": flag({ billRequested: true, requestedAt: Date.now() }, "Hesap istendi"); return;
