@@ -80,6 +80,15 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 .c-main{display:flex;flex-direction:column;gap:26px;padding-block:20px 40px}
 .c-main.has-bar{padding-bottom:200px}
 .c-intro{font-family:var(--f-display);font-style:italic;font-size:1.15rem;color:var(--soft);text-align:center}
+.ar-open{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin-top:6px;background:var(--sand);border:1px solid var(--line-2);color:var(--wine);border-radius:999px;padding:6px 12px;font-size:.8rem;font-weight:500}
+#arLayer{position:fixed;inset:0;z-index:60;background:rgba(58,10,10,.55);display:flex;align-items:flex-end;justify-content:center}
+.ar-box{width:100%;max-width:560px;max-height:100%;background:var(--cream);border-radius:14px 14px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px}
+.ar-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.ar-head h2{font-size:1.7rem;line-height:1.1}
+.ar-stage{position:relative;height:min(58vh,440px);border-radius:10px;overflow:hidden;background:var(--sand);display:flex;align-items:center;justify-content:center}
+.ar-wait{color:var(--soft);font-size:.9rem;text-align:center;padding:20px}
+.ar-btn{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;background:var(--wine);color:var(--cream);border:0;border-radius:999px;padding:12px 20px;font-weight:500;box-shadow:0 8px 20px -6px rgba(58,10,10,.5)}
+.ar-note{font-size:.84rem;color:var(--soft)}
 .eta-list{display:flex;flex-direction:column;gap:8px}
 .eta-banner{display:flex;align-items:center;gap:12px;background:var(--ink);color:var(--cream);border-radius:6px;padding:12px 14px}
 .eta-banner svg{flex-shrink:0;color:var(--sand)}
@@ -281,7 +290,7 @@ main.k-wrap{padding-block:20px 48px}
 <div id="app"><p style="padding:40px 16px;text-align:center;color:#6E4A42">Yükleniyor…</p></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <script>
-window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
+window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "model": "", "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "model": "", "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "model": "", "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "model": "", "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
 /* Sırala — ortak yardımcılar (klasik script; window.S altına yazar). */
 (function(){
   "use strict";
@@ -398,6 +407,31 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       '<text x="60" y="68" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" font-weight="600" fill="#9D0208">' + S.esc(ini) + '</text></svg>';
   };
 
+  /* 3D / artırılmış gerçeklik: Google model-viewer ile, uygulama gerekmez.
+     Android: Scene Viewer, iPhone: AR Quick Look (USDZ'yi kendisi üretir). ar-scale="fixed": gerçek boyut, büyütülemez. */
+  var MV = "https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js", mvLoad = null;
+  function loadMV(){
+    if (window.customElements && customElements.get("model-viewer")) return Promise.resolve();
+    if (!mvLoad) mvLoad = new Promise(function(res, rej){ var s = document.createElement("script"); s.type = "module"; s.src = MV; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    return mvLoad;
+  }
+  S.openAR = function(item, info){
+    var lay = document.getElementById("arLayer");
+    if (!lay) { lay = document.createElement("div"); lay.id = "arLayer"; document.body.appendChild(lay); }
+    lay.hidden = false; document.body.style.overflow = "hidden";
+    lay.innerHTML = '<div class="ar-box" role="dialog" aria-modal="true" aria-label="' + S.esc(item.name) + ' 3D görünüm">' +
+      '<div class="ar-head"><div><span class="label">Gerçek porsiyon</span><h2>' + S.esc(item.name) + '</h2></div><button class="btn btn-sm" data-ar="close">Kapat</button></div>' +
+      '<div class="ar-stage"><p class="ar-wait">3D model yükleniyor…</p></div>' +
+      '<p class="ar-note">' + S.esc(info || "") + ' Parmağınızla çevirin. Telefonda <b>Masaya yerleştir</b>e basın, kamerayı masaya tutun; tabak gerçek boyutunda masanızda görünür.</p></div>';
+    lay.onclick = function(e){ if (e.target === lay || (e.target.closest && e.target.closest('[data-ar="close"]'))) S.closeAR(); };
+    loadMV().then(function(){
+      var st = lay.querySelector(".ar-stage"); if (!st) return;
+      st.innerHTML = '<model-viewer src="' + S.esc(item.model) + '" alt="' + S.esc(item.name) + ' porsiyonu" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" auto-rotate shadow-intensity="1" exposure="1.05" camera-orbit="30deg 60deg 0.55m" min-camera-orbit="auto auto 0.3m" style="width:100%;height:100%;background:#F2E3C6">' +
+        '<button slot="ar-button" class="ar-btn">' + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Masaya yerleştir</button></model-viewer>';
+    }).catch(function(){ var st = lay.querySelector(".ar-stage"); if (st) st.innerHTML = '<p class="ar-wait">3D görüntüleyici yüklenemedi. İnternet bağlantınızı kontrol edin.</p>'; });
+  };
+  S.closeAR = function(){ var lay = document.getElementById("arLayer"); if (lay) { lay.hidden = true; lay.innerHTML = ""; } document.body.style.overflow = ""; };
+
   S.loginView = function(title, error){
     return '<main class="login"><div class="login-card"><div class="brand-sm">Sırala</div>' +
       '<h1>' + S.esc(title) + '</h1><p class="muted">İşletme hesabınla giriş yap.</p>' +
@@ -425,7 +459,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
 /* Sırala — yerel demo arka ucu: giriş yok, veriler bu telefonun tarayıcısında durur. Aynı arayüz. */
 (function(){
   "use strict";
-  var KEY = "sirala-local-v1", mem = null, subs = [];
+  var KEY = "sirala-local-v2", mem = null, subs = [];
   function load(){
     if (mem) return mem;
     try { mem = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ mem = null; }
@@ -530,6 +564,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       return '<article class="dish' + (i.out ? " out" : "") + '"><div class="dish-img">' + photo(i) + '</div><div class="dish-body">' +
         '<h3 class="dish-name">' + S.esc(i.name) + '</h3>' + (i.desc ? '<p class="dish-desc">' + S.esc(i.desc) + '</p>' : '') +
         (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + 'Ortalama ' + mins + ' dakikada hazır' + (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
+        (i.model && !i.out ? '<button class="ar-open" data-act="ar" data-v="' + S.esc(i.id) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Porsiyonu masada gör · 3D</button>' : '') +
         buy + '</div></article>';
     }
     function etaBanner(){
@@ -618,6 +653,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "inc": st.cart[v] = (st.cart[v] || 0) + 1; break;
         case "dec": if (st.cart[v]) { st.cart[v]--; if (!st.cart[v]) delete st.cart[v]; } break;
         case "send": send(); return;
+        case "ar": { var it = menu().find(function(x){ return x.id === v; }); if (it) S.openAR(it, "1 porsiyon" + (Number(it.kcal) > 0 ? " · yaklaşık " + it.kcal + " kcal" : "") + "."); return; }
         case "menu": st.view = "menu"; window.scrollTo(0, 0); break;
         case "bill": st.view = "bill"; window.scrollTo(0, 0); break;
         case "askBill": flag({ billRequested: true, requestedAt: Date.now() }, "Hesap istendi"); return;
