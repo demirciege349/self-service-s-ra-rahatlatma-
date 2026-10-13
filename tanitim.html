@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Sırala</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Kafe ve restoranlar için QR ile masadan sipariş ve canlı sıra takibi. Eskişehir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap">
+<style>
+/* Layout: lüks restoran menüsü gibi — krem kâğıt, ince çift çizgiler, ortalı serif başlıklar, koyu bordo "akşam" bölümleri.
+   Palet (kullanıcının seçtiği): krem #FFF8EC, kum #F2E3C6, kırmızı #D62828, bordo #9D0208, kahve-siyah #3A0A0A.
+   Tek görünüm: marka kimliği gereği koyu tema yok; her renk açıkça tanımlı. */
+:root{
+  --cream:#FFF8EC; --sand:#F2E3C6; --red:#D62828; --wine:#9D0208; --ink:#3A0A0A;
+  --ink-soft:#6E4A42; --line:#E4D2B0; --sand-deep:#E9D5AE; --white:#FFFDF8;
+  --on-dark:#F2E3C6; --on-dark-soft:#C9AE95;
+  --f-display:"Cormorant Garamond","Cormorant",Garamond,"Times New Roman",serif;
+  --f-body:"Jost",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--f-body);font-weight:400;font-size:17px;line-height:1.65}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;letter-spacing:-.005em;text-wrap:balance}
+a{color:var(--wine)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--wine);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px}
+.num{font-family:var(--f-display);font-variant-numeric:lining-nums tabular-nums}
+.kicker{display:inline-flex;align-items:center;gap:12px;font-size:.74rem;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--wine)}
+.kicker::before,.kicker::after{content:"";width:28px;height:1px;background:currentColor;opacity:.6}
+.kicker.left::before{display:none}
+.orn{display:flex;align-items:center;justify-content:center;gap:14px;color:var(--red)}
+.orn::before,.orn::after{content:"";height:1px;flex:0 1 120px;background:var(--line)}
+.orn svg{flex-shrink:0}
+.sec{padding-block:104px}
+.sec-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;max-width:760px;margin:0 auto 56px}
+.sec-head h2{font-size:clamp(2.3rem,4.6vw,3.6rem);line-height:1.05;font-weight:600}
+.sec-head h2 em{font-style:italic;color:var(--wine);font-weight:500}
+.sec-head p{color:var(--ink-soft);font-size:1.08rem;font-weight:300;max-width:40em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 28px;border-radius:2px;font-family:var(--f-body);font-weight:500;font-size:.88rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border:1px solid var(--ink);color:var(--ink);background:transparent;transition:background .2s,color .2s,border-color .2s}
+.btn:hover{background:var(--ink);color:var(--cream)}
+.btn-red{background:var(--wine);border-color:var(--wine);color:var(--cream)}
+.btn-red:hover{background:var(--ink);border-color:var(--ink)}
+
+/* üst şerit + menü */
+.strip{background:var(--ink);color:var(--on-dark-soft);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;text-align:center;padding:9px 16px}
+.strip b{color:var(--on-dark);font-weight:500}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(255,248,236,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;min-height:76px}
+.nav{display:flex;gap:28px;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+.nav a{color:var(--ink);text-decoration:none;padding-block:6px;border-bottom:1px solid transparent}
+.nav a:hover{border-color:var(--red)}
+.brand{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--ink);line-height:1}
+.brand-name{font-family:var(--f-display);font-size:2rem;font-weight:700;letter-spacing:.02em}
+.brand-sub{font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--wine);margin-top:4px}
+.top-cta{justify-self:end}
+.top-cta .btn{min-height:42px;padding:0 18px;font-size:.74rem}
+@media (max-width:900px){.top-in{grid-template-columns:auto 1fr}.nav{display:none}.brand{align-items:flex-start}}
+
+/* hero */
+.hero{position:relative;padding-block:72px 96px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:24px 20px auto;height:calc(100% - 48px);max-width:1140px;margin:0 auto;border:1px solid var(--line);pointer-events:none}
+.hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:64px;align-items:center;padding:24px 40px}
+@media (max-width:960px){.hero-grid{grid-template-columns:minmax(0,1fr);gap:56px;padding:24px 12px}}
+.hero-txt{display:flex;flex-direction:column;gap:26px}
+.hero h1{font-size:clamp(2.9rem,6vw,5.2rem);line-height:.98;font-weight:600}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--wine)}
+.lead{font-size:1.15rem;font-weight:300;color:var(--ink-soft);max-width:34em}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.marks{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);padding-top:20px}
+.marks span{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding-right:18px;margin-right:18px;border-right:1px solid var(--line);line-height:1.2;margin-bottom:8px}
+.marks span:last-child{border-right:0}
+
+/* sahne: telefon + kasa */
+.stage{display:flex;flex-direction:column;align-items:center;gap:16px}
+.stage-box{position:relative;width:100%;display:flex;justify-content:center;padding-bottom:100px}
+.stage-box::before{content:"";position:absolute;width:min(420px,92%);aspect-ratio:1;border-radius:50%;background:var(--sand);top:4%;left:50%;transform:translateX(-50%);z-index:0}
+.phone{position:relative;z-index:1;width:300px;max-width:100%;background:var(--white);border:9px solid var(--ink);border-radius:44px;padding:22px 18px 22px;display:flex;flex-direction:column;gap:12px;box-shadow:0 40px 80px -30px rgba(58,10,10,.45)}
+.ph-head{display:flex;justify-content:space-between;align-items:baseline;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:10px}
+.ph-head b{font-family:var(--f-display);font-size:1.2rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:700}
+.ph-alert{background:var(--wine);color:var(--cream);border-radius:3px;padding:10px 12px;font-size:.84rem;font-weight:500;line-height:1.35;min-height:3.1em;display:flex;align-items:center}
+.ph-alert.calm{background:var(--sand);color:var(--ink)}
+.ph-alert.ok{background:var(--ink);color:var(--on-dark)}
+.ph-no{text-align:center}
+.ph-no small{display:block;font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-soft)}
+.ph-no strong{display:block;font-family:var(--f-display);font-weight:600;font-size:5.4rem;line-height:.95;color:var(--ink)}
+.ph-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-block:1px solid var(--line)}
+.ph-stats div{padding:8px;text-align:center}
+.ph-stats div+div{border-left:1px solid var(--line)}
+.ph-stats small{display:block;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
+.ph-stats b{font-family:var(--f-display);font-size:1.9rem;font-weight:600;line-height:1.1}
+.ph-order{font-size:.8rem;color:var(--ink-soft);line-height:1.5;display:flex;justify-content:space-between;gap:8px}
+.ph-order b{font-family:var(--f-display);font-size:1.1rem;color:var(--ink)}
+.ph-menu{display:flex;flex-direction:column;gap:10px}
+.ph-dish{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:10px}
+.ph-img{width:54px;height:54px;border-radius:6px;background:#B5552A;display:flex;align-items:center;justify-content:center}
+.ph-img i{width:34px;height:34px;border-radius:50%;background:#E8C99A;box-shadow:inset 0 0 0 9px #E8C99A,inset 0 0 0 20px #8C2A12}
+.ph-img.s2{background:#C98A2E}.ph-img.s2 i{box-shadow:inset 0 0 0 5px #F2E3C6,inset 0 0 0 20px #D9822B}
+.ph-img.s3{background:#E9DCC6}.ph-img.s3 i{width:20px;height:30px;border-radius:4px;background:#FFFDF8;box-shadow:none;border:2px solid #D6C3A3}
+.ph-d{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.ph-d b{font-family:var(--f-display);font-size:1.05rem}
+.ph-d small{font-size:.66rem;color:var(--ink-soft)}
+.ph-d em{font-style:normal;font-family:var(--f-display);font-weight:700;font-size:.98rem;margin-top:2px}
+.ph-q{width:26px;height:26px;border-radius:50%;background:var(--wine);color:var(--cream);font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.ph-bar{display:flex;justify-content:space-between;align-items:baseline;font-size:.74rem;color:var(--ink-soft);padding-top:2px}
+.ph-bar b{font-family:var(--f-display);font-size:1.25rem;color:var(--ink)}
+.ph-done{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:18px 4px 24px;border:1px solid var(--line)}
+.ph-check{width:52px;height:52px;border-radius:50%;background:var(--wine);color:var(--cream);display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.ph-done b{font-family:var(--f-display);font-size:1.5rem}
+.ph-done small{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px}
+.ph-done strong{font-family:var(--f-display);font-size:3.2rem;line-height:1;color:var(--wine)}
+.ph-done strong span{font-size:1rem;color:var(--ink)}
+.ph-done p{font-size:.78rem;color:var(--ink-soft);margin-top:4px}
+.till{position:absolute;z-index:2;right:0;bottom:0;width:250px;max-width:74%;background:var(--ink);color:var(--on-dark);border-radius:4px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 26px 50px -18px rgba(58,10,10,.6)}
+.till-top{display:flex;justify-content:space-between;align-items:center;font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--on-dark-soft)}
+.till-top span:last-child{border:1px solid var(--on-dark-soft);color:var(--on-dark);padding:2px 7px;letter-spacing:.14em}
+.till-row{display:flex;align-items:baseline;gap:12px}
+.till-row b{font-family:var(--f-display);font-size:2.3rem;font-weight:600;line-height:1}
+.till-row span{font-size:.84rem;color:var(--on-dark);line-height:1.45}
+.till-row span span{color:var(--on-dark-soft);font-size:.78rem}
+.till-row b{font-size:1rem!important}
+.till button{font:inherit;font-size:.74rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;border:0;border-radius:2px;padding:12px;background:var(--red);color:var(--cream);cursor:pointer;transition:background .2s}
+.till button:hover{background:var(--wine)}
+.stage-note{font-family:var(--f-display);font-style:italic;font-size:1.1rem;color:var(--ink-soft);text-align:center}
+
+/* kimler için */
+.band{background:var(--white);border-block:1px solid var(--line)}
+.who{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line)}
+@media (max-width:960px){.who{grid-template-columns:minmax(0,1fr)}}
+.who-card{padding:40px 34px;display:flex;flex-direction:column;gap:16px;background:var(--cream)}
+.who-card+.who-card{border-left:1px solid var(--line)}
+@media (max-width:960px){.who-card+.who-card{border-left:0;border-top:1px solid var(--line)}}
+.who-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.who-ico{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--wine);background:var(--white)}
+.tag{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px;border:1px solid var(--ink);color:var(--ink)}
+.tag.soon{border-color:var(--red);color:var(--wine)}
+.who-card h3{font-size:2rem;line-height:1.05}
+.who-card p{color:var(--ink-soft);font-weight:300}
+.who-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:.96rem}
+.who-card li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px;align-items:baseline}
+.who-card li::before{content:"";width:6px;height:6px;background:var(--red);transform:rotate(45deg) translateY(-2px)}
+.who-ex{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font-family:var(--f-display);font-style:italic;font-size:1.08rem;color:var(--ink-soft)}
+
+/* akış */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;counter-reset:s}
+@media (max-width:960px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.flow{grid-template-columns:minmax(0,1fr)}}
+.flow li{display:flex;flex-direction:column;gap:12px;padding-top:22px;border-top:1px solid var(--ink)}
+.flow .n{font-family:var(--f-display);font-size:3.6rem;line-height:.8;font-weight:500;font-style:italic;color:var(--red)}
+.flow h3{font-size:1.6rem;line-height:1.1}
+.flow p{color:var(--ink-soft);font-weight:300;font-size:.97rem}
+
+/* masa kartı */
+.tent-sec{background:var(--sand)}
+.tent-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:center}
+@media (max-width:960px){.tent-grid{grid-template-columns:minmax(0,1fr);gap:48px}}
+.tent-txt{display:flex;flex-direction:column;gap:20px}
+.tent-txt h2{font-size:clamp(2.2rem,4.4vw,3.4rem);line-height:1.04}
+.tent-txt h2 em{font-style:italic;color:var(--wine);font-weight:500}
+.tent-txt p{color:var(--ink-soft);font-weight:300}
+.specs{list-style:none;margin:0;padding:0;border-top:1px solid var(--sand-deep)}
+.specs li{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--sand-deep);font-size:.95rem}
+.specs span:first-child{letter-spacing:.14em;text-transform:uppercase;font-size:.74rem;color:var(--ink-soft);padding-top:3px}
+.specs span:last-child{text-align:right}
+.tents{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;perspective:900px}
+.tent{width:250px;max-width:100%;background:var(--cream);border:1px solid var(--sand-deep);padding:14px;box-shadow:0 30px 50px -28px rgba(58,10,10,.55);transform:rotateX(6deg)}
+.tent:nth-child(2){transform:rotateX(6deg) translateY(28px)}
+@media (max-width:600px){.tent:nth-child(2){display:none}}
+.tent-in{border:1px solid var(--wine);outline:1px solid var(--wine);outline-offset:-5px;padding:22px 16px 18px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.tent-cafe{font-family:var(--f-display);font-size:1.25rem;font-weight:700}
+.tent-sub{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--wine)}
+.tent-table{font-family:var(--f-display);font-style:italic;font-size:2.2rem;line-height:1;color:var(--ink);margin-top:4px}
+.tent-qr{width:132px;height:132px;background:var(--white);padding:8px;border:1px solid var(--sand-deep);display:flex;align-items:center;justify-content:center}
+.tent-qr img,.tent-qr canvas{width:116px!important;height:116px!important}
+.tent-hint{font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
+.tent-foot{font-family:var(--f-display);font-style:italic;font-size:.95rem;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:8px;width:100%}
+
+/* kazanç (koyu) */
+.dark{background:var(--ink);color:var(--on-dark)}
+.dark .kicker{color:var(--on-dark-soft)}
+.dark .sec-head p{color:var(--on-dark-soft)}
+.dark .sec-head h2 em{color:#F08A7E}
+.gains{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 64px}
+@media (max-width:820px){.gains{grid-template-columns:minmax(0,1fr)}}
+.gain{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;padding:28px 0;border-top:1px solid rgba(242,227,198,.18)}
+.gain svg{color:var(--red);margin-top:6px}
+.gain h3{font-size:1.65rem;line-height:1.1;margin-bottom:6px}
+.gain p{color:var(--on-dark-soft);font-weight:300}
+.not{margin-top:56px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid rgba(242,227,198,.22)}
+@media (max-width:820px){.not{grid-template-columns:minmax(0,1fr)}}
+.not div{padding:22px 24px;text-align:center}
+.not div+div{border-left:1px solid rgba(242,227,198,.22)}
+@media (max-width:820px){.not div+div{border-left:0;border-top:1px solid rgba(242,227,198,.22)}}
+.not small{display:block;font-size:.64rem;letter-spacing:.28em;text-transform:uppercase;color:#F08A7E;margin-bottom:6px}
+.not span{font-family:var(--f-display);font-size:1.3rem}
+
+/* pilot */
+.pilot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:start}
+@media (max-width:960px){.pilot{grid-template-columns:minmax(0,1fr);gap:48px}}
+.pilot-l{display:flex;flex-direction:column;gap:20px}
+.pilot-l h2{font-size:clamp(2.3rem,4.6vw,3.5rem);line-height:1.04}
+.pilot-l h2 em{font-style:italic;color:var(--wine);font-weight:500}
+.pilot-l>p{color:var(--ink-soft);font-weight:300;font-size:1.08rem}
+.timeline{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column}
+.timeline li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.timeline .d{font-family:var(--f-display);font-style:italic;font-size:1.3rem;color:var(--wine);line-height:1.2}
+.timeline h3{font-size:1.35rem;line-height:1.15;margin-bottom:4px}
+.timeline p{color:var(--ink-soft);font-weight:300;font-size:.96rem}
+.menu-card{background:var(--white);border:1px solid var(--line);padding:12px}
+.menu-card-in{border:1px solid var(--sand-deep);padding:36px 32px;display:flex;flex-direction:column;gap:18px}
+.menu-card h3{text-align:center;font-size:1.9rem}
+.menu-card .sub{text-align:center;font-family:var(--f-display);font-style:italic;color:var(--ink-soft);font-size:1.05rem;margin-top:-10px}
+.measure{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.measure li{display:flex;align-items:baseline;gap:10px}
+.measure .k{font-family:var(--f-display);font-size:1.22rem;font-weight:600;min-width:0}
+.measure .dots{flex:1;border-bottom:1px dotted var(--ink-soft);transform:translateY(-5px);min-width:20px}
+.measure .v{font-size:.85rem;color:var(--ink-soft);text-align:right;max-width:12em;line-height:1.35}
+.site-pack{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;border-top:1px solid var(--line);padding-top:20px;margin-top:4px}
+.site-pack p{font-weight:300;color:var(--ink-soft)}
+.site-pack b{font-family:var(--f-display);font-size:1.25rem;color:var(--ink);font-weight:600;display:block}
+
+/* sss */
+.faq{max-width:860px;margin:0 auto;border-top:1px solid var(--ink)}
+details{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 4px;font-family:var(--f-display);font-size:1.45rem;font-weight:600;line-height:1.2}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";flex-shrink:0;width:12px;height:12px;border-right:1.5px solid var(--red);border-bottom:1.5px solid var(--red);transform:rotate(45deg) translateY(-4px);transition:transform .2s}
+details[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
+details p{color:var(--ink-soft);font-weight:300;padding:0 4px 24px;max-width:46em}
+
+/* iletişim */
+.contact{position:relative;background:var(--wine);color:var(--cream)}
+.contact-in{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px;align-items:center;padding-block:104px}
+@media (max-width:900px){.contact-in{grid-template-columns:minmax(0,1fr);gap:40px}}
+.contact .kicker{color:var(--sand)}
+.contact h2{font-size:clamp(2.6rem,5.4vw,4.4rem);line-height:1;margin:18px 0}
+.contact h2 em{font-style:italic;font-weight:500;color:var(--sand)}
+.contact .lead{color:var(--sand)}
+.c-card{background:var(--cream);color:var(--ink);padding:12px}
+.c-card-in{border:1px solid var(--sand-deep);padding:30px 28px;display:flex;flex-direction:column;gap:18px}
+.c-row{display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.c-row small{font-size:.64rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-soft)}
+.c-row span{font-family:var(--f-display);font-size:1.45rem;font-weight:600;overflow-wrap:anywhere}
+footer{background:var(--ink);color:var(--on-dark-soft);padding-block:34px;font-size:.82rem;letter-spacing:.08em}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px}
+footer .brand-name{color:var(--on-dark);font-size:1.6rem}
+</style>
+</head>
+<body>
+<div class="strip">Eskişehir'deki işletmelere <b>2 hafta ücretsiz deneme</b></div>
+<header class="top">
+  <div class="wrap top-in">
+    <nav class="nav" aria-label="Sayfa menüsü">
+      <a href="#kimler">Kimler için</a>
+      <a href="#nasil">Nasıl çalışır</a>
+      <a href="#pilot">Deneme</a>
+    </nav>
+    <a class="brand" href="#ust"><span class="brand-name">Sırala</span><span class="brand-sub">Masadan sipariş</span></a>
+    <div class="top-cta"><a class="btn btn-red" href="#iletisim">Randevu alın</a></div>
+  </div>
+</header>
+
+<main id="ust">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-txt">
+        <span class="kicker left">Kafe ve restoranlar için · Eskişehir</span>
+        <h1>Misafir masadan sipariş verir, <em>servisiniz zarafetini korur.</em></h1>
+        <p class="lead">Misafiriniz masadaki QR kodu okutur, fotoğraflı menünüzü görür, her yemeğin ortalama ne kadar sürede çıktığını bilir ve siparişini verir. Sipariş mutfağınıza yazılı düşer. Hesap, her zamanki gibi sonunda garsona ya da kasaya ödenir.</p>
+        <div class="cta">
+          <a class="btn btn-red" href="#pilot">Ücretsiz deneyin</a>
+          <a class="btn" href="site.html">Örnek restoran sitesi</a>
+        </div>
+        <div class="marks"><span>Uygulama indirilmez</span><span>POS cihazınız aynı kalır</span><span>Kasada bir tablet yeter</span></div>
+      </div>
+
+      <div class="stage" aria-label="Misafir telefonu ve kasa ekranı örneği">
+        <div class="stage-box">
+          <div class="phone" aria-live="polite">
+            <div class="ph-head"><b>Kuzey Sofrası</b><span>Masa 7</span></div>
+            <div id="phMenu" class="ph-menu">
+              <div class="ph-dish"><span class="ph-img" aria-hidden="true"><i></i></span><span class="ph-d"><b>Adana kebap</b><small>Ortalama 20 dakikada hazır</small><em>360 ₺</em></span><span class="ph-q">1</span></div>
+              <div class="ph-dish"><span class="ph-img s2" aria-hidden="true"><i></i></span><span class="ph-d"><b>Mercimek çorbası</b><small>Ortalama 8 dakikada hazır</small><em>95 ₺</em></span><span class="ph-q">1</span></div>
+              <div class="ph-dish"><span class="ph-img s3" aria-hidden="true"><i></i></span><span class="ph-d"><b>Ayran</b><small>Ortalama 2 dakikada hazır</small><em>45 ₺</em></span><span class="ph-q">1</span></div>
+              <div class="ph-bar"><span>3 ürün · yaklaşık 20 dk</span><b>500 ₺</b></div>
+            </div>
+            <div id="phDone" class="ph-done" hidden>
+              <span class="ph-check" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+              <b>Siparişiniz alındı</b><small>Tahmini süre</small><strong>~20 <span>dk</span></strong><p>Adana kebap, Mercimek çorbası, Ayran</p>
+            </div>
+          </div>
+          <div class="till">
+            <div class="till-top"><span>Mutfak · Yeni sipariş</span><span id="tPay">Masa 7</span></div>
+            <div class="till-row" id="tRow"><span id="tDesc">Henüz sipariş yok</span></div>
+            <button type="button" id="tPaid">Siparişi gönder</button>
+          </div>
+        </div>
+        <p class="stage-note">Deneyin: "Siparişi gönder"e dokunun; misafir süreyi, mutfak siparişi görsün.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band sec" id="kimler">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Kimler için</span>
+        <h2>Masadan sipariş, <em>işletmenize göre</em></h2>
+        <p>İşletmenizin çalışma biçimine göre ayarlanır. Hangisinin size uyduğuna ilk görüşmede birlikte karar veririz.</p>
+      </div>
+      <div class="who">
+        <article class="who-card">
+          <div class="who-top">
+            <span class="who-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 21V3c-2 1-3 4-3 7s1 4 3 4"/></svg></span>
+            <span class="tag">Hazır</span>
+          </div>
+          <h3>Restoranlar</h3>
+          <p>Misafir siparişini masadan verir; garsonunuz servise ve misafir ağırlamaya odaklanır. İsteyen misafir yine garsonla sipariş verir.</p>
+          <ul>
+            <li>Yanlış duyulan sipariş kalmaz</li>
+            <li>"Bir çay daha" için garson aranmaz</li>
+            <li>"Hesap iste" ve "Garson çağır" tuşları</li>
+          </ul>
+          <p class="who-ex">Ocakbaşı, ev yemekleri, bistro.</p>
+        </article>
+        <article class="who-card">
+          <div class="who-top">
+            <span class="who-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1 1 1.5 1 2.5S8 7 8 7M12 3c0 1 1 1.5 1 2.5S12 7 12 7"/></svg></span>
+            <span class="tag">Hazır</span>
+          </div>
+          <h3>Kafeler</h3>
+          <p>Misafir oturduğu yerden sipariş verir, kasa önünde kuyruk oluşmaz. Tatlı ve içecek fotoğrafları siparişi kendiliğinden artırır.</p>
+          <ul>
+            <li>Fotoğraflı, her an güncel menü</li>
+            <li>Tükenen ürün tek dokunuşla kalkar</li>
+            <li>Hesap masa masa, otomatik toplanır</li>
+          </ul>
+          <p class="who-ex">Kampüs çevresi ve cadde kafeleri.</p>
+        </article>
+        <article class="who-card">
+          <div class="who-top">
+            <span class="who-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <span class="tag soon">Geliştiriliyor</span>
+          </div>
+          <h3>Masadan ödeme</h3>
+          <p>Misafirin hesabı telefonundan kartla ödeyip kalkabilmesi. Adisyon programınıza bağlantı da bu aşamada gelecek.</p>
+          <ul>
+            <li>Garsonun hesap getirme turu kalkar</li>
+            <li>Siparişler adisyonunuza aktarılır</li>
+            <li>İlk pilot işletmelerle birlikte</li>
+          </ul>
+          <p class="who-ex">Pilot işletmelerin geri bildirimiyle.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="nasil">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Nasıl çalışır</span>
+        <h2>Masadan mutfağa <em>dört adım</em></h2>
+      </div>
+      <ol class="flow">
+        <li><span class="n">1</span><h3>QR okutulur</h3><p>Masadaki karttan menünüz açılır, masa numarası kendiliğinden gelir. Uygulama indirilmez.</p></li>
+        <li><span class="n">2</span><h3>Fotoğraftan seçilir</h3><p>Her yemeğin fotoğrafı, fiyatı ve ortalama çıkma süresi görünür. Misafir not da ekleyebilir.</p></li>
+        <li><span class="n">3</span><h3>Mutfağa yazılı düşer</h3><p>Sipariş masa numarası ve notuyla ekranınızda belirir. Misafir "yaklaşık 20 dk" yazısını görür.</p></li>
+        <li><span class="n">4</span><h3>Hesap sonunda</h3><p>Masanın hesabı kendiliğinden toplanır. Misafir "Hesap iste"ye dokunur, ödemeyi garsona ya da kasaya yapar.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="tent-sec sec">
+    <div class="wrap tent-grid">
+      <div class="tent-txt">
+        <span class="kicker left">Masanızda</span>
+        <h2>Masaya yakışan <em>bir QR kartı</em></h2>
+        <p>Kartlar işletmenizin adı ve renkleriyle hazırlanır. Her masanın kendi kodu vardır; siparişler doğru masaya düşer.</p>
+        <ul class="specs">
+          <li><span>Kart</span><span>İşletmenize özel tasarım</span></li>
+          <li><span>Masa sayısı</span><span>İhtiyacınız kadar, ek ücret yok</span></li>
+          <li><span>Baskı</span><span>Yazdırmaya hazır dosya teslim edilir</span></li>
+          <li><span>Değişiklik</span><span>Menü ve fiyat değişse de kart aynı kalır</span></li>
+        </ul>
+      </div>
+      <div class="tents" aria-label="Masa kartı örnekleri">
+        <div class="tent"><div class="tent-in">
+          <span class="tent-cafe">Kuzey Sofrası</span><span class="tent-sub">Eskişehir</span>
+          <span class="tent-table">Masa 7</span>
+          <div class="tent-qr" data-qr="Masa 7" role="img" aria-label="Örnek QR kodu"></div>
+          <span class="tent-hint">Okutun · seçin · afiyet olsun</span>
+          <span class="tent-foot">Garsonumuz da her zaman yanınızda</span>
+        </div></div>
+        <div class="tent"><div class="tent-in">
+          <span class="tent-cafe">Kuzey Sofrası</span><span class="tent-sub">Eskişehir</span>
+          <span class="tent-table">Masa 12</span>
+          <div class="tent-qr" data-qr="Masa 12" role="img" aria-label="Örnek QR kodu"></div>
+          <span class="tent-hint">Okutun · seçin · afiyet olsun</span>
+          <span class="tent-foot">Garsonumuz da her zaman yanınızda</span>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Ne kazanırsınız</span>
+        <h2>Abartmadan, <em>açıkça</em></h2>
+        <p>Sistem mutfağınızı hızlandırmaz, ekibinizi yarıya indirmez. Kazancınız, sipariş almaya ve hesap toplamaya harcanan zamandan gelir.</p>
+      </div>
+      <div class="gains">
+        <div class="gain"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.5 7.5H22l-6 4.5 2.3 7.5L12 17l-6.3 4.5L8 14 2 9.5h7.5z"/></svg><div><h3>Aynı ekiple daha çok misafir</h3><p>Kasiyer ve garson sipariş dinlemek yerine servise ve misafire odaklanır. Yoğun saatte bir kişi eksik olsa da iş aksamaz.</p></div></div>
+        <div class="gain"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12l5 5L20 7"/></svg><div><h3>Yanlış sipariş azalır</h3><p>Sipariş, misafirin kendi seçtiği haliyle yazılı gelir. "Ben ayran demiştim" tartışması biter.</p></div></div>
+        <div class="gain"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14"/></svg><div><h3>Ek sipariş kolaylaşır</h3><p>Tatlı ya da ikinci içecek için kimseyi beklemek gerekmez. Misafir aklına geldiği an ekler.</p></div></div>
+        <div class="gain"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h10M4 18h7"/></svg><div><h3>Menünüz her an güncel</h3><p>Biten ürün tek dokunuşla kalkar. Fiyat ve hazırlanma süresi patron şifresiyle değişir, her değişiklik kayda geçer.</p></div></div>
+      </div>
+      <div class="not">
+        <div><small>Gerekmez</small><span>Misafirin uygulama indirmesi</span></div>
+        <div><small>Gerekmez</small><span>Yeni POS ya da adisyon cihazı</span></div>
+        <div><small>Gerekmez</small><span>Uzun personel eğitimi</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="pilot">
+    <div class="wrap pilot">
+      <div class="pilot-l">
+        <span class="kicker left">Ücretsiz deneme</span>
+        <h2>İki hafta deneyin, <em>rakamlara birlikte bakalım</em></h2>
+        <p>Söz vermek yerine ölçmeyi tercih ediyoruz. Deneme sonunda işinize yaramadıysa sistemi kaldırırız, hiçbir ücret ödemezsiniz.</p>
+        <ol class="timeline">
+          <li><span class="d">1. gün</span><div><h3>Kurulum</h3><p>Menünüzü alırız, masa kartlarınızı yerleştiririz, kasiyerinize on dakikada gösteririz.</p></div></li>
+          <li><span class="d">1. hafta</span><div><h3>Alışma</h3><p>Yoğun saatlerde yanınızda oluruz, takılan noktayı hemen düzeltiriz.</p></div></li>
+          <li><span class="d">2. hafta</span><div><h3>Ölçüm</h3><p>Rakamları deneme öncesiyle karşılaştırırız. Devam edip etmemeye siz karar verirsiniz.</p></div></li>
+        </ol>
+      </div>
+      <div class="menu-card"><div class="menu-card-in">
+        <h3>Denemede ölçtüklerimiz</h3>
+        <p class="sub">menü kartı usulü</p>
+        <ul class="measure">
+          <li><span class="k">QR ile sipariş oranı</span><span class="dots" aria-hidden="true"></span><span class="v">misafirlerin yüzde kaçı kullandı</span></li>
+          <li><span class="k">Sipariş bekleme</span><span class="dots" aria-hidden="true"></span><span class="v">oturmadan siparişe geçen süre</span></li>
+          <li><span class="k">Yanlış sipariş</span><span class="dots" aria-hidden="true"></span><span class="v">geri dönen ürün sayısı</span></li>
+          <li><span class="k">Ortalama hesap</span><span class="dots" aria-hidden="true"></span><span class="v">ek siparişler arttı mı</span></li>
+          <li><span class="k">Garson başına masa</span><span class="dots" aria-hidden="true"></span><span class="v">yoğun saatte</span></li>
+        </ul>
+        <div class="site-pack">
+          <p><b>Web siteniz de hazır olsun</b>Menünüz sitenizde de aynı anda güncellenir; tükenen ürün sitede de görünmez.</p>
+          <a class="btn" href="site.html">Örneği görün</a>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="band sec" id="sss">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">Sık sorulanlar</span><h2>Aklınıza <em>takılanlar</em></h2></div>
+      <div class="faq">
+        <details><summary>Yemek süreleri nereden geliyor?</summary><p>Her yemeğin ortalama çıkma süresini siz belirlersiniz; kurulumda birlikte gireriz, istediğiniz an kasa ekranından değiştirirsiniz. Misafir siparişindeki en uzun süreyi "yaklaşık" olarak görür.</p></details>
+        <details><summary>Yemek fotoğraflarını kim çekiyor?</summary><p>Kurulumda telefonla birlikte çekeriz ya da elinizdeki fotoğrafları yükleriz. Fotoğraf yoksa menü şık bir yer tutucuyla görünür.</p></details>
+        <details><summary>QR kullanmak istemeyen misafir ne yapacak?</summary><p>Garsonunuz her zamanki gibi siparişi alır ve kasa ekranından o masaya girer. Mutfağa aynı şekilde düşer, hesaba eklenir.</p></details>
+        <details><summary>İnternet kesilirse ne olur?</summary><p>Ekrandaki siparişler kaybolmaz. Telefondan internet paylaşımı açılırsa tablet hemen geri bağlanır; olmazsa garsonla eski usule dönülür, bağlantı gelince kaldığı yerden devam eder.</p></details>
+        <details><summary>Misafirden kart bilgisi ya da telefon numarası alınıyor mu?</summary><p>Hayır. Ödeme sonunda garsona ya da kasaya, kendi POS cihazınızla yapılır. Sistem isim ya da telefon numarası tutmaz.</p></details>
+        <details><summary>Ücreti ne kadar?</summary><p>İşletmenizin büyüklüğüne göre aylık bir ücret belirliyoruz. İlk iki hafta ücretsiz; fiyatı deneme sonunda, rakamları gördükten sonra konuşuruz.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="iletisim">
+    <div class="wrap contact-in">
+      <div>
+        <span class="kicker left">İletişim</span>
+        <h2>Yoğun saatinizde <em>gelip bakalım.</em></h2>
+        <p class="lead">Eskişehir'deyiz. İşletmenize gelir, sistemi kendi telefonunuzla canlı gösteririz. On beş dakikanızı alır.</p>
+      </div>
+      <div class="c-card"><div class="c-card-in">
+        <div class="c-row"><small>Telefon · WhatsApp</small><span>[TELEFON NUMARANIZ]</span></div>
+        <div class="c-row"><small>E-posta</small><span>[E-POSTA ADRESİNİZ]</span></div>
+        <div class="c-row"><small>Bölge</small><span>Eskişehir</span></div>
+        <a class="btn btn-red" href="#pilot">Ücretsiz denemeyi inceleyin</a>
+      </div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span class="brand-name" style="font-family:var(--f-display);font-weight:700">Sırala</span><span>Kafe ve restoranlar için QR sipariş ve sıra sistemi · © 2026</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+  var sent = false, $ = function(id){ return document.getElementById(id); };
+  $("tPaid").addEventListener("click", function(){
+    sent = !sent;
+    $("phMenu").hidden = sent; $("phDone").hidden = !sent;
+    $("tDesc").innerHTML = sent ? "<b>1×</b> Adana kebap · <b>1×</b> Mercimek çorbası · <b>1×</b> Ayran<br><span>Not: acısız · tahmini 20 dk</span>" : "Henüz sipariş yok";
+    $("tPaid").textContent = sent ? "Baştan oynat" : "Siparişi gönder";
+  });
+  /* masa kartlarındaki örnek QR'lar */
+  function qr(){
+    if (!window.QRCode) return;
+    document.querySelectorAll("[data-qr]").forEach(function(el){
+      try { new QRCode(el, { text: "Sırala örnek masa kartı · " + el.getAttribute("data-qr"), width: 116, height: 116, colorDark: "#3A0A0A", colorLight: "#FFFDF8", correctLevel: QRCode.CorrectLevel.M }); } catch(e){}
+    });
+  }
+  if (document.readyState === "complete") qr(); else window.addEventListener("load", qr);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3A0A0A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kuzey Sofrası">
+<meta name="description" content="QR ile masadan sipariş demosu">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Kuzey Sofrası Menü</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap">
+<style>
+/* Sırala — ortak stil. Palet: krem #FFF8EC, kum #F2E3C6, kırmızı #D62828, bordo #9D0208, kahve-siyah #3A0A0A.
+   Tek görünüm (marka kimliği); her renk açıkça tanımlı. */
+:root{
+  --cream:#FFF8EC; --sand:#F2E3C6; --red:#D62828; --wine:#9D0208; --ink:#3A0A0A;
+  --soft:#6E4A42; --line:#E8D8BA; --line-2:#DCC59C; --white:#FFFDF8;
+  --ok:#2E6B3A; --ok-soft:#E3EFDC; --warn-soft:#FBE3D9;
+  --f-display:"Cormorant Garamond","Cormorant",Garamond,"Times New Roman",serif;
+  --f-body:"Jost",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--cream);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;letter-spacing:-.005em}
+[hidden]{display:none!important}
+a{color:var(--wine)}
+button{font:inherit;cursor:pointer;color:inherit}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--white);border:1px solid var(--line-2);border-radius:4px;padding:.6rem .7rem;width:100%;min-width:0}
+textarea{resize:vertical}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--wine);outline-offset:2px}
+.muted{color:var(--soft)} .small{font-size:.86rem} .center{text-align:center} .wide{width:100%}
+.num{font-family:var(--f-display);font-variant-numeric:lining-nums tabular-nums}
+.label{display:block;font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:46px;padding:.55rem 1.1rem;border-radius:4px;border:1px solid var(--line-2);background:var(--white);color:var(--ink);font-weight:500;text-decoration:none;text-align:center}
+.btn:hover{border-color:var(--wine)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--wine);border-color:var(--wine);color:var(--cream)}
+.btn-primary:hover{background:var(--ink);border-color:var(--ink)}
+.btn-red{background:var(--red);border-color:var(--red);color:var(--cream)}
+.btn-ghost{background:transparent}
+.btn-ok{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+.btn-bad{background:var(--warn-soft);border-color:transparent;color:var(--wine)}
+.btn-sm{min-height:36px;padding:.3rem .75rem;font-size:.88rem}
+.btn-lg{min-height:54px;font-size:1.02rem;letter-spacing:.04em}
+.row-btns{display:flex;flex-wrap:wrap;gap:10px}
+.toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:.7rem 1.1rem;border-radius:4px;font-weight:500;z-index:50;max-width:calc(100% - 32px);text-align:center;box-shadow:0 10px 30px -10px rgba(58,10,10,.5)}
+.empty-card{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:8px}
+.empty-card h2{font-size:1.6rem}
+.empty-card p{color:var(--soft)}
+.offline{background:var(--warn-soft);color:var(--wine);font-weight:500;font-size:.88rem;text-align:center;padding:8px 16px}
+.chip{font-size:.72rem;font-weight:500;padding:.15rem .5rem;border-radius:3px;background:var(--sand);color:var(--ink);white-space:nowrap}
+
+/* ---------- giriş ---------- */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.login-card{width:100%;max-width:400px;background:var(--white);border:1px solid var(--line);padding:30px 26px;display:flex;flex-direction:column;gap:14px;box-shadow:0 0 0 8px var(--cream),0 0 0 9px var(--line)}
+.login-card h1{font-size:2rem}
+.brand-sm{font-family:var(--f-display);font-weight:700;font-size:1.3rem;color:var(--wine)}
+.login-form{display:flex;flex-direction:column;gap:12px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:.78rem;font-weight:500;letter-spacing:.06em;color:var(--soft);min-width:0}
+.form-err{color:var(--wine);font-weight:500;font-size:.9rem}
+
+/* ---------- müşteri ---------- */
+.c-wrap{max-width:560px;margin:0 auto;padding-inline:16px}
+.c-head{background:var(--cream);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:10}
+.c-head-in{display:flex;align-items:center;gap:12px;padding-block:14px 10px}
+.c-name{flex:1;min-width:0;font-family:var(--f-display);font-weight:700;font-size:1.65rem;line-height:1.05;overflow-wrap:anywhere}
+.c-table{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);background:var(--wine);padding:6px 10px;border-radius:3px;white-space:nowrap}
+.c-chips{display:flex;gap:6px;overflow-x:auto;padding-block:4px 12px;scrollbar-width:none}
+.c-chips::-webkit-scrollbar{display:none}
+.c-chips a{flex-shrink:0;text-decoration:none;color:var(--ink);font-size:.86rem;border:1px solid var(--line-2);border-radius:999px;padding:6px 13px;background:var(--white)}
+.c-main{display:flex;flex-direction:column;gap:26px;padding-block:20px 40px}
+.c-main.has-bar{padding-bottom:200px}
+.c-intro{font-family:var(--f-display);font-style:italic;font-size:1.15rem;color:var(--soft);text-align:center}
+.cat-h{display:flex;align-items:center;gap:12px;font-family:var(--f-display);font-size:1.6rem;font-weight:600;margin-bottom:6px}
+.cat-h::after{content:"";flex:1;height:1px;background:var(--line-2)}
+.dish{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.dish:last-child{border-bottom:0}
+.dish-img{width:104px;height:104px;border-radius:6px;overflow:hidden;background:var(--sand);position:relative}
+.dish-img img,.dish-img .ph-svg{width:100%;height:100%;object-fit:cover;display:block}
+.dish.out .dish-img{filter:grayscale(1);opacity:.55}
+.dish-body{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dish-name{font-family:var(--f-display);font-size:1.32rem;font-weight:600;line-height:1.15;overflow-wrap:anywhere}
+.dish-desc{font-size:.86rem;color:var(--soft);line-height:1.4}
+.dish-meta{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:4px}
+.dish-price{font-family:var(--f-display);font-weight:700;font-size:1.3rem;white-space:nowrap}
+.dish-time{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;color:var(--soft)}
+.dish-time svg{flex-shrink:0}
+.dish-time{flex-wrap:wrap}
+.kcal{display:inline-flex;align-items:center;gap:4px;flex-basis:100%;margin-top:2px}
+.por-l{display:flex;flex-direction:column;line-height:1.2}
+.por-l small{font-size:.7rem;color:var(--soft);opacity:.85}
+.dish-meta.portion{padding-top:6px;gap:8px}
+.dish-meta.portion .round{width:34px;height:34px}
+.dish-meta.portion .stepper{gap:6px}
+.dish-meta.portion .dish-price{font-size:1.15rem}
+.dish-meta.portion+.dish-meta.portion{border-top:1px dashed var(--line);margin-top:4px}
+.por-l{font-size:.8rem;color:var(--soft);white-space:nowrap}
+.dish-out{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--wine);font-weight:500}
+.stepper{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.stepper .q{min-width:1.4em;text-align:center;font-family:var(--f-display);font-weight:700;font-size:1.2rem}
+.round{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:var(--white);display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;line-height:1}
+.round-add{background:var(--wine);border-color:var(--wine);color:var(--cream)}
+.c-bar{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--white);border-top:1px solid var(--line-2);padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 30px -18px rgba(58,10,10,.35)}
+.c-bar-in{display:flex;flex-direction:column;gap:8px}
+.c-bar-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:.9rem;color:var(--soft)}
+.c-bar-top b{font-family:var(--f-display);font-size:1.35rem;color:var(--ink)}
+.note-in{font-size:.92rem}
+.done{background:var(--white);border:1px solid var(--line);padding:10px}
+.done-in{border:1px solid var(--line-2);padding:30px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.done-ico{width:64px;height:64px;border-radius:50%;background:var(--wine);color:var(--cream);display:flex;align-items:center;justify-content:center}
+.done h2{font-size:2rem;line-height:1.1}
+.done-eta{font-family:var(--f-display);font-size:3.4rem;font-weight:700;line-height:1;color:var(--wine)}
+.done-eta small{font-size:1.2rem;font-weight:600;color:var(--ink)}
+.done p{color:var(--soft)}
+.bill{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.bill h3{font-size:1.35rem;display:flex;justify-content:space-between;align-items:baseline}
+.bill ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:.94rem}
+.bill li{display:flex;justify-content:space-between;gap:12px}
+.bill li span:last-child{white-space:nowrap}
+.bill-total{display:flex;justify-content:space-between;border-top:1px solid var(--line-2);padding-top:8px;font-weight:500}
+.bill-total b{font-family:var(--f-display);font-size:1.35rem}
+.bill-state{font-size:.88rem;color:var(--ok);font-weight:500;text-align:center}
+.c-foot{text-align:center;font-size:.78rem;color:var(--soft);letter-spacing:.06em}
+
+/* ---------- kasa ---------- */
+.k-wrap{max-width:1240px;margin:0 auto;padding-inline:16px}
+.k-head{background:var(--ink);color:var(--sand)}
+.k-head-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.k-name{font-family:var(--f-display);font-weight:700;font-size:1.5rem;color:var(--cream)}
+.k-head .label{color:#C9AE95}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button{position:relative;min-height:42px;padding:.4rem 1rem;border-radius:4px;border:1px solid rgba(242,227,198,.3);background:transparent;color:var(--sand);font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.tabs .badge{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;border-radius:10px;background:var(--red);color:#fff;font-size:.72rem;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.k-head .btn{background:transparent;color:var(--sand);border-color:rgba(242,227,198,.3)}
+@media (max-width:720px){
+  .k-head-in{display:grid;grid-template-columns:minmax(0,1fr) auto}
+  .k-head-in .tabs{grid-column:1 / -1;grid-row:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  .k-head-in .tabs button{padding-inline:.3rem;font-size:.86rem}
+}
+main.k-wrap{padding-block:20px 48px}
+.alerts{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.alert{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--red);color:#fff;border-radius:4px;padding:12px 16px;font-weight:500}
+.alert .btn{background:#fff;color:var(--wine);border-color:#fff;min-height:36px}
+.k-cols{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:900px){.k-cols{grid-template-columns:minmax(0,1fr)}}
+.k-h{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--f-display);font-size:1.5rem;font-weight:600;margin-bottom:10px}
+.k-h .label{font-family:var(--f-body)}
+.tickets{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ticket{background:var(--white);border:1px solid var(--line);border-top:4px solid var(--wine);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.ticket.late{border-top-color:var(--red);box-shadow:0 0 0 2px var(--red)}
+.t-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.t-table{font-family:var(--f-display);font-size:1.7rem;font-weight:700;line-height:1}
+.t-time{font-size:.8rem;color:var(--soft);text-align:right}
+.t-items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;font-size:1rem}
+.t-items b{font-family:var(--f-display);font-size:1.15rem;margin-right:4px}
+.t-note{background:var(--sand);border-radius:3px;padding:6px 9px;font-size:.88rem}
+.t-eta{font-size:.82rem;color:var(--soft)}
+.t-eta.late{color:var(--red);font-weight:600}
+.done-list{display:flex;flex-direction:column;gap:6px}
+.done-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--white);border:1px solid var(--line);border-radius:4px;font-size:.9rem}
+.done-row .d{flex:1;min-width:0;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.done-row b{font-family:var(--f-display);font-size:1.1rem}
+.tables{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tbl{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:6px;text-align:left;min-height:118px}
+.tbl:hover{border-color:var(--wine)}
+.tbl.busy{border-color:var(--line-2);background:var(--cream)}
+.tbl.bill{border:2px solid var(--red);background:var(--warn-soft)}
+.tbl-n{font-family:var(--f-display);font-size:1.6rem;font-weight:700;line-height:1}
+.tbl-t{font-family:var(--f-display);font-size:1.3rem;font-weight:600;margin-top:auto}
+.tbl-s{font-size:.78rem;color:var(--soft)}
+.tbl.bill .tbl-s{color:var(--wine);font-weight:600}
+.detail{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.detail h3{font-size:1.8rem}
+.detail ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.detail li{display:flex;justify-content:space-between;gap:12px}
+.detail li span:last-child{white-space:nowrap}
+.k-narrow{max-width:760px;display:flex;flex-direction:column;gap:16px}
+.k-panel{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.pick-table{display:flex;flex-wrap:wrap;gap:6px}
+.pick-table button{min-width:52px;min-height:44px;border:1px solid var(--line-2);border-radius:4px;background:var(--white);font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.pick-table button[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:var(--cream)}
+.w-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.w-item:last-child{border-bottom:0}
+.w-item .nm{min-width:0}
+.w-item .nm b{display:block;font-weight:500}
+.pinbox{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--sand);border-radius:4px;padding:12px 14px}
+.pinbox input{width:120px}
+.m-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.m-row:last-child{border-bottom:0}
+.m-row.is-out .m-nm{text-decoration:line-through;opacity:.55}
+.m-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.price-in{width:96px}
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:.84rem;color:var(--soft)}
+
+/* ---------- kurulum ---------- */
+.s-wrap{max-width:1100px;margin:0 auto;padding-inline:16px}
+.s-head{background:var(--ink);color:var(--sand)}
+.s-head-in{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:14px}
+.s-head .brand-sm{color:var(--cream);font-size:1.6rem;text-decoration:none}
+.s-head .btn{background:transparent;color:var(--sand);border-color:rgba(242,227,198,.3)}
+.s-head-r{display:flex;align-items:center;gap:10px;min-width:0}
+.s-head-r .small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:40vw;color:#C9AE95}
+.s-main{display:flex;flex-direction:column;gap:34px;padding-block:28px 64px}
+.s-hero{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;background:var(--white);border:1px solid var(--line);padding:26px}
+.s-hero h1{font-size:clamp(2rem,4vw,2.8rem);line-height:1.05}
+.s-sec{display:flex;flex-direction:column;gap:14px}
+.s-sec h2{font-size:1.9rem}
+.s-sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.note{font-size:.88rem;color:var(--soft)}
+.form-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;background:var(--white);border:1px solid var(--line);padding:16px}
+.form-row .fld{flex:2 1 220px}
+.form-row .fld-s{flex:1 1 110px}
+.ed-list{display:flex;flex-direction:column;gap:10px}
+.ed{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;background:var(--white);border:1px solid var(--line);padding:12px}
+.ed-photo{position:relative;width:96px;height:96px;border-radius:6px;overflow:hidden;background:var(--sand);border:1px dashed var(--line-2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ed-photo img,.ed-photo .ph-svg{width:100%;height:100%;object-fit:cover}
+.ed-photo span{position:absolute;bottom:0;left:0;right:0;background:rgba(58,10,10,.72);color:var(--cream);font-size:.7rem;text-align:center;padding:3px}
+.ed-photo input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.ed-fields{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) 86px 96px 76px 80px;gap:8px;align-items:end}
+.ed-fields .fld-desc{grid-column:1 / 6}
+.ed-fields .del{align-self:end}
+@media (max-width:640px){
+  .ed{grid-template-columns:76px minmax(0,1fr)}
+  .ed-photo{width:76px;height:76px}
+  .ed-fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .ed-fields .fld-name,.ed-fields .fld-desc{grid-column:1 / -1}
+}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.qr-card{background:var(--white);border:1px solid var(--line);padding:8px}
+.qr-in{border:1px solid var(--wine);outline:1px solid var(--wine);outline-offset:-4px;padding:16px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.qr-cafe{font-family:var(--f-display);font-weight:700;font-size:1.1rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qr-label{font-family:var(--f-display);font-style:italic;font-size:1.8rem;line-height:1.1}
+.qr-img{width:140px;height:140px;display:flex;align-items:center;justify-content:center}
+.qr-img img,.qr-img canvas{width:140px!important;height:140px!important}
+.qr-hint{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
+.pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.pick-card{display:flex;flex-direction:column;gap:2px;background:var(--white);border:1px solid var(--line);padding:16px;color:var(--ink);text-decoration:none}
+.pick-card b{font-family:var(--f-display);font-size:1.4rem}
+.s-danger{border-top:1px solid var(--line-2);padding-top:26px}
+@media (max-width:480px){
+  .qr-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .qr-img,.qr-img img,.qr-img canvas{width:110px!important;height:110px!important}
+  .qr-label{font-size:1.4rem}
+}
+@media print{
+  body{background:#fff}
+  .s-head,.s-hero,.no-print,.toast{display:none!important}
+  .s-main{padding:0}
+  .qr-grid{grid-template-columns:repeat(3,1fr);gap:8mm}
+  .qr-card{break-inside:avoid}
+}
+
+#demoBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#3A0A0A;color:#C9AE95;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
+#demoBar nav{display:flex;gap:6px;align-items:center}
+#demoBar a,#demoBar button{color:#F2E3C6;text-decoration:none;border:1px solid rgba(242,227,198,.3);border-radius:3px;padding:5px 9px;font:inherit;letter-spacing:.06em;background:transparent;cursor:pointer}
+#demoBar a[aria-current="page"]{background:#F2E3C6;color:#3A0A0A}
+</style>
+</head>
+<body>
+<div id="demoBar"></div>
+<div id="app"><p style="padding:40px 16px;text-align:center;color:#6E4A42">Yükleniyor…</p></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
+/* Sırala — ortak yardımcılar (klasik script; window.S altına yazar). */
+(function(){
+  "use strict";
+  var S = window.S = window.S || {};
+
+  S.$ = function(id){ return document.getElementById(id); };
+  S.esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+  S.fmt = function(n){ return Math.round(Number(n) || 0).toLocaleString("tr-TR") + " ₺"; };
+  S.sum = function(items){ return (items || []).reduce(function(s, i){ return s + (Number(i.price) || 0) * (Number(i.qty) || 0); }, 0); };
+  S.summary = function(items){ return (items || []).map(function(i){ return i.qty + "× " + i.name; }).join(", "); };
+  S.newId = function(){ return "i" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); };
+  S.clock = function(ms){ return new Date(ms || Date.now()).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }); };
+  S.ago = function(ms){ var m = Math.max(0, Math.round((Date.now() - (ms || 0)) / 60000)); return m < 1 ? "şimdi" : m + " dk önce"; };
+  S.DEFAULT_MINS = 15;
+  /* Tahmini süre: yemekler mutfakta paralel hazırlanır, en uzun süren belirler. */
+  S.eta = function(items, menu){
+    var max = 0;
+    (items || []).forEach(function(i){
+      var m = (menu || []).find(function(x){ return x.id === i.id; });
+      var mins = Number(m && m.mins) || S.DEFAULT_MINS;
+      if (mins > max) max = mins;
+    });
+    return max || S.DEFAULT_MINS;
+  };
+  /* Porsiyon: ürünün "p15" (1,5 porsiyon fiyatı) alanı doluysa iki seçenek olur. Sepet anahtarı: "id" ya da "id@15". */
+  S.options = function(i){
+    var k = Number(i.kcal) || 0;
+    var o = [{ key: i.id, label: "1 porsiyon", price: Number(i.price) || 0, kcal: k }];
+    if (Number(i.p15) > 0) o.push({ key: i.id + "@15", label: "1,5 porsiyon", price: Number(i.p15), kcal: Math.round(k * 1.5) });
+    return o;
+  };
+  S.cartLines = function(cart, menu){
+    var out = [];
+    (menu || []).forEach(function(i){
+      if (i.out) return;
+      S.options(i).forEach(function(o, n){
+        var q = cart[o.key] || 0;
+        if (q > 0) out.push({ id: i.id, name: i.name + (n ? " (1,5 porsiyon)" : ""), price: o.price, qty: q });
+      });
+    });
+    return out;
+  };
+  S.slugify = function(s){
+    var map = { "ç":"c","ğ":"g","ı":"i","İ":"i","ö":"o","ş":"s","ü":"u","Ç":"c","Ğ":"g","Ö":"o","Ş":"s","Ü":"u" };
+    return String(s || "").replace(/[çğıİöşüÇĞÖŞÜ]/g, function(c){ return map[c]; }).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+  };
+  S.sha256 = function(text){
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return b.toString(16).padStart(2, "0"); }).join("");
+    });
+  };
+  S.lsGet = function(k){ try { return localStorage.getItem(k); } catch(e){ return null; } };
+  S.lsSet = function(k, v){ try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, String(v)); } catch(e){} };
+
+  var toastT;
+  S.toast = function(msg){
+    var t = S.$("toast"); if (!t) return;
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function(){ t.hidden = true; }, 2800);
+  };
+  S.errText = function(e){
+    var c = (e && (e.code || e.message)) || "";
+    if (/permission|invalid_argument/.test(c)) return "Bu işlem için yetkin yok.";
+    if (/unavailable|offline/.test(c)) return "İnternet bağlantısı yok. Bağlantı gelince tekrar dene.";
+    if (/invalid-credential|wrong-password|user-not-found/.test(c)) return "E-posta ya da şifre hatalı.";
+    if (/too-many-requests/.test(c)) return "Çok fazla deneme yapıldı, biraz bekle.";
+    if (/operation-not-allowed|admin-restricted/.test(c)) return "Giriş yöntemi Firebase'de açılmamış (README, Adım 3).";
+    if (/quota/.test(c)) return "Depolama doldu. Kurulumdan eski siparişleri temizle.";
+    return "İşlem yapılamadı, tekrar dene.";
+  };
+
+  /* ses (ilk dokunuşta açılır) */
+  var AC = null;
+  document.addEventListener("pointerdown", function(){
+    try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); } catch(e){}
+  }, { passive: true });
+  S.beep = function(times, freq){
+    try {
+      if (!AC) return;
+      var t0 = AC.currentTime;
+      for (var i = 0; i < times; i++) {
+        var o = AC.createOscillator(), g = AC.createGain(), t = t0 + i * 0.28;
+        o.type = "sine"; o.frequency.value = freq; o.connect(g); g.connect(AC.destination);
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.25, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+        o.start(t); o.stop(t + 0.24);
+      }
+    } catch(e){}
+  };
+
+  /* Fotoğrafı küçült: en uzun kenar 640px, JPEG. Veritabanında saklanır (Storage gerekmez). */
+  S.shrinkPhoto = function(file){
+    return new Promise(function(resolve, reject){
+      if (!file || !/^image\//.test(file.type)) { reject(new Error("not-image")); return; }
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function(){
+        var max = 640, w = img.naturalWidth, h = img.naturalHeight, r = Math.min(1, max / Math.max(w, h));
+        var c = document.createElement("canvas"); c.width = Math.round(w * r); c.height = Math.round(h * r);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        var q = 0.78, out = c.toDataURL("image/jpeg", q);
+        while (out.length > 180000 && q > 0.4) { q -= 0.08; out = c.toDataURL("image/jpeg", q); }
+        resolve(out);
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error("bad-image")); };
+      img.src = url;
+    });
+  };
+
+  /* Fotoğrafı olmayan ürün için zarif yer tutucu (tabak + baş harfler). */
+  S.placeholder = function(name){
+    var words = String(name || "?").trim().split(/\s+/), ini = (words[0][0] + (words[1] ? words[1][0] : "")).toLocaleUpperCase("tr-TR");
+    return '<svg viewBox="0 0 120 120" aria-hidden="true" class="ph-svg"><rect width="120" height="120" fill="#F2E3C6"/>' +
+      '<circle cx="60" cy="60" r="40" fill="#FFF8EC" stroke="#E4D2B0" stroke-width="2"/><circle cx="60" cy="60" r="30" fill="none" stroke="#E4D2B0" stroke-width="1"/>' +
+      '<text x="60" y="68" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" font-weight="600" fill="#9D0208">' + S.esc(ini) + '</text></svg>';
+  };
+
+  S.loginView = function(title, error){
+    return '<main class="login"><div class="login-card"><div class="brand-sm">Sırala</div>' +
+      '<h1>' + S.esc(title) + '</h1><p class="muted">İşletme hesabınla giriş yap.</p>' +
+      '<form id="loginForm" class="login-form" novalidate>' +
+      '<label class="fld" for="lg-email"><span>E-posta</span><input id="lg-email" type="email" autocomplete="username" required></label>' +
+      '<label class="fld" for="lg-pass"><span>Şifre</span><input id="lg-pass" type="password" autocomplete="current-password" required></label>' +
+      (error ? '<p class="form-err" role="alert">' + S.esc(error) + '</p>' : '') +
+      '<button class="btn btn-primary btn-lg wide" type="submit">Giriş yap</button></form></div></main>';
+  };
+  S.bindLogin = function(B, onError){
+    var f = S.$("loginForm"); if (!f) return;
+    f.addEventListener("submit", function(e){
+      e.preventDefault();
+      var email = S.$("lg-email").value.trim(), pass = S.$("lg-pass").value;
+      if (!email || !pass) { onError("E-posta ve şifre gerekli."); return; }
+      B.login(email, pass).catch(function(err){ onError(S.errText(err)); });
+    });
+  };
+  S.isEditing = function(){
+    var a = document.activeElement;
+    return !!(a && a.closest && a.closest("#app") && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.type !== "file");
+  };
+})();
+
+/* Sırala — yerel demo arka ucu: giriş yok, veriler bu telefonun tarayıcısında durur. Aynı arayüz. */
+(function(){
+  "use strict";
+  var KEY = "sirala-local-v1", mem = null, subs = [];
+  function load(){
+    if (mem) return mem;
+    try { mem = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ mem = null; }
+    if (!mem) mem = JSON.parse(JSON.stringify(window.SIRALA_SEED || { cafes: {}, orders: {}, tables: {}, photos: {}, priv: {} }));
+    return mem;
+  }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch(e){} subs.slice().forEach(function(f){ try { f(); } catch(e){} }); }
+  window.addEventListener("storage", function(e){ if (e.key === KEY) { mem = null; load(); subs.slice().forEach(function(f){ f(); }); } });
+  function watch(fn){ subs.push(fn); setTimeout(fn, 0); return function(){ subs = subs.filter(function(x){ return x !== fn; }); }; }
+  var clone = function(o){ return o == null ? o : JSON.parse(JSON.stringify(o)); };
+  var USER = { uid: "yerel", email: "demo", staff: true, anon: false };
+  function ordersOf(id){ var d = load(); return Object.keys(d.orders).map(function(k){ var o = clone(d.orders[k]); o.id = k; return o; }).filter(function(o){ return o.cafe === id; }); }
+
+  window.SiralaBackend = {
+    kind: "local",
+    ready: Promise.resolve(),
+    onAuth: function(cb){ setTimeout(function(){ cb(USER); }, 0); },
+    currentUser: function(){ return USER; },
+    ensureCustomer: function(){ return Promise.resolve(); },
+    login: function(){ return Promise.resolve(); },
+    logout: function(){ return Promise.resolve(); },
+
+    watchCafe: function(id, cb){ return watch(function(){ cb(clone(load().cafes[id]) || null); }); },
+    cafeExists: function(id){ return Promise.resolve(!!load().cafes[id]); },
+    createCafe: function(id, data){ load().cafes[id] = clone(data); save(); return Promise.resolve(); },
+    updateCafe: function(id, patch){ var d = load(); d.cafes[id] = Object.assign(d.cafes[id] || {}, clone(patch)); save(); return Promise.resolve(); },
+    listMyCafes: function(){ return Promise.resolve([]); },
+
+    watchOrders: function(id, opts, cb){
+      return watch(function(){ cb(ordersOf(id).filter(function(o){ return !o.closed && (!opts || !opts.table || o.table === opts.table); }), false); });
+    },
+    addOrder: function(id, data){ var oid = "o" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); var x = clone(data); x.cafe = id; load().orders[oid] = x; save(); return Promise.resolve(oid); },
+    updateOrder: function(id, oid, patch){ var d = load(); if (d.orders[oid]) Object.assign(d.orders[oid], clone(patch)); save(); return Promise.resolve(); },
+    closeTable: function(id, table){
+      var d = load(), now = Date.now();
+      Object.keys(d.orders).forEach(function(k){ var o = d.orders[k]; if (o.cafe === id && o.table === table && !o.closed) { o.closed = true; o.closedAt = now; } });
+      d.tables[id + "/" + table] = { billRequested: false, waiter: false, updatedAt: now }; save(); return Promise.resolve();
+    },
+    purgeClosed: function(id){ var d = load(), n = 0; Object.keys(d.orders).forEach(function(k){ if (d.orders[k].cafe === id && d.orders[k].closed) { delete d.orders[k]; n++; } }); save(); return Promise.resolve(n); },
+
+    watchTables: function(id, cb){ return watch(function(){ var d = load(), m = {}; Object.keys(d.tables).forEach(function(k){ if (k.indexOf(id + "/") === 0) m[k.slice(id.length + 1)] = clone(d.tables[k]); }); cb(m); }); },
+    setTable: function(id, table, patch){ var d = load(), k = id + "/" + table; d.tables[k] = Object.assign(d.tables[k] || {}, clone(patch)); save(); return Promise.resolve(); },
+
+    watchPhotos: function(id, cb){ return watch(function(){ cb(clone(load().photos[id] || {})); }); },
+    setPhoto: function(id, itemId, data){ var d = load(); d.photos[id] = d.photos[id] || {}; if (data) d.photos[id][itemId] = data; else delete d.photos[id][itemId]; save(); return Promise.resolve(); },
+
+    getPrivate: function(id){ return Promise.resolve(clone(load().priv[id] || {})); },
+    setPrivate: function(id, patch){ var d = load(); d.priv[id] = Object.assign(d.priv[id] || {}, clone(patch)); save(); return Promise.resolve(); },
+
+    reset: function(){ mem = null; try { localStorage.removeItem(KEY); } catch(e){} load(); save(); }
+  };
+})();
+
+/* Sırala — müşteri ekranı: fotoğraflı menü, yaklaşık süre, sipariş, masa hesabı. */
+(function(){
+  "use strict";
+  window.SiralaApp = window.SiralaApp || {};
+  var FIRE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-3 2-4 2-7 1.5 1 2 2.5 2 4 1-2 1-5 1-8z"/></svg>';
+  var CLOCK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+  window.SiralaApp.musteri = function(ctx){
+    var B = ctx.B, cafeId = ctx.cafeId, table = ctx.table;
+    var st = { cafe: null, cafeLoaded: false, photos: {}, orders: [], ordLoaded: false, cart: {}, note: "", view: "menu", last: null, busy: false, tbl: {}, err: null, offline: !navigator.onLine };
+    var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
+    var cartItems = function(){ return S.cartLines(st.cart, menu()); };
+    var tableLabel = "Masa " + table;
+    var alive = true, unsubs = [];
+
+    if (!table) { S.$("app").innerHTML = '<main class="c-wrap c-main"><div class="empty-card"><h2>Masadaki QR kodu okutun</h2><p>Sipariş vermek için oturduğunuz masadaki QR kodu telefonunuzun kamerasıyla okutun.</p></div></main>'; return; }
+    render();
+    B.ready.then(function(){ return B.ensureCustomer(); }).then(function(){
+      if (!alive) return;
+      unsubs.push(B.watchCafe(cafeId, function(d){ st.cafe = d; st.cafeLoaded = true; document.title = ((d && d.name) || "Menü") + " · " + tableLabel; render(); }, fail));
+      unsubs.push(B.watchPhotos(cafeId, function(m){ st.photos = m; render(); }));
+      unsubs.push(B.watchOrders(cafeId, { table: String(table) }, function(list){ st.orders = list; st.ordLoaded = true; render(); }, fail));
+      unsubs.push(B.watchTables(cafeId, function(m){ st.tbl = m[String(table)] || {}; render(); }));
+    }).catch(fail);
+    function fail(e){ st.err = S.errText(e); render(); }
+    window.addEventListener("online", function(){ st.offline = false; render(); });
+    window.addEventListener("offline", function(){ st.offline = true; render(); });
+
+    function head(){
+      var cats = [];
+      if (st.view === "menu") menu().forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
+      return '<header class="c-head"><div class="c-wrap"><div class="c-head-in">' +
+        (ctx.back ? '<button class="btn btn-sm btn-ghost" data-act="back">‹</button>' : '') +
+        '<div class="c-name">' + S.esc((st.cafe && st.cafe.name) || "Menü") + '</div><div class="c-table">' + S.esc(tableLabel) + '</div></div>' +
+        (cats.length > 1 ? '<nav class="c-chips" aria-label="Kategoriler">' + cats.map(function(c){ return '<a href="#kat-' + S.slugify(c) + '">' + S.esc(c) + '</a>'; }).join("") + '</nav>' : '') +
+        '</div></header>' + (st.offline ? '<div class="offline">İnternet bağlantısı yok. Bağlantı gelince siparişinizi gönderebilirsiniz.</div>' : '');
+    }
+    function photo(i){ var p = st.photos[i.id]; return p ? '<img src="' + S.esc(p) + '" alt="' + S.esc(i.name) + '" loading="lazy">' : S.placeholder(i.name); }
+    function stepper(key, name){
+      var q = st.cart[key] || 0;
+      return '<div class="stepper">' + (q ? '<button class="round" data-act="dec" data-v="' + S.esc(key) + '" aria-label="' + S.esc(name) + ' azalt">−</button><span class="q">' + q + '</span>' : '') +
+        '<button class="round' + (q ? "" : " round-add") + '" data-act="inc" data-v="' + S.esc(key) + '" aria-label="' + S.esc(name) + ' ekle">+</button></div>';
+    }
+    function dish(i){
+      var mins = Number(i.mins) || S.DEFAULT_MINS, opts = S.options(i);
+      var buy = i.out ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span></div>'
+        : opts.length === 1 ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span>' + stepper(i.id, i.name) + '</div>'
+        : opts.map(function(o){ return '<div class="dish-meta portion"><span class="por-l">' + o.label + (o.kcal ? '<small>' + o.kcal + ' kcal</small>' : '') + '</span><span class="dish-price">' + S.fmt(o.price) + '</span>' + stepper(o.key, i.name + " " + o.label) + '</div>'; }).join("");
+      return '<article class="dish' + (i.out ? " out" : "") + '"><div class="dish-img">' + photo(i) + '</div><div class="dish-body">' +
+        '<h3 class="dish-name">' + S.esc(i.name) + '</h3>' + (i.desc ? '<p class="dish-desc">' + S.esc(i.desc) + '</p>' : '') +
+        (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + 'Ortalama ' + mins + ' dakikada hazır' + (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
+        buy + '</div></article>';
+    }
+    function menuView(){
+      var items = menu();
+      if (!items.length) return '<main class="c-wrap c-main"><div class="empty-card"><h2>Menü hazırlanıyor</h2><p>Siparişinizi garsonumuza verebilirsiniz.</p></div></main>';
+      var cats = []; items.forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
+      var sel = cartItems(), total = S.sum(sel), count = sel.reduce(function(s, i){ return s + i.qty; }, 0);
+      var tableTotal = S.sum([].concat.apply([], st.orders.map(function(o){ return o.items || []; })));
+      return '<main class="c-wrap c-main has-bar"><p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>' +
+        cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</section>'; }).join("") +
+        '<p class="c-foot">Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.</p></main>' +
+        '<div class="c-bar"><div class="c-wrap c-bar-in">' +
+        (count
+          ? '<div class="c-bar-top"><span>' + count + ' ürün · yaklaşık ' + S.eta(sel, items) + ' dk</span><b>' + S.fmt(total) + '</b></div>' +
+            '<label class="sr" for="note">Sipariş notu</label><input id="note" class="note-in" maxlength="120" placeholder="Not ekleyin (ör. acısız, az pişmiş)" value="' + S.esc(st.note) + '">' +
+            '<button class="btn btn-primary btn-lg wide" data-act="send"' + (st.busy ? " disabled" : "") + '>' + (st.busy ? "Gönderiliyor…" : "Siparişi gönder") + '</button>'
+          : (st.orders.length
+              ? '<button class="btn btn-lg wide" data-act="bill">Masanın hesabı · ' + S.fmt(tableTotal) + '</button>'
+              : '<p class="c-foot" style="padding-block:10px">Ürünlerin yanındaki + ile seçin.</p>')) +
+        '</div></div>';
+    }
+    function doneView(){
+      var o = st.last;
+      return '<main class="c-wrap c-main"><section class="done"><div class="done-in">' +
+        '<span class="done-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>' +
+        '<h2>Siparişiniz alındı</h2><span class="label">Tahmini süre</span><div class="done-eta">~' + o.eta + ' <small>dk</small></div>' +
+        '<p>' + S.esc(S.summary(o.items)) + '</p></div></section>' +
+        '<div class="row-btns"><button class="btn btn-primary btn-lg" style="flex:1" data-act="menu">Menüye dön</button><button class="btn btn-lg" style="flex:1" data-act="bill">Masanın hesabı</button></div></main>';
+    }
+    function billView(){
+      var lines = {}, order = [];
+      st.orders.slice().sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); }).forEach(function(o){
+        (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!lines[k]) { lines[k] = { name: i.name, price: i.price, qty: 0 }; order.push(k); } lines[k].qty += i.qty; });
+      });
+      var all = order.map(function(k){ return lines[k]; }), total = S.sum(all);
+      var req = st.tbl.billRequested, waiter = st.tbl.waiter;
+      return '<main class="c-wrap c-main"><section class="bill"><h3>Masanın hesabı <span class="label">' + S.esc(tableLabel) + '</span></h3>' +
+        (all.length ? '<ul>' + all.map(function(i){ return '<li><span>' + i.qty + '× ' + S.esc(i.name) + '</span><span class="num">' + S.fmt(i.price * i.qty) + '</span></li>'; }).join("") + '</ul>' +
+          '<div class="bill-total"><span>Toplam</span><b>' + S.fmt(total) + '</b></div>' : '<p class="muted">Bu masadan henüz sipariş verilmedi.</p>') +
+        (req ? '<p class="bill-state">Hesap istendi. Garsonumuz masanıza geliyor.</p>' : '') +
+        (waiter && !req ? '<p class="bill-state">Garsonumuz masanıza geliyor.</p>' : '') +
+        '</section><div class="row-btns">' +
+        (all.length && !req ? '<button class="btn btn-primary btn-lg" style="flex:1" data-act="askBill">Hesap iste</button>' : '') +
+        (!waiter && !req ? '<button class="btn btn-lg" style="flex:1" data-act="waiter">Garson çağır</button>' : '') +
+        '</div><button class="btn btn-ghost" data-act="menu">‹ Menüye dön</button>' +
+        '<p class="c-foot">Ödemenizi garsonumuza ya da kasaya yapabilirsiniz.</p></main>';
+    }
+    function render(){
+      if (!alive || S.isEditing()) return;
+      var app = S.$("app");
+      if (st.err) { app.innerHTML = head() + '<main class="c-wrap c-main"><div class="empty-card"><h2>Bağlantı kurulamadı</h2><p>' + S.esc(st.err) + ' Siparişinizi garsonumuza verebilirsiniz.</p></div></main>'; return; }
+      if (!st.cafeLoaded || !st.ordLoaded) { app.innerHTML = head() + '<main class="c-wrap c-main"><p class="muted center">Menü yükleniyor…</p></main>'; return; }
+      if (!st.cafe) { app.innerHTML = head() + '<main class="c-wrap c-main"><div class="empty-card"><h2>Restoran bulunamadı</h2><p>Bu QR kod geçerli bir işletmeye bağlı değil.</p></div></main>'; return; }
+      app.innerHTML = head() + (st.view === "done" && st.last ? doneView() : st.view === "bill" ? billView() : menuView());
+    }
+
+    function send(){
+      var items = cartItems(); if (!items.length || st.busy) return;
+      var u = B.currentUser(); st.busy = true; render();
+      var now = Date.now(), eta = S.eta(items, menu());
+      B.addOrder(cafeId, { table: String(table), items: items, total: S.sum(items), eta: eta, note: st.note.trim().slice(0, 120), uid: u ? u.uid : "", source: "qr", status: "new", closed: false, createdAt: now })
+        .then(function(){ st.last = { items: items, eta: eta }; st.cart = {}; st.note = ""; st.view = "done"; window.scrollTo(0, 0); })
+        .catch(function(e){ S.toast(S.errText(e)); })
+        .then(function(){ st.busy = false; render(); });
+    }
+    function flag(patch, msg){
+      B.setTable(cafeId, String(table), Object.assign({ updatedAt: Date.now() }, patch)).then(function(){ S.toast(msg); }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+
+    S.$("app").oninput = function(e){ if (e.target.id === "note") st.note = e.target.value; };
+    S.$("app").onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    S.$("app").onclick = function(e){
+      var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+      var v = b.dataset.v;
+      switch (b.dataset.act) {
+        case "inc": st.cart[v] = (st.cart[v] || 0) + 1; break;
+        case "dec": if (st.cart[v]) { st.cart[v]--; if (!st.cart[v]) delete st.cart[v]; } break;
+        case "send": send(); return;
+        case "menu": st.view = "menu"; window.scrollTo(0, 0); break;
+        case "bill": st.view = "bill"; window.scrollTo(0, 0); break;
+        case "askBill": flag({ billRequested: true, requestedAt: Date.now() }, "Hesap istendi"); return;
+        case "waiter": flag({ waiter: true, waiterAt: Date.now() }, "Garson çağrıldı"); return;
+        case "back": ctx.back(); return;
+      }
+      render();
+    };
+    return function(){ alive = false; unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
+  };
+})();
+
+/* Sırala — kasa / mutfak ekranı: gelen siparişler, masalar ve hesap, garson siparişi, menü. */
+(function(){
+  "use strict";
+  window.SiralaApp = window.SiralaApp || {};
+
+  window.SiralaApp.kasa = function(ctx){
+    var B = ctx.B, cafeId = ctx.cafeId;
+    var st = { user: null, authKnown: false, loginErr: null, myCafes: null, cafe: null, cafeLoaded: false, denied: false,
+      orders: [], ordLoaded: false, fromCache: false, tables: {}, tab: "siparis", openTable: null, confirmClose: false,
+      wTable: null, wCart: {}, wNote: "", busy: false, pinOk: false, log: [], seen: null, seenFlags: null };
+    var alive = true, unsubs = [];
+    var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
+    var nTables = function(){ return Math.max(1, Math.min(80, Number(st.cafe && st.cafe.tables) || 10)); };
+
+    B.onAuth(function(u){
+      if (!alive) return;
+      st.user = u && u.staff ? u : null; st.authKnown = true;
+      unsubs.forEach(function(x){ try { x(); } catch(e){} }); unsubs = [];
+      if (!st.user) { render(true); return; }
+      if (!cafeId) { B.listMyCafes(st.user.email).then(function(l){ st.myCafes = l; render(true); }); return; }
+      subscribe();
+    });
+    B.ready.catch(function(){ st.authKnown = true; st.denied = "Sisteme bağlanılamadı."; render(true); });
+
+    function subscribe(){
+      unsubs.push(B.watchCafe(cafeId, function(d){
+        st.cafe = d; st.cafeLoaded = true;
+        st.denied = !!(d && B.kind === "firebase" && (d.staffEmails || []).indexOf(st.user.email) < 0) && "Bu hesap bu işletmenin kasa hesapları arasında değil.";
+        document.title = "Kasa · " + ((d && d.name) || cafeId); render();
+      }, function(){ st.denied = "Bu işletmeye erişim yok."; render(true); }));
+      unsubs.push(B.watchOrders(cafeId, null, function(list, cache){
+        st.orders = list; st.ordLoaded = true; st.fromCache = cache;
+        var keys = {}; list.forEach(function(o){ keys[o.id] = 1; });
+        if (st.seen) { for (var k in keys) if (!st.seen[k]) { S.beep(2, 660); break; } }
+        st.seen = keys; render();
+      }));
+      unsubs.push(B.watchTables(cafeId, function(m){
+        var flags = {}; Object.keys(m).forEach(function(t){ if (m[t].billRequested) flags["b" + t] = 1; if (m[t].waiter) flags["w" + t] = 1; });
+        if (st.seenFlags) { for (var f in flags) if (!st.seenFlags[f]) { S.beep(3, 880); break; } }
+        st.seenFlags = flags; st.tables = m; render();
+      }));
+    }
+
+    /* ---------- işlemler ---------- */
+    function upd(o, patch){ return B.updateOrder(cafeId, o.id, patch).catch(function(e){ S.toast(S.errText(e)); }); }
+    function clearFlags(t){ return B.setTable(cafeId, String(t), { billRequested: false, waiter: false, updatedAt: Date.now() }).catch(function(e){ S.toast(S.errText(e)); }); }
+    function closeTable(t){
+      B.closeTable(cafeId, String(t)).then(function(){ S.toast("Masa " + t + " kapatıldı"); st.openTable = null; st.confirmClose = false; render(true); }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+    function sendWaiter(){
+      var items = S.cartLines(st.wCart, menu());
+      if (!st.wTable || !items.length || st.busy) return;
+      st.busy = true; render(true);
+      B.addOrder(cafeId, { table: String(st.wTable), items: items, total: S.sum(items), eta: S.eta(items, menu()), note: st.wNote.trim().slice(0, 120), uid: st.user.uid, source: "garson", status: "new", closed: false, createdAt: Date.now() })
+        .then(function(){ S.toast("Masa " + st.wTable + " siparişi mutfağa gönderildi"); st.wCart = {}; st.wNote = ""; })
+        .catch(function(e){ S.toast(S.errText(e)); })
+        .then(function(){ st.busy = false; render(true); });
+    }
+    function saveMenu(items, msg){ return B.updateCafe(cafeId, { menu: items }).then(function(){ if (msg) S.toast(msg); }).catch(function(e){ S.toast(S.errText(e)); }); }
+    function unlock(){
+      var pin = (S.$("pin") || {}).value || "";
+      Promise.all([B.getPrivate(cafeId), S.sha256(cafeId + ":" + pin)]).then(function(r){
+        if (r[0].pinHash && r[0].pinHash === r[1]) { st.pinOk = true; st.log = r[0].log || []; render(true); } else S.toast("PIN yanlış");
+      }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+    function saveItem(id){
+      var items = menu().map(function(x){ return Object.assign({}, x); }), it = items.find(function(x){ return x.id === id; }); if (!it) return;
+      var p = Math.max(0, Math.round(Number((S.$("pr-" + id) || {}).value) || 0)), m = Math.max(1, Math.min(180, Math.round(Number((S.$("mn-" + id) || {}).value) || S.DEFAULT_MINS)));
+      var changes = [];
+      if (p > 0 && p !== Number(it.price)) changes.push(it.name + ": " + it.price + " → " + p + " ₺");
+      if (m !== (Number(it.mins) || S.DEFAULT_MINS)) changes.push(it.name + " süresi: " + (Number(it.mins) || S.DEFAULT_MINS) + " → " + m + " dk");
+      if (!changes.length) { S.toast("Değişiklik yok"); return; }
+      if (p > 0) it.price = p; it.mins = m;
+      var d = new Date(), stamp = d.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit" }) + " " + S.clock(d);
+      st.log = changes.map(function(c){ return stamp + "  " + c; }).concat(st.log).slice(0, 60);
+      saveMenu(items, "Kaydedildi").then(function(){ return B.setPrivate(cafeId, { log: st.log }); }).then(function(){ render(true); });
+    }
+
+    /* ---------- görünüm ---------- */
+    function alertsHtml(){
+      var out = [];
+      Object.keys(st.tables).sort(function(a, b){ return a - b; }).forEach(function(t){
+        var x = st.tables[t];
+        if (x.billRequested) out.push('<div class="alert"><span>Masa ' + S.esc(t) + ' hesap istiyor · ' + S.ago(x.requestedAt) + '</span><span class="row-btns"><button class="btn btn-sm" data-act="openTable" data-v="' + S.esc(t) + '">Hesabı aç</button></span></div>');
+        else if (x.waiter) out.push('<div class="alert"><span>Masa ' + S.esc(t) + ' garson çağırıyor · ' + S.ago(x.waiterAt) + '</span><button class="btn btn-sm" data-act="gone" data-v="' + S.esc(t) + '">Gidildi</button></div>');
+      });
+      return out.length ? '<div class="alerts">' + out.join("") + '</div>' : '';
+    }
+    function head(){
+      var nNew = st.orders.filter(function(o){ return o.status === "new"; }).length;
+      var nBill = Object.keys(st.tables).filter(function(t){ return st.tables[t].billRequested; }).length;
+      var tabs = [["siparis", "Siparişler", nNew], ["masalar", "Masalar", nBill], ["garson", "Garson siparişi", 0], ["menu", "Menü", 0]];
+      return '<header class="k-head"><div class="k-wrap k-head-in"><div><span class="label">Kasa · Mutfak</span><div class="k-name">' + S.esc((st.cafe && st.cafe.name) || "") + '</div></div>' +
+        '<nav class="tabs" role="tablist" aria-label="Bölümler">' + tabs.map(function(t){ return '<button role="tab" aria-selected="' + (st.tab === t[0]) + '" data-act="tab" data-v="' + t[0] + '">' + t[1] + (t[2] ? '<span class="badge">' + t[2] + '</span>' : '') + '</button>'; }).join("") + '</nav>' +
+        (ctx.setupHref ? '<a class="btn btn-sm" href="' + S.esc(ctx.setupHref) + '">Kurulum</a>' : '') + '</div></header>' +
+        (!navigator.onLine || st.fromCache ? '<div class="offline">İnternet bağlantısı yok. Liste son hâliyle duruyor; telefondan internet paylaşımı açarak devam edebilirsiniz.</div>' : '');
+    }
+    function etaHtml(o){
+      var left = Math.round(((o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000 - Date.now()) / 60000);
+      return left >= 0 ? '<span class="t-eta">Tahmini · ' + left + ' dk kaldı</span>' : '<span class="t-eta late">' + (-left) + ' dk gecikti</span>';
+    }
+    function ordersTab(){
+      var nw = st.orders.filter(function(o){ return o.status === "new"; }).sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); });
+      var dn = st.orders.filter(function(o){ return o.status === "done"; }).sort(function(a, b){ return (b.doneAt || 0) - (a.doneAt || 0); }).slice(0, 10);
+      return '<div class="k-cols"><section><h2 class="k-h">Hazırlanacak <span class="label">' + nw.length + ' sipariş</span></h2>' +
+        (nw.length ? '<div class="tickets">' + nw.map(function(o){
+          var late = Date.now() > (o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000;
+          return '<article class="ticket' + (late ? " late" : "") + '"><div class="t-top"><span class="t-table">Masa ' + S.esc(o.table) + '</span><span class="t-time">' + S.clock(o.createdAt) + '<br>' + (o.source === "garson" ? "garson" : "QR") + '</span></div>' +
+            '<ul class="t-items">' + (o.items || []).map(function(i){ return '<li><b>' + i.qty + '×</b>' + S.esc(i.name) + '</li>'; }).join("") + '</ul>' +
+            (o.note ? '<div class="t-note">Not: ' + S.esc(o.note) + '</div>' : '') + etaHtml(o) +
+            '<button class="btn btn-primary" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button></article>';
+        }).join("") + '</div>' : '<div class="empty-card"><p>Bekleyen sipariş yok. Masalardan gelen siparişler burada belirir ve ses çıkarır.</p></div>') +
+        '</section><section><h2 class="k-h">Hazırlananlar</h2>' +
+        (dn.length ? '<div class="done-list">' + dn.map(function(o){ return '<div class="done-row"><b>M' + S.esc(o.table) + '</b><span class="d">' + S.esc(S.summary(o.items)) + '</span><span class="small muted">' + S.clock(o.doneAt) + '</span><button class="btn btn-sm btn-ghost" data-act="undo" data-v="' + S.esc(o.id) + '" aria-label="Geri al">Geri al</button></div>'; }).join("") + '</div>' : '<p class="muted small">Henüz yok.</p>') +
+        '</section></div>';
+    }
+    function tableAgg(t){
+      var list = st.orders.filter(function(o){ return String(o.table) === String(t); });
+      return { list: list, total: list.reduce(function(s, o){ return s + (Number(o.total) || S.sum(o.items)); }, 0) };
+    }
+    function tablesTab(){
+      var cells = [];
+      for (var t = 1; t <= nTables(); t++) {
+        var a = tableAgg(t), f = st.tables[String(t)] || {};
+        cells.push('<button class="tbl' + (f.billRequested ? " bill" : a.list.length ? " busy" : "") + '" data-act="openTable" data-v="' + t + '"><span class="tbl-n">' + t + '</span>' +
+          '<span class="tbl-s">' + (f.billRequested ? "Hesap istendi" : f.waiter ? "Garson çağırıyor" : a.list.length ? a.list.length + " sipariş" : "Boş") + '</span>' +
+          (a.list.length ? '<span class="tbl-t">' + S.fmt(a.total) + '</span>' : '') + '</button>');
+      }
+      return '<h2 class="k-h">Masalar <span class="label">Hesabı görmek için masaya dokunun</span></h2><div class="tables">' + cells.join("") + '</div>' + (st.openTable ? detail(st.openTable) : '');
+    }
+    function detail(t){
+      var a = tableAgg(t), lines = {}, keys = [];
+      a.list.forEach(function(o){ (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!lines[k]) { lines[k] = { name: i.name, price: i.price, qty: 0 }; keys.push(k); } lines[k].qty += i.qty; }); });
+      return '<section class="detail" id="detail"><h3>Masa ' + S.esc(t) + '</h3>' +
+        (keys.length ? '<ul>' + keys.map(function(k){ var i = lines[k]; return '<li><span>' + i.qty + '× ' + S.esc(i.name) + '</span><span class="num">' + S.fmt(i.price * i.qty) + '</span></li>'; }).join("") + '</ul>' +
+          '<div class="bill-total"><span>Toplam</span><b>' + S.fmt(a.total) + '</b></div>' : '<p class="muted">Açık sipariş yok.</p>') +
+        '<div class="row-btns">' + (keys.length ? (st.confirmClose
+          ? '<button class="btn btn-primary" data-act="closeYes" data-v="' + S.esc(t) + '">Evet, ödendi · masayı kapat</button><button class="btn" data-act="closeNo">Vazgeç</button>'
+          : '<button class="btn btn-primary" data-act="closeAsk">Ödeme alındı · masayı kapat</button>') : '') +
+        '<button class="btn" data-act="wFor" data-v="' + S.esc(t) + '">Bu masaya sipariş ekle</button>' +
+        ((st.tables[String(t)] || {}).billRequested || (st.tables[String(t)] || {}).waiter ? '<button class="btn btn-ghost" data-act="gone" data-v="' + S.esc(t) + '">Uyarıyı kapat</button>' : '') +
+        '<button class="btn btn-ghost" data-act="closeDetail">Kapat</button></div></section>';
+    }
+    function waiterTab(){
+      var items = menu().filter(function(i){ return !i.out; });
+      var sel = S.cartLines(st.wCart, menu());
+      var tbs = []; for (var t = 1; t <= nTables(); t++) tbs.push('<button aria-pressed="' + (String(st.wTable) === String(t)) + '" data-act="wTable" data-v="' + t + '">' + t + '</button>');
+      return '<div class="k-narrow"><p class="muted">Misafir QR kullanmak istemezse siparişini buradan girin. Mutfağa aynı şekilde düşer, masanın hesabına eklenir.</p>' +
+        '<section class="k-panel"><span class="label" style="margin-bottom:8px">Masa</span><div class="pick-table">' + tbs.join("") + '</div></section>' +
+        '<section class="k-panel">' + (items.length ? items.map(function(i){
+          return S.options(i).map(function(o, n){ var q = st.wCart[o.key] || 0;
+            return '<div class="w-item"><span class="nm"><b>' + S.esc(i.name) + (n ? ' · 1,5 porsiyon' : '') + '</b><span class="small muted">' + S.fmt(o.price) + ' · ort. ' + (Number(i.mins) || S.DEFAULT_MINS) + ' dk</span></span><div class="stepper">' +
+              (q ? '<button class="round" data-act="wdec" data-v="' + S.esc(o.key) + '" aria-label="azalt">−</button><span class="q">' + q + '</span>' : '') +
+              '<button class="round' + (q ? "" : " round-add") + '" data-act="winc" data-v="' + S.esc(o.key) + '" aria-label="' + S.esc(i.name) + ' ekle">+</button></div></div>'; }).join(""); }).join("") : '<p class="muted">Menü boş.</p>') + '</section>' +
+        '<label class="fld" for="wnote"><span>Not</span><input id="wnote" maxlength="120" value="' + S.esc(st.wNote) + '" placeholder="ör. acısız"></label>' +
+        '<button class="btn btn-primary btn-lg" data-act="wSend"' + (st.wTable && sel.length && !st.busy ? "" : " disabled") + '>' +
+        (st.busy ? "Gönderiliyor…" : !st.wTable ? "Önce masa seçin" : "Masa " + st.wTable + " · mutfağa gönder · " + S.fmt(S.sum(sel))) + '</button></div>';
+    }
+    function menuTab(){
+      var items = menu();
+      return '<div class="k-narrow"><div class="pinbox">' +
+        (st.pinOk ? '<span>Fiyat ve süre düzenleme açık</span><button class="btn btn-sm" data-act="lock">Kilitle</button>'
+                  : '<label for="pin">Fiyat ve süre değiştirmek için patron PIN\'i</label><input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="6"><button class="btn btn-sm" data-act="unlock">Aç</button>') + '</div>' +
+        '<section class="k-panel">' + (items.length ? items.map(function(i){
+          return '<div class="m-row' + (i.out ? " is-out" : "") + '"><div><div class="m-nm">' + S.esc(i.name) + '</div><span class="small muted">' + S.esc(i.cat || "") + '</span></div><div class="m-ctl">' +
+            (st.pinOk
+              ? '<label class="sr" for="pr-' + S.esc(i.id) + '">Fiyat</label><input class="price-in" id="pr-' + S.esc(i.id) + '" type="number" min="0" inputmode="numeric" value="' + (Number(i.price) || 0) + '"><span class="small muted">₺</span>' +
+                '<label class="sr" for="mn-' + S.esc(i.id) + '">Süre</label><input class="price-in" style="width:70px" id="mn-' + S.esc(i.id) + '" type="number" min="1" max="180" inputmode="numeric" value="' + (Number(i.mins) || S.DEFAULT_MINS) + '"><span class="small muted">dk</span>' +
+                '<button class="btn btn-sm" data-act="saveItem" data-v="' + S.esc(i.id) + '">Kaydet</button>'
+              : '<span class="num" style="font-size:1.15rem">' + S.fmt(i.price) + '</span><span class="small muted">ort. ' + (Number(i.mins) || S.DEFAULT_MINS) + ' dk</span>') +
+            '<button class="btn btn-sm ' + (i.out ? "btn-ok" : "btn-bad") + '" data-act="out" data-v="' + S.esc(i.id) + '">' + (i.out ? "Geri aç" : "Tükendi") + '</button></div></div>';
+        }).join("") : '<p class="muted">Menü boş. Kurulumdan ürün ekleyin.</p>') + '</section>' +
+        (st.pinOk ? '<section class="k-panel"><span class="label">Değişiklik kaydı</span>' + (st.log.length ? '<ul class="log" style="margin-top:8px">' + st.log.map(function(l){ return '<li>' + S.esc(l) + '</li>'; }).join("") + '</ul>' : '<p class="muted small">Henüz değişiklik yok.</p>') + '</section>' : '') + '</div>';
+    }
+    function pickCafe(){
+      var l = st.myCafes || [];
+      return '<main class="login"><div class="login-card"><div class="brand-sm">Sırala</div><h1>Kasa ekranı</h1>' +
+        (l.length ? '<p class="muted">Hangi işletme?</p>' + l.map(function(c){ return '<a class="btn btn-lg wide" href="kasa.html?k=' + encodeURIComponent(c.id) + '">' + S.esc(c.name || c.id) + '</a>'; }).join("")
+                  : '<p class="muted">Bu hesaba bağlı işletme yok. Önce kurulum ekranından işletme oluşturun.</p><a class="btn btn-primary wide" href="kurulum.html">Kuruluma git</a>') +
+        '<button class="btn btn-sm btn-ghost" data-act="logout">Çıkış yap</button></div></main>';
+    }
+    function render(force){
+      if (!alive || (!force && S.isEditing())) return;
+      var app = S.$("app");
+      if (!st.authKnown) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
+      if (!st.user) { app.innerHTML = S.loginView("Kasa ekranı", st.loginErr || st.denied); S.bindLogin(B, function(m){ st.loginErr = m; render(true); }); return; }
+      if (!cafeId) { app.innerHTML = pickCafe(); return; }
+      if (st.denied) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Erişim yok</h1><p class="muted">' + S.esc(st.denied) + '</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
+      if (!st.cafeLoaded || !st.ordLoaded) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
+      if (!st.cafe) { app.innerHTML = '<main class="login"><div class="login-card"><h1>İşletme bulunamadı</h1><p class="muted">"' + S.esc(cafeId) + '" kodlu işletme kayıtlı değil.</p></div></main>'; return; }
+      app.innerHTML = head() + '<main class="k-wrap">' + alertsHtml() + (st.tab === "siparis" ? ordersTab() : st.tab === "masalar" ? tablesTab() : st.tab === "garson" ? waiterTab() : menuTab()) + '</main>';
+    }
+    var tick = setInterval(function(){ if (st.tab === "siparis") render(); }, 30000);
+
+    var app = S.$("app");
+    app.onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    app.oninput = function(e){ if (e.target.id === "wnote") st.wNote = e.target.value; };
+    app.onkeydown = function(e){ if (e.key === "Enter" && e.target.id === "pin") { e.preventDefault(); unlock(); } };
+    app.onclick = function(e){
+      var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+      var v = b.dataset.v, o = st.orders.find(function(x){ return x.id === v; });
+      switch (b.dataset.act) {
+        case "tab": st.tab = v; st.pinOk = v === "menu" && st.pinOk; st.openTable = null; st.confirmClose = false; break;
+        case "done": if (o) upd(o, { status: "done", doneAt: Date.now() }); return;
+        case "undo": if (o) upd(o, { status: "new" }); return;
+        case "openTable": st.tab = "masalar"; st.openTable = v; st.confirmClose = false; render(true); var d = S.$("detail"); if (d) d.scrollIntoView({ block: "nearest" }); return;
+        case "closeDetail": st.openTable = null; st.confirmClose = false; break;
+        case "closeAsk": st.confirmClose = true; break;
+        case "closeNo": st.confirmClose = false; break;
+        case "closeYes": closeTable(v); return;
+        case "gone": clearFlags(v); return;
+        case "wFor": st.tab = "garson"; st.wTable = v; st.openTable = null; break;
+        case "wTable": st.wTable = v; break;
+        case "winc": st.wCart[v] = (st.wCart[v] || 0) + 1; break;
+        case "wdec": if (st.wCart[v]) { st.wCart[v]--; if (!st.wCart[v]) delete st.wCart[v]; } break;
+        case "wSend": sendWaiter(); return;
+        case "out": { var items = menu().map(function(x){ return Object.assign({}, x, x.id === v ? { out: !x.out } : {}); }), it = items.find(function(x){ return x.id === v; });
+          saveMenu(items, it.out ? it.name + " tükendi, menüden kalktı" : it.name + " tekrar menüde"); return; }
+        case "unlock": unlock(); return;
+        case "lock": st.pinOk = false; break;
+        case "saveItem": saveItem(v); return;
+        case "logout": B.logout(); return;
+      }
+      render(true);
+    };
+    return function(){ alive = false; clearInterval(tick); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
+  };
+})();
+
+/* Sırala — telefon demosu: QR doğrudan Masa 7 menüsünü açar; üst şeritten mutfak ekranına geçilir. */
+(function(){
+  "use strict";
+  var CAFE = "demo", stop = null, B = window.SiralaBackend;
+  var bar = document.getElementById("demoBar");
+  function route(){
+    if (stop) { stop(); stop = null; }
+    var h = (location.hash || "").replace(/^#/, ""), m = h.match(/^masa-(\d{1,3})$/);
+    window.scrollTo(0, 0);
+    var kitchen = h === "mutfak";
+    bar.innerHTML = '<span>Canlı demo</span><nav>' +
+      '<a href="#masa-7"' + (!kitchen ? ' aria-current="page"' : '') + '>Misafir</a>' +
+      '<a href="#mutfak"' + (kitchen ? ' aria-current="page"' : '') + '>Mutfak / kasa</a>' +
+      '<button type="button" id="demoReset">Sıfırla</button></nav>';
+    S.$("demoReset").onclick = function(){ B.reset(); S.toast("Demo sıfırlandı"); route(); };
+    if (kitchen) stop = SiralaApp.kasa({ B: B, cafeId: CAFE });
+    else stop = SiralaApp.musteri({ B: B, cafeId: CAFE, table: m ? String(Number(m[1])) : "7" });
+  }
+  window.addEventListener("hashchange", route);
+  route();
+})();
+
+</script>
+</body>
+</html>
