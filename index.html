@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap">
 <style>
-/* Sırala — ortak stil. Palet: krem #FFF8EC, kum #F2E3C6, kırmızı #D62828, bordo #9D0208, kahve-siyah #3A0A0A.
+/* Adanalım — ortak stil. Palet: krem #FFF8EC, kum #F2E3C6, kırmızı #D62828, bordo #9D0208, kahve-siyah #3A0A0A.
    Tek görünüm (marka kimliği); her renk açıkça tanımlı. */
 :root{
   --cream:#FFF8EC; --sand:#F2E3C6; --red:#D62828; --wine:#9D0208; --ink:#3A0A0A;
@@ -334,7 +334,7 @@ main.k-wrap{padding-block:20px 48px}
 <div class="toast" id="toast" role="status" hidden></div>
 <script>
 window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "amount": "300 ml", "allergens": ["sut", "kereviz"], "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "amount": "1 adet, 70 gr kıyma", "allergens": ["gluten"], "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "amount": "180 gr et", "allergens": ["gluten"], "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "amount": "200 gr köfte", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "amount": "200 gr tavuk", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "amount": "180 gr kuzu eti", "allergens": [], "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "amount": "180 gr", "allergens": ["gluten", "sut", "kuruyemis"], "model": "", "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "amount": "100 gr", "allergens": ["gluten", "susam"], "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "amount": "300 ml", "allergens": ["sut"], "model": "", "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "amount": "330 ml", "allergens": [], "model": "", "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "amount": "1 fincan", "allergens": [], "model": "", "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
-/* Sırala — ortak yardımcılar (klasik script; window.S altına yazar). */
+/* Adanalım — ortak yardımcılar (klasik script; window.S altına yazar). */
 (function(){
   "use strict";
   var S = window.S = window.S || {};
@@ -538,7 +538,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   };
 
   S.loginView = function(title, error){
-    return '<main class="login"><div class="login-card"><div class="brand-sm">Sırala</div>' +
+    return '<main class="login"><div class="login-card"><div class="brand-sm">Adanalım</div>' +
       '<h1>' + S.esc(title) + '</h1><p class="muted">İşletme hesabınla giriş yap.</p>' +
       '<form id="loginForm" class="login-form" novalidate>' +
       '<label class="fld" for="lg-email"><span>E-posta</span><input id="lg-email" type="email" autocomplete="username" required></label>' +
@@ -561,7 +561,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   };
 })();
 
-/* Sırala — yerel demo arka ucu: giriş yok, veriler bu telefonun tarayıcısında durur. Aynı arayüz. */
+/* Adanalım — yerel demo arka ucu: giriş yok, veriler bu telefonun tarayıcısında durur. Aynı arayüz. */
 (function(){
   "use strict";
   var KEY = "sirala-local-v4", mem = null, subs = [];
@@ -624,7 +624,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   };
 })();
 
-/* Sırala — müşteri ekranı: fotoğraflı menü, yaklaşık süre, sipariş, masa hesabı. */
+/* Adanalım — müşteri ekranı: fotoğraflı menü, yaklaşık süre, sipariş, masa hesabı. */
 (function(){
   "use strict";
   window.SiralaApp = window.SiralaApp || {};
@@ -805,7 +805,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   };
 })();
 
-/* Sırala — kasa / mutfak ekranı: gelen siparişler, masalar ve hesap, garson siparişi, menü. */
+/* Adanalım — kasa / mutfak ekranı: gelen siparişler, masalar ve hesap, garson siparişi, menü. */
 (function(){
   "use strict";
   window.SiralaApp = window.SiralaApp || {};
@@ -1032,7 +1032,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     }
     function pickCafe(){
       var l = st.myCafes || [];
-      return '<main class="login"><div class="login-card"><div class="brand-sm">Sırala</div><h1>Kasa ekranı</h1>' +
+      return '<main class="login"><div class="login-card"><div class="brand-sm">Adanalım</div><h1>Kasa ekranı</h1>' +
         (l.length ? '<p class="muted">Hangi işletme?</p>' + l.map(function(c){ return '<a class="btn btn-lg wide" href="kasa.html?k=' + encodeURIComponent(c.id) + '">' + S.esc(c.name || c.id) + '</a>'; }).join("")
                   : '<p class="muted">Bu hesaba bağlı işletme yok. Önce kurulum ekranından işletme oluşturun.</p><a class="btn btn-primary wide" href="kurulum.html">Kuruluma git</a>') +
         '<button class="btn btn-sm btn-ghost" data-act="logout">Çıkış yap</button></div></main>';
@@ -1095,7 +1095,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   };
 })();
 
-/* Sırala — telefon demosu: QR doğrudan Masa 7 menüsünü açar; üst şeritten mutfak ekranına geçilir. */
+/* Adanalım — telefon demosu: QR doğrudan Masa 7 menüsünü açar; üst şeritten mutfak ekranına geçilir. */
 (function(){
   "use strict";
   var CAFE = "demo", stop = null, B = window.SiralaBackend;
