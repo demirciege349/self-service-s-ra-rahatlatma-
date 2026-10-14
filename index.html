@@ -322,6 +322,20 @@ main.k-wrap{padding-block:20px 48px}
   .qr-card{break-inside:avoid}
 }
 
+/* Yoğunluk ve iptal */
+.busy-note{display:flex;align-items:center;gap:8px;background:#FBE9D0;border:1px solid #E9C48F;color:var(--wine);border-radius:6px;padding:10px 12px;margin:0 0 14px;font-size:.9rem}
+.busy-note svg{flex-shrink:0}
+.busy-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--white);border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin-bottom:18px}
+.busy-bar>div:first-child{display:flex;flex-direction:column;min-width:0;flex:1 1 240px}
+.busy-bar .pick-table{align-items:center}
+.eta-banner.cancelled{background:var(--white);color:var(--ink);border:1px solid var(--red)}
+.eta-banner.cancelled b{color:var(--red)}
+.t-cancel-link{background:none;border:0;color:var(--soft);font:inherit;font-size:.8rem;text-decoration:underline;cursor:pointer;padding:6px 0 0;align-self:center}
+.t-cancel{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.82rem;margin-top:6px}
+.t-cancel span{flex:1 1 100%;color:var(--red)}
+.eta-banner.cancelled .eta-txt span{color:var(--soft);white-space:normal}
+.busy-bar .pick-table button{font-family:var(--f-body,inherit);font-size:.88rem;font-weight:500}
+
 #demoBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#3A0A0A;color:#C9AE95;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
 #demoBar nav{display:flex;gap:6px;align-items:center}
 #demoBar a,#demoBar button{color:#F2E3C6;text-decoration:none;border:1px solid rgba(242,227,198,.3);border-radius:3px;padding:5px 9px;font:inherit;letter-spacing:.06em;background:transparent;cursor:pointer}
@@ -357,6 +371,30 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (mins > max) max = mins;
     });
     return max || S.DEFAULT_MINS;
+  };
+  /* Mutfak yoğunluğu: hazırlanmayı bekleyen sipariş sayısına göre otomatik ek süre + kasanın elle eklediği süre.
+     2 siparişe kadar ek yok; sonra her 2 sipariş için +5 dk (en fazla +30). */
+  S.loadInfo = function(orders, cafe){
+    var queue = (orders || []).filter(function(o){ return o.status === "new"; }).length;
+    var auto = Math.min(30, Math.max(0, Math.ceil((queue - 2) / 2)) * 5);
+    var manual = Math.max(0, Math.min(60, Number(cafe && cafe.busyExtra) || 0));
+    return { queue: queue, auto: auto, manual: manual, extra: auto + manual };
+  };
+
+  /* Masa hesap fişi (bilgi fişi; mali belge değildir). */
+  S.billHtml = function(cafe, table, lines, total){
+    var d = new Date();
+    return '<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Masa ' + S.esc(table) + ' hesap</title><style>@page{size:80mm auto;margin:4mm}body{margin:0;font-family:Arial,sans-serif;font-size:11pt;color:#000;width:72mm}' +
+      'h1{font-size:14pt;text-align:center;margin:0 0 2pt}.c{text-align:center;font-size:9pt;margin-bottom:6pt}table{width:100%;border-collapse:collapse}td{padding:2pt 0;vertical-align:top}td.r{text-align:right;white-space:nowrap}' +
+      '.t td{border-top:1pt dashed #000;font-weight:700;font-size:13pt;padding-top:5pt}.f{margin-top:8pt;font-size:8.5pt;text-align:center}</style></head><body>' +
+      '<h1>' + S.esc((cafe && cafe.name) || "") + '</h1><div class="c">Masa ' + S.esc(table) + ' · ' + d.toLocaleDateString("tr-TR") + ' ' + S.clock(d) + '</div><table>' +
+      lines.map(function(i){ return '<tr><td>' + i.qty + '× ' + S.esc(i.name) + '</td><td class="r">' + S.fmt(i.price * i.qty) + '</td></tr>'; }).join("") +
+      '<tr class="t"><td>TOPLAM</td><td class="r">' + S.fmt(total) + '</td></tr></table><div class="f">Bilgi fişidir, mali değeri yoktur.<br>KDV dahildir.</div></body></html>';
+  };
+  /* Dosya indir (CSV vb.). */
+  S.downloadText = function(text, name, type){
+    try { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type || "text/plain" })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 2000); }
+    catch(e){ S.toast("Dosya indirilemedi"); }
   };
   /* Porsiyon: ürünün "p15" (1,5 porsiyon fiyatı) alanı doluysa iki seçenek olur. Sepet anahtarı: "id" ya da "id@15". */
   S.options = function(i){
@@ -524,8 +562,9 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         }).join("") + '</section>';
       }).join("") + '</div><div class="foot">Fiyatlarımıza KDV dahildir.<br>Menümüzü masanızdaki QR kodu okutarak da görebilir, siparişinizi oradan verebilirsiniz.</div></div></body></html>';
   };
-  S.printPriceList = function(cafe, menu){
-    var html = S.priceListHtml(cafe, menu), f = document.createElement("iframe");
+  S.printPriceList = function(cafe, menu){ S.printHtml(S.priceListHtml(cafe, menu)); };
+  S.printHtml = function(html){
+    var f = document.createElement("iframe");
     f.setAttribute("aria-hidden", "true"); f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0";
     document.body.appendChild(f);
     var done = false, go = function(){
@@ -636,10 +675,11 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
 
   window.SiralaApp.musteri = function(ctx){
     var B = ctx.B, cafeId = ctx.cafeId, table = ctx.table;
-    var st = { avoid: (function(){ try { return JSON.parse(S.lsGet("sirala-avoid") || "{}") || {}; } catch(e){ return {}; } })(), algOpen: false, cafe: null, cafeLoaded: false, photos: {}, orders: [], ordLoaded: false, cart: {}, note: "", view: "menu", last: null, busy: false, tbl: {}, err: null, offline: !navigator.onLine };
+    var st = { avoid: (function(){ try { return JSON.parse(S.lsGet("sirala-avoid") || "{}") || {}; } catch(e){ return {}; } })(), algOpen: false, cafe: null, cafeLoaded: false, photos: {}, orders: [], all: [], ordLoaded: false, cart: {}, note: "", view: "menu", last: null, busy: false, tbl: {}, err: null, offline: !navigator.onLine };
     var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
     var cartItems = function(){ return S.cartLines(st.cart, menu()); };
     var tableLabel = "Masa " + table;
+    var load = function(){ return S.loadInfo(st.all, st.cafe); };
     var alive = true, unsubs = [];
 
     if (!table) { S.$("app").innerHTML = '<main class="c-wrap c-main"><div class="empty-card"><h2>Masadaki QR kodu okutun</h2><p>Sipariş vermek için oturduğunuz masadaki QR kodu telefonunuzun kamerasıyla okutun.</p></div></main>'; return; }
@@ -648,7 +688,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (!alive) return;
       unsubs.push(B.watchCafe(cafeId, function(d){ st.cafe = d; st.cafeLoaded = true; dropSoldOut(); document.title = ((d && d.name) || "Menü") + " · " + tableLabel; render(); }, fail));
       unsubs.push(B.watchPhotos(cafeId, function(m){ st.photos = m; render(); }));
-      unsubs.push(B.watchOrders(cafeId, { table: String(table) }, function(list){ st.orders = list; st.ordLoaded = true; render(); }, fail));
+      unsubs.push(B.watchOrders(cafeId, null, function(list){ st.all = list; st.orders = list.filter(function(o){ return String(o.table) === String(table); }); st.ordLoaded = true; render(); }, fail));
       unsubs.push(B.watchTables(cafeId, function(m){ st.tbl = m[String(table)] || {}; render(); }));
     }).catch(fail);
     function dropSoldOut(){
@@ -684,7 +724,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     }
     function avoidedIn(i){ return (i.allergens || []).filter(function(a){ return st.avoid[a]; }); }
     function dish(i){
-      var mins = Number(i.mins) || S.DEFAULT_MINS, opts = S.options(i), hit = avoidedIn(i);
+      var base = Number(i.mins) || S.DEFAULT_MINS, mins = base + load().extra, opts = S.options(i), hit = avoidedIn(i);
       var buy = i.out ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span></div>'
         : opts.length === 1 ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span>' + stepper(i.id, i.name) + '</div>'
         : opts.map(function(o){ return '<div class="dish-meta portion"><span class="por-l">' + o.label + ((o.amount || o.kcal) ? '<small>' + [o.amount, o.kcal ? o.kcal + ' kcal' : ''].filter(Boolean).map(S.esc).join(' · ') + '</small>' : '') + '</span><span class="dish-price">' + S.fmt(o.price) + '</span>' + stepper(o.key, i.name + " " + o.label) + '</div>'; }).join("");
@@ -692,15 +732,18 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         (hit.length ? '<span class="alg-warn">' + WARN + S.esc(hit.map(S.allergenName).join(", ")) + ' içerir</span>' : '') +
         '<h3 class="dish-name">' + S.esc(i.name) + '</h3>' + (i.desc ? '<p class="dish-desc">' + S.esc(i.desc) + '</p>' : '') +
         ((i.allergens || []).length ? '<span class="alg-line">İçerir: ' + S.esc(i.allergens.map(S.allergenName).join(" · ")) + '</span>' : '') +
-        (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + 'Ortalama ' + mins + ' dakikada hazır' + (opts.length === 1 && i.amount ? '<span class="kcal">' + SCALE + 'Porsiyon: ' + S.esc(i.amount) + '</span>' : '') +
+        (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + (mins > base ? 'Şu an yaklaşık ' + mins + ' dakikada hazır' : 'Ortalama ' + mins + ' dakikada hazır') + (opts.length === 1 && i.amount ? '<span class="kcal">' + SCALE + 'Porsiyon: ' + S.esc(i.amount) + '</span>' : '') +
         (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
         (i.model && !i.out ? '<button class="ar-open" data-act="ar" data-v="' + S.esc(i.id) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Porsiyonu masada gör · 3D</button>' : '') +
         buy + '</div></article>';
     }
     function etaBanner(){
       var act = st.orders.filter(function(o){ return o.status === "new"; }).sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); });
-      if (!act.length) return "";
-      return '<section class="eta-list" aria-live="polite">' + act.map(function(o){
+      var can = st.orders.filter(function(o){ return o.status === "cancelled" && Date.now() - (o.cancelledAt || 0) < 20 * 60000; });
+      if (!act.length && !can.length) return "";
+      return '<section class="eta-list" aria-live="polite">' + can.map(function(o){
+        return '<div class="eta-banner cancelled"><div class="eta-txt"><b>Bir siparişiniz iptal edildi</b><span>' + S.esc(S.summary(o.items)) + ' · hesabınıza yazılmadı. Sorunuz varsa garsonumuza danışın.</span></div></div>';
+      }).join("") + act.map(function(o){
         var left = Math.ceil(((o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000 - Date.now()) / 60000);
         return '<div class="eta-banner">' + CLOCK.replace('width="13" height="13"', 'width="20" height="20"') +
           '<div class="eta-txt"><b>Siparişiniz hazırlanıyor</b><span>' + S.esc(S.summary(o.items)) + '</span></div>' +
@@ -719,12 +762,14 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         (st.algOpen ? '<div class="alg-panel"><p>İçermesini istemediklerinizi seçin; bunları içeren yemekler işaretlenir.</p><div class="alg-chips">' +
           S.ALLERGENS.filter(function(a){ return used[a[0]]; }).map(function(a){ return '<button class="alg-chip" aria-pressed="' + !!st.avoid[a[0]] + '" data-act="avoid" data-v="' + a[0] + '">' + S.esc(a[1]) + '</button>'; }).join("") +
           '</div><p class="alg-small">Bilgiler işletme tarafından girilir. Ciddi alerjiniz varsa siparişten önce garsonumuza da söyleyin.</p></div>' : '') + '</section>' : '';
-      return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') + filt +
+      var L = load();
+      var busy = L.extra > 0 ? '<p class="busy-note">' + CLOCK + '<span>Mutfağımız şu an yoğun · süreler yaklaşık <b>+' + L.extra + ' dk</b> uzun</span></p>' : '';
+      return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') + busy + filt +
         cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</section>'; }).join("") +
         '<p class="c-foot">Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.</p></main>' +
         '<div class="c-bar"><div class="c-wrap c-bar-in">' +
         (count
-          ? '<div class="c-bar-top"><span>' + count + ' ürün · yaklaşık ' + S.eta(sel, items) + ' dk</span><b>' + S.fmt(total) + '</b></div>' +
+          ? '<div class="c-bar-top"><span>' + count + ' ürün · yaklaşık ' + (S.eta(sel, items) + L.extra) + ' dk</span><b>' + S.fmt(total) + '</b></div>' +
             '<label class="sr" for="note">Sipariş notu</label><input id="note" class="note-in" maxlength="120" placeholder="Not ekleyin (ör. acısız, az pişmiş)" value="' + S.esc(st.note) + '">' +
             '<button class="btn btn-primary btn-lg wide" data-act="send"' + (st.busy ? " disabled" : "") + '>' + (st.busy ? "Gönderiliyor…" : "Siparişi gönder") + '</button>'
           : (st.orders.length
@@ -770,7 +815,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     function send(){
       var items = cartItems(); if (!items.length || st.busy) return;
       var u = B.currentUser(); st.busy = true; render();
-      var now = Date.now(), eta = S.eta(items, menu());
+      var now = Date.now(), eta = S.eta(items, menu()) + load().extra;
       B.addOrder(cafeId, { table: String(table), items: items, total: S.sum(items), eta: eta, note: st.note.trim().slice(0, 120), uid: u ? u.uid : "", source: "qr", status: "new", closed: false, createdAt: now })
         .then(function(){ st.last = { items: items, eta: eta }; st.cart = {}; st.note = ""; st.view = "done"; window.scrollTo(0, 0); })
         .catch(function(e){ S.toast(S.errText(e)); })
@@ -814,7 +859,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     var B = ctx.B, cafeId = ctx.cafeId;
     var st = { user: null, authKnown: false, loginErr: null, myCafes: null, cafe: null, cafeLoaded: false, denied: false,
       orders: [], ordLoaded: false, fromCache: false, tables: {}, tab: "siparis", openTable: null, confirmClose: false,
-      wTable: null, moveFrom: null, repDays: "1", report: null, wCart: {}, wNote: "", busy: false, pinOk: false, log: [], seen: null, seenFlags: null };
+      wTable: null, moveFrom: null, repDays: "1", report: null, wCart: {}, wNote: "", busy: false, pinOk: false, log: [], seen: null, seenFlags: null, confirmCancel: null };
     var alive = true, unsubs = [];
     var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
     var nTables = function(){ return Math.max(1, Math.min(80, Number(st.cafe && st.cafe.tables) || 10)); };
@@ -858,7 +903,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       var items = S.cartLines(st.wCart, menu());
       if (!st.wTable || !items.length || st.busy) return;
       st.busy = true; render(true);
-      B.addOrder(cafeId, { table: String(st.wTable), items: items, total: S.sum(items), eta: S.eta(items, menu()), note: st.wNote.trim().slice(0, 120), uid: st.user.uid, source: "garson", status: "new", closed: false, createdAt: Date.now() })
+      B.addOrder(cafeId, { table: String(st.wTable), items: items, total: S.sum(items), eta: S.eta(items, menu()) + S.loadInfo(st.orders, st.cafe).extra, note: st.wNote.trim().slice(0, 120), uid: st.user.uid, source: "garson", status: "new", closed: false, createdAt: Date.now() })
         .then(function(){ S.toast("Masa " + st.wTable + " siparişi mutfağa gönderildi"); st.wCart = {}; st.wNote = ""; })
         .catch(function(e){ S.toast(S.errText(e)); })
         .then(function(){ st.busy = false; render(true); });
@@ -909,13 +954,20 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     function ordersTab(){
       var nw = st.orders.filter(function(o){ return o.status === "new"; }).sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); });
       var dn = st.orders.filter(function(o){ return o.status === "done"; }).sort(function(a, b){ return (b.doneAt || 0) - (a.doneAt || 0); }).slice(0, 10);
-      return '<div class="k-cols"><section><h2 class="k-h">Hazırlanacak <span class="label">' + nw.length + ' sipariş</span></h2>' +
+      var L = S.loadInfo(st.orders, st.cafe), opts = [0, 10, 20];
+      var busyBar = '<div class="busy-bar"><div><b>Mutfak yoğunluğu</b><span class="small muted">' + L.queue + ' sipariş bekliyor · otomatik ' + (L.auto ? '+' + L.auto + ' dk' : 'ek yok') +
+        ' · müşteriye ' + (L.extra ? '+' + L.extra + ' dk' : 'normal süre') + ' gösteriliyor</span></div><div class="pick-table"><span class="small">Elle ekle:</span>' +
+        opts.map(function(x){ return '<button aria-pressed="' + (L.manual === x) + '" data-act="busy" data-v="' + x + '">' + (x ? '+' + x + ' dk' : 'Yok') + '</button>'; }).join("") + '</div></div>';
+      return busyBar + '<div class="k-cols"><section><h2 class="k-h">Hazırlanacak <span class="label">' + nw.length + ' sipariş</span></h2>' +
         (nw.length ? '<div class="tickets">' + nw.map(function(o){
           var late = Date.now() > (o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000;
           return '<article class="ticket' + (late ? " late" : "") + '"><div class="t-top"><span class="t-table">Masa ' + S.esc(o.table) + '</span><span class="t-time">' + S.clock(o.createdAt) + '<br>' + (o.source === "garson" ? "garson" : "QR") + '</span></div>' +
             '<ul class="t-items">' + (o.items || []).map(function(i){ return '<li><b>' + i.qty + '×</b>' + S.esc(i.name) + '</li>'; }).join("") + '</ul>' +
             (o.note ? '<div class="t-note">Not: ' + S.esc(o.note) + '</div>' : '') + etaHtml(o) +
-            '<button class="btn btn-primary" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button></article>';
+            '<button class="btn btn-primary" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button>' +
+            (st.confirmCancel === o.id
+              ? '<div class="t-cancel"><span>İptal edilsin mi? Hesaptan düşer.</span><button class="btn btn-sm btn-bad" data-act="cancelYes" data-v="' + S.esc(o.id) + '">Evet, iptal</button><button class="btn btn-sm" data-act="cancelNo">Vazgeç</button></div>'
+              : '<button class="t-cancel-link" data-act="cancelAsk" data-v="' + S.esc(o.id) + '">Siparişi iptal et</button>') + '</article>';
         }).join("") + '</div>' : '<div class="empty-card"><p>Bekleyen sipariş yok. Masalardan gelen siparişler burada belirir ve ses çıkarır.</p></div>') +
         '</section><section><h2 class="k-h">Hazırlananlar</h2>' +
         (dn.length ? '<div class="done-list">' + dn.map(function(o){ return '<div class="done-row"><b>M' + S.esc(o.table) + '</b><span class="d">' + S.esc(S.summary(o.items)) + '</span><span class="small muted">' + S.clock(o.doneAt) + '</span><button class="btn btn-sm btn-ghost" data-act="undo" data-v="' + S.esc(o.id) + '" aria-label="Geri al">Geri al</button></div>'; }).join("") + '</div>' : '<p class="muted small">Henüz yok.</p>') +
@@ -935,6 +987,19 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       }
       return '<h2 class="k-h">Masalar <span class="label">Hesabı görmek için masaya dokunun</span></h2><div class="tables">' + cells.join("") + '</div>' + (st.openTable ? detail(st.openTable) : '');
     }
+    function billLines(t){
+      var a = tableAgg(t), m = {}, out = [];
+      a.list.forEach(function(o){ (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!m[k]) { m[k] = { name: i.name, price: i.price, qty: 0 }; out.push(m[k]); } m[k].qty += i.qty; }); });
+      return { lines: out, total: a.total };
+    }
+    function exportCsv(){
+      var R = st.report; if (!R || !R.n) return;
+      var q = function(x){ return '"' + String(x).replace(/"/g, '""') + '"'; };
+      var rows = [["Ürün", "Adet", "Birim fiyat", "Tutar"]].concat(R.lines.map(function(l){ return [l.name, l.qty, l.price, l.price * l.qty]; }));
+      rows.push(["TOPLAM", R.items, "", R.revenue]);
+      var d = new Date();
+      S.downloadText("\ufeff" + rows.map(function(r){ return r.map(q).join(";"); }).join("\r\n"), (cafeId || "adanalim") + "-satis-" + d.toISOString().slice(0, 10) + ".csv", "text/csv");
+    }
     function detail(t){
       var a = tableAgg(t), lines = {}, keys = [];
       a.list.forEach(function(o){ (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!lines[k]) { lines[k] = { name: i.name, price: i.price, qty: 0 }; keys.push(k); } lines[k].qty += i.qty; }); });
@@ -944,6 +1009,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         '<div class="row-btns">' + (keys.length ? (st.confirmClose
           ? '<button class="btn btn-primary" data-act="closeYes" data-v="' + S.esc(t) + '">Evet, ödendi · masayı kapat</button><button class="btn" data-act="closeNo">Vazgeç</button>'
           : '<button class="btn btn-primary" data-act="closeAsk">Ödeme alındı · masayı kapat</button>') : '') +
+        (keys.length ? '<button class="btn" data-act="printBill" data-v="' + S.esc(t) + '">Hesap fişi yazdır</button>' : '') +
         '<button class="btn" data-act="wFor" data-v="' + S.esc(t) + '">Bu masaya sipariş ekle</button>' +
         (keys.length ? '<button class="btn" data-act="moveAsk" data-v="' + S.esc(t) + '">Masayı taşı</button>' : '') +
         ((st.tables[String(t)] || {}).billRequested || (st.tables[String(t)] || {}).waiter ? '<button class="btn btn-ghost" data-act="gone" data-v="' + S.esc(t) + '">Uyarıyı kapat</button>' : '') +
@@ -966,12 +1032,13 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       var maxH = Math.max.apply(null, R.hours.map(function(h){ return h[1]; }));
       return head + '<div class="rep-tiles">' +
         tile("Sipariş", R.n, R.items + " ürün") + tile("QR'dan", "%" + R.qrPct, R.qr + " QR · " + R.garson + " garson") +
-        tile("Ciro", S.fmt(R.revenue), "iptaller hariç") + tile("Masa başı hesap", R.checks ? S.fmt(R.avgCheck) : "—", R.checks + " kapanan masa") +
+        tile("Ciro", S.fmt(R.revenue), R.cancelled ? R.cancelled + " iptal hariç" : "iptal yok") + tile("Masa başı hesap", R.checks ? S.fmt(R.avgCheck) : "—", R.checks + " kapanan masa") +
         tile("Hazırlanma", R.prepN ? "~" + R.avgPrep + " dk" : "—", R.prepN ? "%" + R.onTime + " zamanında" : "henüz yok") + '</div>' +
         '<div class="k-cols" style="margin-top:20px"><section class="k-panel"><span class="label">En çok satanlar</span><ol class="rep-top">' +
         R.top.map(function(t){ return '<li><span>' + S.esc(t[0]) + '</span><b class="num">' + t[1] + '</b></li>'; }).join("") + '</ol></section>' +
         '<section class="k-panel"><span class="label">Saatlere göre sipariş</span><div class="rep-hours">' +
         R.hours.map(function(h){ return '<div class="rep-bar"><span class="num">' + h[0] + ':00</span><i style="width:' + Math.max(4, Math.round(h[1] / maxH * 100)) + '%"></i><b>' + h[1] + '</b></div>'; }).join("") + '</div></section></div>' +
+        '<div class="pl-box" style="margin-top:20px"><div><b>Satış dökümü (Excel)</b><span class="small muted">Seçili aralıkta hangi üründen kaç adet satıldı. Adisyon programınıza ya da muhasebeye toplu girmek için.</span></div><button class="btn" data-act="csv">İndir (.csv)</button></div>' +
         '<p class="small muted" style="margin-top:14px">"Eski siparişleri temizle" yapılırsa o günlerin raporu da silinir. Pilot bitmeden temizlemeyin, ekran görüntüsünü alın.</p>';
     }
     function tile(k, v, s){ return '<div class="rep-tile"><span class="label">' + k + '</span><b>' + v + '</b><small>' + S.esc(s) + '</small></div>'; }
@@ -981,9 +1048,9 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       B.listOrders(cafeId, since).then(function(list){
         var ok = list.filter(function(o){ return o.status !== "cancelled"; });
         var R = { n: ok.length, items: 0, qr: 0, garson: 0, revenue: 0, checks: 0, avgCheck: 0, prepN: 0, avgPrep: 0, onTime: 0, top: [], hours: [] };
-        var counts = {}, hrs = {}, checks = {}, prepSum = 0, onTime = 0;
+        var counts = {}, hrs = {}, checks = {}, lines = {}, prepSum = 0, onTime = 0;
         ok.forEach(function(o){
-          (o.items || []).forEach(function(i){ R.items += i.qty; counts[i.name] = (counts[i.name] || 0) + i.qty; });
+          (o.items || []).forEach(function(i){ R.items += i.qty; counts[i.name] = (counts[i.name] || 0) + i.qty; var lk = i.name + "|" + i.price; if (!lines[lk]) lines[lk] = { name: i.name, price: Number(i.price) || 0, qty: 0 }; lines[lk].qty += i.qty; });
           if (o.source === "garson") R.garson++; else R.qr++;
           var tot = Number(o.total) || S.sum(o.items); R.revenue += tot;
           var h = new Date(o.createdAt || 0).getHours(); hrs[h] = (hrs[h] || 0) + 1;
@@ -996,6 +1063,8 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         R.avgPrep = R.prepN ? Math.round(prepSum / R.prepN) : 0; R.onTime = R.prepN ? Math.round(onTime / R.prepN * 100) : 0;
         R.top = Object.keys(counts).map(function(k){ return [k, counts[k]]; }).sort(function(a, b){ return b[1] - a[1]; }).slice(0, 6);
         R.hours = Object.keys(hrs).map(Number).sort(function(a, b){ return a - b; }).map(function(h){ return [(h < 10 ? "0" : "") + h, hrs[h]]; });
+        R.lines = Object.keys(lines).map(function(k){ return lines[k]; }).sort(function(a, b){ return b.qty - a.qty; });
+        R.cancelled = list.length - ok.length;
         st.report = R; render(true);
       }).catch(function(e){ S.toast(S.errText(e)); st.report = { n: 0 }; render(true); });
     }
@@ -1066,6 +1135,12 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "moveTo": { var from = st.moveFrom; st.moveFrom = null;
           B.moveTable(cafeId, String(from), String(v)).then(function(n){ S.toast("Masa " + from + " → Masa " + v + " taşındı (" + n + " sipariş)"); st.openTable = String(v); render(true); }).catch(function(e){ S.toast(S.errText(e)); }); return; }
         case "done": if (o) upd(o, { status: "done", doneAt: Date.now() }); return;
+        case "cancelAsk": st.confirmCancel = v; break;
+        case "cancelNo": st.confirmCancel = null; break;
+        case "cancelYes": st.confirmCancel = null; if (o && o.status === "new") upd(o, { status: "cancelled", cancelledAt: Date.now(), cancelledBy: (st.user && st.user.email) || "" }).then(function(){ S.toast("Masa " + o.table + " siparişi iptal edildi"); }); return;
+        case "busy": B.updateCafe(cafeId, { busyExtra: Number(v) || 0 }).then(function(){ S.toast(Number(v) ? "Tüm sürelere +" + v + " dk eklendi" : "Elle ek süre kaldırıldı"); }).catch(function(e){ S.toast(S.errText(e)); }); return;
+        case "printBill": { var bl = billLines(v); S.printHtml(S.billHtml(st.cafe, v, bl.lines, bl.total)); return; }
+        case "csv": exportCsv(); return;
         case "undo": if (o) upd(o, { status: "new" }); return;
         case "openTable": st.tab = "masalar"; st.openTable = v; st.confirmClose = false; render(true); var d = S.$("detail"); if (d) d.scrollIntoView({ block: "nearest" }); return;
         case "closeDetail": st.openTable = null; st.confirmClose = false; break;
