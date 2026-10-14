@@ -3,107 +3,226 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#9D0208">
-<title>Adanalım · QR ile masadan sipariş</title>
-<meta name="description" content="Restoran ve kafeler için QR ile masadan sipariş. Fotoğraflı menü, yaklaşık hazırlanma süresi, mutfak ekranı. Eskişehir.">
+<meta name="theme-color" content="#FFF8EC">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Jost:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="site.css">
+<title>Adanalım</title>
+<meta name="description" content="Adanalım ocakbaşı, Eskişehir. Menü: kebaplar, çorbalar, tatlılar ve içecekler.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Yerleşim: tam ekran sade "Adanalım" girişi, kaydırınca menü krem zeminde tek kolon akar; başlık yapışkan üst şeride küçülür. */
+:root{
+  --cream:#FFF8EC; --sand:#F2E3C6; --red:#D62828; --wine:#9D0208; --ink:#3A0A0A;
+  --soft:#7A5249; --line:#E7D3B2;
+  --f-d:"Cormorant Garamond",Garamond,"Times New Roman",serif;
+  --f-b:"Jost",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--f-b);font-size:17px;line-height:1.6;font-weight:400}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3{margin:0;font-family:var(--f-d);font-weight:600;line-height:1.05;text-wrap:balance}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+/* ---------- giriş ekranı ---------- */
+.intro{min-height:100svh;display:grid;place-items:center;text-align:center;position:relative;padding-block:40px;overflow:hidden}
+.intro-in{display:flex;flex-direction:column;align-items:center;gap:18px;will-change:transform,opacity}
+.intro .pre{font-size:.78rem;letter-spacing:.42em;text-transform:uppercase;color:var(--wine);padding-left:.42em}
+.logo{font-family:var(--f-d);font-weight:700;font-size:clamp(4.2rem,17vw,11rem);line-height:.9;letter-spacing:-.02em;color:var(--ink);display:flex}
+.logo span{display:inline-block}
+.ember{width:clamp(80px,14vw,140px);height:3px;background:var(--red);border-radius:2px;transform-origin:center}
+.intro .sub{font-family:var(--f-d);font-style:italic;font-size:clamp(1.25rem,2.6vw,1.6rem);color:var(--soft)}
+.scroll-cue{position:absolute;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--soft);text-decoration:none;padding-left:.3em}
+.scroll-cue i{width:1px;height:42px;background:linear-gradient(var(--wine),transparent);display:block}
+
+/* ---------- üst şerit ---------- */
+.bar{position:fixed;left:0;right:0;top:0;z-index:20;background:rgba(255,248,236,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px);transform:translateY(-110%);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.bar.on{transform:none}
+.bar-in{display:flex;align-items:center;gap:18px;min-height:60px}
+.bar .mini{font-family:var(--f-d);font-weight:700;font-size:1.6rem;text-decoration:none;letter-spacing:-.01em}
+.bar .mini b{color:var(--red)}
+.tabs{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none;position:relative}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex-shrink:0;text-decoration:none;font-size:.9rem;color:var(--soft);padding:8px 12px;border-radius:999px;transition:color .25s,background .25s}
+.tabs a.act{color:#fff;background:var(--wine)}
+@media (max-width:600px){.bar-in{flex-wrap:wrap;gap:0;padding-block:6px}.bar .mini{font-size:1.35rem}.tabs{margin-left:0;width:100%;padding-bottom:4px}}
+
+/* ---------- menü ---------- */
+.menu{padding-block:40px 40px}
+.menu-head{text-align:center;padding-block:40px 20px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.menu-head .pre{font-size:.76rem;letter-spacing:.36em;text-transform:uppercase;color:var(--wine);padding-left:.36em}
+.menu-head h2{font-size:clamp(2.8rem,8vw,4.6rem)}
+.menu-head p{color:var(--soft);max-width:44ch}
+.cat{padding-block:56px 8px;scroll-margin-top:90px}
+.cat-h{display:flex;align-items:baseline;gap:16px;margin-bottom:26px}
+.cat-h h3{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+.cat-h::after{content:"";flex:1;height:1px;background:var(--line);transform:translateY(-6px)}
+.cat-h small{font-family:var(--f-d);font-style:italic;font-size:1.1rem;color:var(--soft);order:3}
+.dish{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:20px;align-items:center;padding-block:20px;border-bottom:1px dashed var(--line)}
+.dish:last-child{border-bottom:0}
+.plate{width:92px;height:92px;border-radius:50%;background:#FFFDF8;box-shadow:inset 0 0 0 7px #FFFDF8,inset 0 0 0 8px var(--line),0 10px 22px -12px rgba(58,10,10,.45);position:relative;overflow:hidden;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.plate::before{content:"";position:absolute;inset:16px;border-radius:50%;background:var(--food)}
+.plate::after{content:"";position:absolute;inset:16px;border-radius:50%;background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.35),transparent 45%)}
+.dish:hover .plate{transform:rotate(-14deg) scale(1.04)}
+.d-name{font-family:var(--f-d);font-size:1.55rem;font-weight:600;line-height:1.15}
+.d-desc{color:var(--soft);font-size:.95rem;margin-top:2px}
+.d-meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:.8rem;color:var(--soft);letter-spacing:.02em}
+.d-meta span{display:inline-flex;align-items:center;gap:5px}
+.d-meta span::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--red)}
+.d-price{text-align:right;font-family:var(--f-d);font-weight:700;font-size:1.6rem;white-space:nowrap;font-variant-numeric:tabular-nums;line-height:1.1}
+.d-price small{display:block;font-family:var(--f-b);font-weight:400;font-size:.76rem;color:var(--soft);letter-spacing:.02em;margin-top:4px}
+@media (max-width:560px){.dish{grid-template-columns:68px minmax(0,1fr);gap:14px}.plate{width:68px;height:68px;box-shadow:inset 0 0 0 5px #FFFDF8,inset 0 0 0 6px var(--line),0 8px 16px -10px rgba(58,10,10,.45)}.plate::before,.plate::after{inset:12px}.d-price{grid-column:2;text-align:left;font-size:1.4rem}.d-price small{display:inline;margin-left:8px}}
+.note{text-align:center;color:var(--soft);font-size:.86rem;padding-block:36px 10px}
+
+/* ---------- alt bölüm ---------- */
+.order{background:var(--wine);color:var(--cream);text-align:center;padding-block:80px;margin-top:40px}
+.order h2{font-size:clamp(2.2rem,6vw,3.4rem);color:var(--cream)}
+.order h2 em{font-style:italic;font-weight:500;color:var(--sand)}
+.order p{color:var(--sand);margin:14px auto 28px;max-width:46ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 30px;border-radius:999px;background:var(--cream);color:var(--wine);font-weight:500;text-decoration:none;transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px);background:#fff}
+footer{background:var(--ink);color:var(--sand);text-align:center;padding-block:44px;font-size:.88rem}
+footer .f-logo{font-family:var(--f-d);font-size:2.2rem;font-weight:700;color:var(--cream);display:block;margin-bottom:6px}
+
+/* ---------- geçişler (yalnızca JS ve hareket açıkken) ---------- */
+.js .logo span{opacity:0;transform:translateY(.4em) rotate(4deg);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(.15s + var(--i) * .06s)}
+.js .ember{transform:scaleX(0);animation:draw .9s .75s cubic-bezier(.6,0,.2,1) forwards}
+.js .intro .pre,.js .intro .sub,.js .scroll-cue{opacity:0;animation:fade 1s 1s forwards}
+.js .scroll-cue i{animation:drip 2.2s 1.8s ease-in-out infinite}
+@keyframes rise{to{opacity:1;transform:none}}
+@keyframes draw{to{transform:scaleX(1)}}
+@keyframes fade{to{opacity:1}}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.js .rv{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.js .rv.in{opacity:1;transform:none}
+.js .rv .plate{transform:scale(.6) rotate(-40deg);transition:transform 1s cubic-bezier(.2,.7,.2,1) calc(var(--d,0s) + .1s)}
+.js .rv.in .plate{transform:none}
+.js .rv.in:hover .plate{transform:rotate(-14deg) scale(1.04)}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .logo span,.js .ember,.js .intro .pre,.js .intro .sub,.js .scroll-cue{animation:none;opacity:1;transform:none}
+  .js .scroll-cue i{animation:none}
+  .js .rv,.js .rv .plate{opacity:1;transform:none;transition:none}
+  .bar{transition:none}
+}
+</style>
 </head>
 <body>
-<header class="top"><div class="wrap top-in">
-<a class="logo" href="index.html"><span class="logo-mark">A</span><b>Adanalım</b></a>
-<nav class="nav" aria-label="Ana menü"><a href="index.html" aria-current="page">Ana sayfa</a><a href="ozellikler.html">Özellikler</a><a href="nasil-calisir.html">Nasıl çalışır</a><a href="fiyat.html">Pilot ve fiyat</a><a href="iletisim.html">İletişim</a></nav>
-<a class="btn btn-red" href="iletisim.html">Ücretsiz deneyin</a>
-<button class="burger" id="burger" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-</div><div class="mnav" id="mnav" hidden><div class="wrap"><a href="index.html" aria-current="page">Ana sayfa</a><a href="ozellikler.html">Özellikler</a><a href="nasil-calisir.html">Nasıl çalışır</a><a href="fiyat.html">Pilot ve fiyat</a><a href="iletisim.html">İletişim</a><a class="btn btn-red" href="iletisim.html">Ücretsiz deneyin</a></div></div></header>
-<main>
-
-<section class="hero"><div class="wrap hero-grid">
-<div>
- <span class="kicker">Restoran ve kafeler için · Eskişehir</span>
- <h1 style="margin-top:14px">Misafir masadan sipariş verir, <em>garson servise odaklanır.</em></h1>
- <p class="lead">Adanalım ile misafir masadaki QR kodu okutur, fotoğraflı menünüzden seçer ve siparişini gönderir. Sipariş mutfağa yazılı düşer, misafir yemeğinin yaklaşık kaç dakikada çıkacağını görür. Hesap her zamanki gibi sonunda ödenir.</p>
- <div class="cta-row"><a class="btn btn-red" href="iletisim.html">2 hafta ücretsiz deneyin</a><a class="btn" href="https://demirciege349.github.io/self-service-s-ra-rahatlatma-/" target="_blank" rel="noopener">Canlı demoyu açın</a></div>
- <div class="trust"><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Uygulama indirilmez</span><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>POS cihazınız aynı kalır</span><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Kasada bir tablet yeter</span></div>
-</div>
-<div class="mock">
- <div class="float f1"><span class="dot"></span>Mutfağa düştü<b>Masa 7 · 2 ürün</b></div>
- <div class="phone">
-  <div class="ph-top"><b>Kuzey Sofrası</b><span>MASA 7</span></div>
-  <div class="ph-chips"><span>Ana yemekler</span><span>Başlangıçlar</span><span>Tatlılar</span><span>İçecekler</span></div>
-  <div class="ph-body">
-   <div class="ph-eta"><div>Siparişiniz hazırlanıyor<small>1× Mercimek çorbası</small></div><strong>~6 <small style="display:inline">dk</small></strong></div>
-   <div class="ph-dish"><span class="ph-pic"></span><div><b>Adana kebap</b><small>~20 dk · 180 gr et · 650 kcal</small><i>360 ₺</i></div><span class="ph-plus">+</span></div>
-   <div class="ph-dish"><span class="ph-pic b"></span><div><b>Balaban kebap</b><small>~18 dk · 200 gr köfte</small><i>340 ₺</i></div><span class="ph-plus">+</span></div>
-   <div class="ph-dish"><span class="ph-pic c"></span><div><b>Künefe</b><small>~14 dk · 180 gr · 520 kcal</small><i>180 ₺</i></div><span class="ph-plus">+</span></div>
-   <div class="ph-send">Siparişi gönder · 540 ₺</div>
+<header class="bar" id="bar" aria-label="Menü kategorileri">
+  <div class="wrap bar-in">
+    <a class="mini" href="#top">Adanalım<b>.</b></a>
+    <nav class="tabs" id="tabs"></nav>
   </div>
- </div>
- <div class="float f2">Tahmini süre<b>~20 dk</b></div>
-</div>
-</div></section>
+</header>
 
-<section class="sec"><div class="wrap">
-<div class="sec-title"><span class="kicker">Neden Adanalım</span><h2>Sipariş almak yerine <em>misafire</em> vakit kalır</h2><p>Sistem mutfağınızı hızlandırmaz. Kazancınız, sipariş dinlemeye ve hesap toplamaya harcanan zamandan gelir.</p></div>
-<div class="grid3">
-<div class="box"><span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-8 7"/></svg></span><h3>Fotoğraflı, güncel menü</h3><p>Her yemeğin fotoğrafı, fiyatı, gramajı, kalorisi ve alerjenleri. Biten ürün tek dokunuşla menüden kalkar.</p></div>
-<div class="box"><span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></span><h3>Yanlış sipariş biter</h3><p>Sipariş misafirin seçtiği haliyle, notuyla birlikte yazılı gelir. "Ben ayran demiştim" tartışması olmaz.</p></div>
-<div class="box"><span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h3>Süre baştan bellidir</h3><p>Misafir "yaklaşık 20 dk" yazısını görür. Mutfak yoğunlaşınca süre kendiliğinden uzar, misafir bilerek sipariş verir.</p></div>
-</div></div></section>
+<section class="intro" id="top">
+  <div class="intro-in" id="introIn">
+    <span class="pre">Ocakbaşı · Eskişehir</span>
+    <h1 class="logo" id="logo" aria-label="Adanalım">Adanalım</h1>
+    <span class="ember" aria-hidden="true"></span>
+    <p class="sub">Közün başında, acele etmeden.</p>
+  </div>
+  <a class="scroll-cue" href="#menu">Menü<i></i></a>
+</section>
 
-<section class="sec alt"><div class="wrap">
-<div class="sec-title"><span class="kicker">Nasıl çalışır</span><h2>Masadan mutfağa <em>dört adım</em></h2></div>
-<div class="steps">
-<div class="step"><span class="n">1</span><h3>QR okutulur</h3><p>Misafir masadaki kartı telefonuyla okutur. Menü açılır, masa numarası kendiliğinden gelir.</p></div>
-<div class="step"><span class="n">2</span><h3>Fotoğraftan seçilir</h3><p>Fiyat, gramaj, kalori, alerjen ve hazırlanma süresi her yemeğin altında görünür.</p></div>
-<div class="step"><span class="n">3</span><h3>Mutfağa düşer</h3><p>Sipariş masa numarası ve notuyla kasa ekranında belirir. Misafir yaklaşık süreyi görür.</p></div>
-<div class="step"><span class="n">4</span><h3>Hesap sonunda</h3><p>Masanın hesabı kendiliğinden toplanır. Ödeme her zamanki gibi garsona ya da kasaya yapılır.</p></div>
-</div>
-<p class="center" style="margin-top:44px"><a class="btn" href="nasil-calisir.html">Ayrıntılı anlatım</a></p>
-</div></section>
-
-<section class="sec"><div class="wrap split">
-<div>
- <span class="kicker">Kasa ve mutfak ekranı</span>
- <h2 style="margin-top:12px">Her şey <em>tek ekranda</em></h2>
- <p class="lead">Kasadaki tablette ya da bilgisayarda açılır. Yeni sipariş, garson çağrısı ve hesap isteği sesle gelir.</p>
- <ul class="list">
-  <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><div><b>Gelen siparişler</b><span>Masa, saat, not ve kalan süre. Geciken sipariş kırmızıya döner.</span></div></li>
-  <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>"Kaç dk sonra çıkar?"</b><span>Mutfak 5, 10, 15 ya da 20'ye dokunur, misafirin ekranı hemen güncellenir.</span></div></li>
-  <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><div><b>Masalar ve hesap</b><span>Açık hesaplar, hesap fişi, masa taşıma ve masayı kapatma.</span></div></li>
-  <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><div><b>Rapor</b><span>Ciro, QR oranı, en çok satanlar, yoğun saatler. Excel'e döküm.</span></div></li>
- </ul>
- <p style="margin-top:26px"><a class="btn" href="ozellikler.html">Tüm özellikler</a></p>
-</div>
-<div class="panel">
- <div class="busy-note">Mutfak yoğunluğu: 6 sipariş bekliyor · misafire <b>+10 dk</b> gösteriliyor</div>
- <div class="ticket">
-  <div class="th"><b>Masa 12</b><span>20:41 · QR</span></div>
-  <div>1× Adana kebap (1,5 porsiyon)<br>2× Ayran</div>
-  <div class="eta">Not: acısız · Tahmini 18 dk kaldı</div>
-  <div class="row"><span>5</span><span class="on">10</span><span>15</span><span>20</span></div>
-  <div class="done">Hazırlandı</div>
- </div>
-</div>
-</div></section>
-<section class="sec"><div class="wrap"><div class="cta">
-<div><h2>İşletmenizde <em>iki hafta ücretsiz</em> deneyin</h2><p>Kurulumu biz yaparız. İşinize yaramazsa sistemi kaldırırız, hiçbir ücret ödemezsiniz.</p></div>
-<div class="cta-row"><a class="btn btn-white" href="iletisim.html">Pilot isteyin</a><a class="btn btn-line-w" href="https://demirciege349.github.io/self-service-s-ra-rahatlatma-/" target="_blank" rel="noopener">Demoyu açın</a></div>
-</div></div></section>
+<main class="menu" id="menu">
+  <div class="wrap">
+    <div class="menu-head rv">
+      <span class="pre">Menü</span>
+      <h2>Bugün ocakta</h2>
+      <p>Kıymamızı her sabah zırhla çekeriz. Kebaplar közde, sipariş üzerine pişer.</p>
+    </div>
+    <div id="cats"></div>
+    <p class="note rv">Fiyatlarımıza KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa lütfen garsonumuza söyleyin.</p>
+  </div>
 </main>
-<footer class="ft"><div class="wrap">
-<div class="ft-grid">
- <div><a class="logo" href="index.html"><span class="logo-mark">A</span><b>Adanalım</b></a><p>Restoran ve kafeler için QR ile masadan sipariş sistemi. Eskişehir.</p></div>
- <div><h4>Ürün</h4><a href="ozellikler.html">Özellikler</a><a href="nasil-calisir.html">Nasıl çalışır</a><a href="https://demirciege349.github.io/self-service-s-ra-rahatlatma-/" target="_blank" rel="noopener">Canlı demo</a></div>
- <div><h4>Başlayın</h4><a href="fiyat.html">Pilot ve fiyat</a><a href="fiyat.html#sss">Sık sorulanlar</a><a href="iletisim.html">İletişim</a></div>
- <div><h4>İletişim</h4><span style="display:block">[TELEFON NUMARANIZ]</span><span style="display:block">[E-POSTA ADRESİNİZ]</span><span style="display:block">Eskişehir</span></div>
-</div>
-<div class="ft-bottom"><span>© 2026 Adanalım</span><span>Fiyatlar ve ödeme işletmenin kendi kasasında kalır.</span></div>
-</div></footer>
+
+<section class="order">
+  <div class="wrap rv">
+    <h2>Masanızdan <em>sipariş verin</em></h2>
+    <p>Masadaki QR kodu okutun, menüden seçin. Siparişiniz doğrudan ocağa gelir, yemeğinizin kaç dakikada çıkacağını görürsünüz.</p>
+    <a class="btn" href="https://demirciege349.github.io/self-service-s-ra-rahatlatma-/" target="_blank" rel="noopener">QR menüyü açın</a>
+  </div>
+</section>
+
+<footer>
+  <span class="f-logo">Adanalım</span>
+  Ocakbaşı · Eskişehir
+</footer>
+
 <script>
-(function(){var b=document.getElementById("burger"),m=document.getElementById("mnav");if(!b)return;b.addEventListener("click",function(){var o=m.hidden;m.hidden=!o;b.setAttribute("aria-expanded",String(o));});})();
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if ("IntersectionObserver" in window) document.documentElement.classList.add("js");
+
+  /* Menü (fiyat, süre, porsiyon, kalori). food: tabağın içindeki renk. */
+  var MENU = [
+    { cat: "Başlangıçlar", note: "sıcak", items: [
+      { n: "Mercimek çorbası", d: "Limon ve kırmızı biberli tereyağı ile", p: 95, m: 8, a: "300 ml", k: 230, food: "radial-gradient(circle at 60% 60%,#E8902E,#C4561C)" },
+      { n: "Çibörek", d: "İnce hamur, kıymalı iç, kızgın yağda", p: 120, m: 12, a: "1 adet, 70 gr kıyma", k: 380, food: "linear-gradient(135deg,#F0C377,#C98A3A)" }
+    ]},
+    { cat: "Kebaplar", note: "közde", items: [
+      { n: "Adana kebap", d: "Zırh kıyması, közlenmiş biber ve domates", p: 360, p15: 520, m: 20, a: "180 gr et", a15: "270 gr et", k: 650, food: "radial-gradient(ellipse 70% 22% at 50% 50%,#8A2A12 60%,transparent 62%),radial-gradient(circle at 75% 25%,#3E7A2E 0 12%,transparent 13%),radial-gradient(circle at 25% 75%,#D62828 0 14%,transparent 15%),#F3E2C2" },
+      { n: "Balaban kebap", d: "Közde köfte, tereyağlı ekmek, yoğurt", p: 340, p15: 490, m: 18, a: "200 gr köfte", a15: "300 gr köfte", k: 700, food: "radial-gradient(circle at 35% 40%,#7A2611 0 16%,transparent 17%),radial-gradient(circle at 62% 55%,#7A2611 0 16%,transparent 17%),radial-gradient(circle at 50% 50%,#FFFDF8 0 40%,#E9C690 41%)" },
+      { n: "Tavuk şiş", d: "Marine edilmiş but, lavaş, sumaklı soğan", p: 290, p15: 420, m: 16, a: "200 gr tavuk", a15: "300 gr tavuk", k: 480, food: "repeating-linear-gradient(90deg,#D9892F 0 14px,#B8661E 14px 18px),#D9892F" },
+      { n: "Kuzu şiş", d: "Kuzu kuşbaşı, közlenmiş sebze", p: 420, m: 22, a: "180 gr kuzu eti", k: 620, food: "repeating-linear-gradient(90deg,#6E1F0E 0 13px,#A6411F 13px 16px),#6E1F0E" }
+    ]},
+    { cat: "Tatlılar", note: "Eskişehir'den", items: [
+      { n: "Künefe", d: "Antep fıstıklı, sıcak servis", p: 180, m: 14, a: "180 gr", k: 520, food: "radial-gradient(circle at 50% 50%,#7FA34A 0 12%,transparent 13%),repeating-radial-gradient(circle,#E3A13A 0 3px,#C97F1E 3px 5px)" },
+      { n: "Met helvası", d: "Eskişehir'e özgü, tahinli", p: 110, m: 5, a: "100 gr", k: 290, food: "repeating-linear-gradient(45deg,#F6EAD2 0 6px,#E8D3AC 6px 9px)" }
+    ]},
+    { cat: "İçecekler", note: "soğuk ve sıcak", items: [
+      { n: "Ayran", d: "Yayık, köpüklü", p: 45, m: 2, a: "300 ml", k: 110, food: "radial-gradient(circle at 40% 40%,#FFFFFF,#F1EADB)" },
+      { n: "Şalgam", d: "Acılı ya da acısız", p: 50, m: 2, a: "330 ml", k: 25, food: "radial-gradient(circle at 40% 40%,#B0245A,#5E0C2B)" },
+      { n: "Türk kahvesi", d: "Lokumuyla", p: 80, m: 7, a: "1 fincan", k: 10, food: "radial-gradient(circle at 50% 50%,#3B2316 0 55%,#C9A27A 56%)" }
+    ]}
+  ];
+
+  var fmt = function(n){ return n.toLocaleString("tr-TR") + " ₺"; };
+  var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var slug = function(s){ return s.toLowerCase().replace(/ç/g,"c").replace(/ğ/g,"g").replace(/ı/g,"i").replace(/ö/g,"o").replace(/ş/g,"s").replace(/ü/g,"u").replace(/[^a-z0-9]+/g,"-"); };
+
+  /* logo harfleri */
+  var logo = document.getElementById("logo");
+  logo.innerHTML = Array.prototype.map.call("Adanalım", function(ch, i){ return '<span aria-hidden="true" style="--i:' + i + '">' + ch + '</span>'; }).join("");
+
+  /* menüyü çiz */
+  document.getElementById("cats").innerHTML = MENU.map(function(c){
+    return '<section class="cat" id="' + slug(c.cat) + '"><div class="cat-h rv"><h3>' + esc(c.cat) + '</h3><small>' + esc(c.note) + '</small></div>' +
+      c.items.map(function(it, i){
+        return '<article class="dish rv" style="--d:' + (i * 0.08).toFixed(2) + 's"><span class="plate" style="--food:' + it.food + '" aria-hidden="true"></span>' +
+          '<div><h4 class="d-name" style="margin:0">' + esc(it.n) + '</h4><p class="d-desc">' + esc(it.d) + '</p>' +
+          '<div class="d-meta"><span>' + esc(it.a) + '</span><span>~' + it.m + ' dk</span><span>yaklaşık ' + it.k + ' kcal</span></div></div>' +
+          '<div class="d-price">' + fmt(it.p) + (it.p15 ? '<small>1,5 porsiyon · ' + fmt(it.p15) + '</small>' : '') + '</div></article>';
+      }).join("") + '</section>';
+  }).join("");
+  document.getElementById("tabs").innerHTML = MENU.map(function(c){ return '<a href="#' + slug(c.cat) + '">' + esc(c.cat) + '</a>'; }).join("");
+
+  /* görünür olunca beliren öğeler */
+  var rv = document.querySelectorAll(".rv");
+  if ("IntersectionObserver" in window && !reduce) {
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    rv.forEach(function(el){ io.observe(el); });
+  } else rv.forEach(function(el){ el.classList.add("in"); });
+
+  /* kaydırınca: giriş yazısı küçülüp söner, üst şerit iner, aktif kategori işaretlenir */
+  var intro = document.getElementById("introIn"), bar = document.getElementById("bar"), tabs = document.querySelectorAll("#tabs a"), cats = document.querySelectorAll(".cat"), ticking = false;
+  function onScroll(){
+    var y = window.pageYOffset, h = window.innerHeight;
+    if (!reduce) { var t = Math.min(1, y / (h * 0.7)); intro.style.transform = "translateY(" + (y * 0.35) + "px) scale(" + (1 - t * 0.18) + ")"; intro.style.opacity = String(1 - t); }
+    bar.classList.toggle("on", y > h * 0.6);
+    var cur = null; cats.forEach(function(c){ if (c.getBoundingClientRect().top < 140) cur = c.id; });
+    tabs.forEach(function(a){ var on = a.getAttribute("href") === "#" + cur; a.classList.toggle("act", on); if (on && a.scrollIntoView && a.parentNode.scrollWidth > a.parentNode.clientWidth) a.parentNode.scrollTo({ left: a.offsetLeft - 20, behavior: reduce ? "auto" : "smooth" }); });
+    ticking = false;
+  }
+  window.addEventListener("scroll", function(){ if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
+})();
 </script>
 </body>
 </html>
