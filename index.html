@@ -235,6 +235,8 @@ main.k-wrap{padding-block:20px 48px}
 .rep-bar{display:grid;grid-template-columns:52px minmax(0,1fr) 30px;align-items:center;gap:8px;font-size:.84rem}
 .rep-bar i{display:block;height:12px;background:var(--wine);border-radius:2px}
 .rep-bar b{text-align:right}
+.pl-box{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--white);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.pl-box div{display:flex;flex-direction:column;min-width:0;flex:1 1 220px}
 .k-narrow{max-width:760px;display:flex;flex-direction:column;gap:16px}
 .k-panel{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
 .pick-table{display:flex;flex-wrap:wrap;gap:6px}
@@ -492,6 +494,48 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     }).catch(function(){ var st = lay.querySelector(".ar-stage"); if (st) st.innerHTML = '<p class="ar-wait">3D görüntüleyici yüklenemedi. İnternet bağlantınızı kontrol edin.</p>'; });
   };
   S.closeAR = function(){ var lay = document.getElementById("arLayer"); if (lay) { lay.hidden = true; lay.innerHTML = ""; } document.body.style.overflow = ""; };
+
+  /* Basılı fiyat listesi (Fiyat Etiketi Yönetmeliği: girişte ve masalarda). Güncel menüden A4 sayfa üretir. */
+  S.priceListHtml = function(cafe, menu){
+    var items = (menu || []).filter(function(i){ return i.name; }), cats = [];
+    items.forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
+    var now = new Date(), date = now.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" });
+    var row = function(name, sub, price){
+      return '<div class="r"><span class="n">' + S.esc(name) + (sub ? '<small>' + S.esc(sub) + '</small>' : '') + '</span><span class="d"></span><span class="p">' + S.fmt(price) + '</span></div>';
+    };
+    return '<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>' + S.esc((cafe && cafe.name) || "Fiyat listesi") + ' · Fiyat listesi</title>' +
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Jost:wght@400;500&display=swap">' +
+      '<style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{margin:0;font-family:Jost,Arial,sans-serif;color:#3A0A0A;background:#fff;font-size:11pt}' +
+      '.sheet{border:1.5pt solid #9D0208;outline:.6pt solid #9D0208;outline-offset:-5pt;padding:14mm 14mm 10mm;min-height:268mm;display:flex;flex-direction:column}' +
+      'h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:30pt;font-weight:700;text-align:center;margin:0}' +
+      '.sub{text-align:center;font-size:8.5pt;letter-spacing:.3em;text-transform:uppercase;color:#9D0208;margin:4pt 0 2pt}' +
+      '.date{text-align:center;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:11pt;color:#6E4A42;margin-bottom:12pt}' +
+      '.cols{columns:2;column-gap:12mm;flex:1}.cat{break-inside:avoid;margin-bottom:10pt}' +
+      'h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:15pt;font-weight:700;margin:0 0 4pt;border-bottom:.8pt solid #9D0208;padding-bottom:2pt}' +
+      '.r{display:flex;align-items:baseline;gap:4pt;padding:2.5pt 0;break-inside:avoid}.n{font-weight:500}.n small{display:block;font-weight:400;font-size:8.5pt;color:#6E4A42}' +
+      '.d{flex:1;border-bottom:.8pt dotted #B9A58A;transform:translateY(-3pt);min-width:8pt}.p{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;font-size:12.5pt;white-space:nowrap}' +
+      '.foot{border-top:.6pt solid #DCC59C;margin-top:10pt;padding-top:6pt;font-size:8.5pt;color:#6E4A42;text-align:center;line-height:1.5}</style></head><body><div class="sheet">' +
+      '<h1>' + S.esc((cafe && cafe.name) || "") + '</h1><div class="sub">Fiyat listesi</div><div class="date">Güncelleme: ' + S.esc(date) + '</div><div class="cols">' +
+      cats.map(function(c){
+        return '<section class="cat"><h2>' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(function(i){
+          var out = row(i.name, i.amount || "", i.price);
+          if (Number(i.p15) > 0) out += row(i.name + " · 1,5 porsiyon", S.amountText(i, 1.5), i.p15);
+          return out;
+        }).join("") + '</section>';
+      }).join("") + '</div><div class="foot">Fiyatlarımıza KDV dahildir.<br>Menümüzü masanızdaki QR kodu okutarak da görebilir, siparişinizi oradan verebilirsiniz.</div></div></body></html>';
+  };
+  S.printPriceList = function(cafe, menu){
+    var html = S.priceListHtml(cafe, menu), f = document.createElement("iframe");
+    f.setAttribute("aria-hidden", "true"); f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0";
+    document.body.appendChild(f);
+    var done = false, go = function(){
+      if (done) return; done = true;
+      try { f.contentWindow.focus(); f.contentWindow.print(); } catch(e){ S.toast("Bu ekranda yazdırma açılamadı"); }
+      setTimeout(function(){ f.remove(); }, 60000);
+    };
+    f.onload = function(){ var d = f.contentDocument; (d && d.fonts ? d.fonts.ready : Promise.resolve()).then(function(){ setTimeout(go, 150); }); setTimeout(go, 2500); };
+    f.srcdoc = html;
+  };
 
   S.loginView = function(title, error){
     return '<main class="login"><div class="login-card"><div class="brand-sm">Sırala</div>' +
@@ -836,7 +880,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (p > 0) it.price = p; it.mins = m;
       var d = new Date(), stamp = d.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit" }) + " " + S.clock(d);
       st.log = changes.map(function(c){ return stamp + "  " + c; }).concat(st.log).slice(0, 60);
-      saveMenu(items, "Kaydedildi").then(function(){ return B.setPrivate(cafeId, { log: st.log }); }).then(function(){ render(true); });
+      saveMenu(items, p > 0 && changes.some(function(c){ return c.indexOf("₺") > 0; }) ? "Kaydedildi · basılı fiyat listesini yeniden yazdırmayı unutmayın" : "Kaydedildi").then(function(){ return B.setPrivate(cafeId, { log: st.log }); }).then(function(){ render(true); });
     }
 
     /* ---------- görünüm ---------- */
@@ -972,7 +1016,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     }
     function menuTab(){
       var items = menu();
-      return '<div class="k-narrow"><div class="pinbox">' +
+      return '<div class="k-narrow"><div class="pl-box"><div><b>Basılı fiyat listesi</b><span class="small muted">Girişte ve masalarda bulunması zorunlu. Fiyat değiştirdiğinizde yeniden yazdırın.</span></div><button class="btn" data-act="printList">Fiyat listesini yazdır</button></div><div class="pinbox">' +
         (st.pinOk ? '<span>Fiyat ve süre düzenleme açık</span><button class="btn btn-sm" data-act="lock">Kilitle</button>'
                   : '<label for="pin">Fiyat ve süre değiştirmek için patron PIN\'i</label><input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="6"><button class="btn btn-sm" data-act="unlock">Aç</button>') + '</div>' +
         '<section class="k-panel">' + (items.length ? items.map(function(i){
@@ -1016,6 +1060,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       switch (b.dataset.act) {
         case "tab": st.tab = v; st.pinOk = v === "menu" && st.pinOk; st.openTable = null; st.confirmClose = false; st.moveFrom = null; if (v === "rapor") { loadReport(); return; } break;
         case "repRange": st.repDays = v; loadReport(); return;
+        case "printList": S.printPriceList(st.cafe, menu()); return;
         case "moveAsk": st.moveFrom = v; break;
         case "moveNo": st.moveFrom = null; break;
         case "moveTo": { var from = st.moveFrom; st.moveFrom = null;
