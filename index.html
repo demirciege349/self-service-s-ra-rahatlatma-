@@ -95,6 +95,17 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 .ar-wait{color:var(--soft);font-size:.9rem;text-align:center;padding:20px}
 .ar-btn{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;background:var(--wine);color:var(--cream);border:0;border-radius:999px;padding:12px 20px;font-weight:500;box-shadow:0 8px 20px -6px rgba(58,10,10,.5)}
 .ar-note{font-size:.84rem;color:var(--soft)}
+.alg-line{font-size:.76rem;color:var(--soft);letter-spacing:.02em}
+.alg-warn{display:inline-flex;align-items:center;gap:5px;align-self:flex-start;font-size:.74rem;font-weight:600;color:#fff;background:var(--red);border-radius:3px;padding:3px 8px}
+.dish.avoid .dish-img{opacity:.55}
+.dish.avoid .dish-name{color:var(--soft)}
+.alg-filter{display:flex;flex-direction:column;gap:8px}
+.alg-toggle{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;background:transparent;border:1px solid var(--line-2);border-radius:999px;padding:7px 13px;font-size:.84rem;color:var(--ink)}
+.alg-panel{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;font-size:.88rem;color:var(--soft)}
+.alg-chips{display:flex;flex-wrap:wrap;gap:6px}
+.alg-chip{border:1px solid var(--line-2);background:var(--cream);border-radius:999px;padding:7px 12px;font-size:.84rem;color:var(--ink)}
+.alg-chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.alg-small{font-size:.76rem}
 .eta-list{display:flex;flex-direction:column;gap:8px}
 .eta-banner{display:flex;align-items:center;gap:12px;background:var(--ink);color:var(--cream);border-radius:6px;padding:12px 14px}
 .eta-banner svg{flex-shrink:0;color:var(--sand)}
@@ -169,7 +180,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 .k-head .btn{background:transparent;color:var(--sand);border-color:rgba(242,227,198,.3)}
 @media (max-width:720px){
   .k-head-in{display:grid;grid-template-columns:minmax(0,1fr) auto}
-  .k-head-in .tabs{grid-column:1 / -1;grid-row:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  .k-head-in .tabs{grid-column:1 / -1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
   .k-head-in .tabs button{padding-inline:.3rem;font-size:.86rem}
 }
 main.k-wrap{padding-block:20px 48px}
@@ -209,6 +220,21 @@ main.k-wrap{padding-block:20px 48px}
 .detail ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
 .detail li{display:flex;justify-content:space-between;gap:12px}
 .detail li span:last-child{white-space:nowrap}
+.move-box{border-top:1px dashed var(--line-2);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.pick-table button.busy{border-style:dashed;color:var(--soft)}
+.rep-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.rep-head .pick-table button{min-width:auto;padding:0 14px;font-family:var(--f-body);font-weight:500;font-size:.9rem}
+.rep-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.rep-tile{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.rep-tile b{font-family:var(--f-display);font-size:2rem;font-weight:700;line-height:1.1}
+.rep-tile small{color:var(--soft);font-size:.8rem}
+.rep-top{margin:10px 0 0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.rep-top li span{display:inline-block;min-width:60%}
+.rep-top b{float:right;font-size:1.1rem}
+.rep-hours{display:flex;flex-direction:column;gap:5px;margin-top:10px}
+.rep-bar{display:grid;grid-template-columns:52px minmax(0,1fr) 30px;align-items:center;gap:8px;font-size:.84rem}
+.rep-bar i{display:block;height:12px;background:var(--wine);border-radius:2px}
+.rep-bar b{text-align:right}
 .k-narrow{max-width:760px;display:flex;flex-direction:column;gap:16px}
 .k-panel{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
 .pick-table{display:flex;flex-wrap:wrap;gap:6px}
@@ -247,6 +273,14 @@ main.k-wrap{padding-block:20px 48px}
 .form-row .fld-s{flex:1 1 110px}
 .ed-list{display:flex;flex-direction:column;gap:10px}
 .ed{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;background:var(--white);border:1px solid var(--line);padding:12px}
+.ed-left{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.ed-mini{border:1px solid var(--line-2);background:var(--white);border-radius:4px;padding:4px 6px;font-size:.74rem;color:var(--soft)}
+.ed-mini:disabled{opacity:.35}
+.ed-move{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.alg-edit{border:1px dashed var(--line-2);border-radius:4px;padding:6px 10px 8px;margin:0;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.8rem;color:var(--ink)}
+.alg-edit legend{font-size:.78rem;letter-spacing:.06em;color:var(--soft);padding:0 4px}
+.alg-edit label{display:inline-flex;align-items:center;gap:4px}
+.alg-edit input{width:auto}
 .ed-photo{position:relative;width:96px;height:96px;border-radius:6px;overflow:hidden;background:var(--sand);border:1px dashed var(--line-2);display:flex;align-items:center;justify-content:center;cursor:pointer}
 .ed-photo img,.ed-photo .ph-svg{width:100%;height:100%;object-fit:cover}
 .ed-photo span{position:absolute;bottom:0;left:0;right:0;background:rgba(58,10,10,.72);color:var(--cream);font-size:.7rem;text-align:center;padding:3px}
@@ -297,7 +331,7 @@ main.k-wrap{padding-block:20px 48px}
 <div id="app"><p style="padding:40px 16px;text-align:center;color:#6E4A42">Yükleniyor…</p></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <script>
-window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "amount": "300 ml", "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "amount": "1 adet, 70 gr kıyma", "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "amount": "180 gr et", "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "amount": "200 gr köfte", "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "amount": "200 gr tavuk", "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "amount": "180 gr kuzu eti", "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "amount": "180 gr", "model": "", "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "amount": "100 gr", "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "amount": "300 ml", "model": "", "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "amount": "330 ml", "model": "", "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "amount": "1 fincan", "model": "", "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
+window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "amount": "300 ml", "allergens": ["sut", "kereviz"], "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "amount": "1 adet, 70 gr kıyma", "allergens": ["gluten"], "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "amount": "180 gr et", "allergens": ["gluten"], "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "amount": "200 gr köfte", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "amount": "200 gr tavuk", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "amount": "180 gr kuzu eti", "allergens": [], "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "amount": "180 gr", "allergens": ["gluten", "sut", "kuruyemis"], "model": "", "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "amount": "100 gr", "allergens": ["gluten", "susam"], "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "amount": "300 ml", "allergens": ["sut"], "model": "", "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "amount": "330 ml", "allergens": [], "model": "", "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "amount": "1 fincan", "allergens": [], "model": "", "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
 /* Sırala — ortak yardımcılar (klasik script; window.S altına yazar). */
 (function(){
   "use strict";
@@ -349,6 +383,9 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     });
     return out;
   };
+  /* Alerjenler (Türk Gıda Kodeksi'ndeki başlıca gruplardan sade bir seçim). */
+  S.ALLERGENS = [["gluten","Gluten"],["sut","Süt"],["yumurta","Yumurta"],["kuruyemis","Kabuklu yemiş"],["yerfistigi","Yer fıstığı"],["susam","Susam"],["soya","Soya"],["balik","Balık"],["kabuklu","Kabuklu deniz ürünü"],["hardal","Hardal"],["kereviz","Kereviz"]];
+  S.allergenName = function(k){ var a = S.ALLERGENS.find(function(x){ return x[0] === k; }); return a ? a[1] : k; };
   S.slugify = function(s){
     var map = { "ç":"c","ğ":"g","ı":"i","İ":"i","ö":"o","ş":"s","ü":"u","Ç":"c","Ğ":"g","Ö":"o","Ş":"s","Ü":"u" };
     return String(s || "").replace(/[çğıİöşüÇĞÖŞÜ]/g, function(c){ return map[c]; }).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
@@ -483,7 +520,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
 /* Sırala — yerel demo arka ucu: giriş yok, veriler bu telefonun tarayıcısında durur. Aynı arayüz. */
 (function(){
   "use strict";
-  var KEY = "sirala-local-v3", mem = null, subs = [];
+  var KEY = "sirala-local-v4", mem = null, subs = [];
   function load(){
     if (mem) return mem;
     try { mem = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ mem = null; }
@@ -522,6 +559,12 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       Object.keys(d.orders).forEach(function(k){ var o = d.orders[k]; if (o.cafe === id && o.table === table && !o.closed) { o.closed = true; o.closedAt = now; } });
       d.tables[id + "/" + table] = { billRequested: false, waiter: false, updatedAt: now }; save(); return Promise.resolve();
     },
+    moveTable: function(id, from, to){
+      var d = load(), now = Date.now(), n = 0;
+      Object.keys(d.orders).forEach(function(k){ var o = d.orders[k]; if (o.cafe === id && o.table === from && !o.closed) { o.table = to; o.movedFrom = from; o.movedAt = now; n++; } });
+      d.tables[id + "/" + from] = { billRequested: false, waiter: false, updatedAt: now }; save(); return Promise.resolve(n);
+    },
+    listOrders: function(id, since){ return Promise.resolve(ordersOf(id).filter(function(o){ return (o.createdAt || 0) >= since; })); },
     purgeClosed: function(id){ var d = load(), n = 0; Object.keys(d.orders).forEach(function(k){ if (d.orders[k].cafe === id && d.orders[k].closed) { delete d.orders[k]; n++; } }); save(); return Promise.resolve(n); },
 
     watchTables: function(id, cb){ return watch(function(){ var d = load(), m = {}; Object.keys(d.tables).forEach(function(k){ if (k.indexOf(id + "/") === 0) m[k.slice(id.length + 1)] = clone(d.tables[k]); }); cb(m); }); },
@@ -543,12 +586,13 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   window.SiralaApp = window.SiralaApp || {};
   var FIRE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-3 2-4 2-7 1.5 1 2 2.5 2 4 1-2 1-5 1-8z"/></svg>';
   var BELL = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>';
+  var WARN = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>';
   var SCALE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 20h14l-2-11H7z"/><path d="M9 9a3 3 0 0 1 6 0"/></svg>';
   var CLOCK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 
   window.SiralaApp.musteri = function(ctx){
     var B = ctx.B, cafeId = ctx.cafeId, table = ctx.table;
-    var st = { cafe: null, cafeLoaded: false, photos: {}, orders: [], ordLoaded: false, cart: {}, note: "", view: "menu", last: null, busy: false, tbl: {}, err: null, offline: !navigator.onLine };
+    var st = { avoid: (function(){ try { return JSON.parse(S.lsGet("sirala-avoid") || "{}") || {}; } catch(e){ return {}; } })(), algOpen: false, cafe: null, cafeLoaded: false, photos: {}, orders: [], ordLoaded: false, cart: {}, note: "", view: "menu", last: null, busy: false, tbl: {}, err: null, offline: !navigator.onLine };
     var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
     var cartItems = function(){ return S.cartLines(st.cart, menu()); };
     var tableLabel = "Masa " + table;
@@ -594,13 +638,16 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       return '<div class="stepper">' + (q ? '<button class="round" data-act="dec" data-v="' + S.esc(key) + '" aria-label="' + S.esc(name) + ' azalt">−</button><span class="q">' + q + '</span>' : '') +
         '<button class="round' + (q ? "" : " round-add") + '" data-act="inc" data-v="' + S.esc(key) + '" aria-label="' + S.esc(name) + ' ekle">+</button></div>';
     }
+    function avoidedIn(i){ return (i.allergens || []).filter(function(a){ return st.avoid[a]; }); }
     function dish(i){
-      var mins = Number(i.mins) || S.DEFAULT_MINS, opts = S.options(i);
+      var mins = Number(i.mins) || S.DEFAULT_MINS, opts = S.options(i), hit = avoidedIn(i);
       var buy = i.out ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span></div>'
         : opts.length === 1 ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span>' + stepper(i.id, i.name) + '</div>'
         : opts.map(function(o){ return '<div class="dish-meta portion"><span class="por-l">' + o.label + ((o.amount || o.kcal) ? '<small>' + [o.amount, o.kcal ? o.kcal + ' kcal' : ''].filter(Boolean).map(S.esc).join(' · ') + '</small>' : '') + '</span><span class="dish-price">' + S.fmt(o.price) + '</span>' + stepper(o.key, i.name + " " + o.label) + '</div>'; }).join("");
-      return '<article class="dish' + (i.out ? " out" : "") + '"><div class="dish-img">' + photo(i) + '</div><div class="dish-body">' +
+      return '<article class="dish' + (i.out ? " out" : "") + (hit.length ? " avoid" : "") + '"><div class="dish-img">' + photo(i) + '</div><div class="dish-body">' +
+        (hit.length ? '<span class="alg-warn">' + WARN + S.esc(hit.map(S.allergenName).join(", ")) + ' içerir</span>' : '') +
         '<h3 class="dish-name">' + S.esc(i.name) + '</h3>' + (i.desc ? '<p class="dish-desc">' + S.esc(i.desc) + '</p>' : '') +
+        ((i.allergens || []).length ? '<span class="alg-line">İçerir: ' + S.esc(i.allergens.map(S.allergenName).join(" · ")) + '</span>' : '') +
         (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + 'Ortalama ' + mins + ' dakikada hazır' + (opts.length === 1 && i.amount ? '<span class="kcal">' + SCALE + 'Porsiyon: ' + S.esc(i.amount) + '</span>' : '') +
         (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
         (i.model && !i.out ? '<button class="ar-open" data-act="ar" data-v="' + S.esc(i.id) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Porsiyonu masada gör · 3D</button>' : '') +
@@ -622,7 +669,13 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       var cats = []; items.forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
       var sel = cartItems(), total = S.sum(sel), count = sel.reduce(function(s, i){ return s + i.qty; }, 0);
       var tableTotal = S.sum([].concat.apply([], st.orders.filter(function(o){ return o.status !== "cancelled"; }).map(function(o){ return o.items || []; })));
-      return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') +
+      var used = {}; items.forEach(function(i){ (i.allergens || []).forEach(function(a){ used[a] = 1; }); });
+      var nAvoid = Object.keys(st.avoid).length;
+      var filt = Object.keys(used).length ? '<section class="alg-filter"><button class="alg-toggle" data-act="algPanel" aria-expanded="' + !!st.algOpen + '">' + WARN + (nAvoid ? 'Alerjen filtresi · ' + nAvoid + ' seçili' : 'Alerjiniz mi var?') + '</button>' +
+        (st.algOpen ? '<div class="alg-panel"><p>İçermesini istemediklerinizi seçin; bunları içeren yemekler işaretlenir.</p><div class="alg-chips">' +
+          S.ALLERGENS.filter(function(a){ return used[a[0]]; }).map(function(a){ return '<button class="alg-chip" aria-pressed="' + !!st.avoid[a[0]] + '" data-act="avoid" data-v="' + a[0] + '">' + S.esc(a[1]) + '</button>'; }).join("") +
+          '</div><p class="alg-small">Bilgiler işletme tarafından girilir. Ciddi alerjiniz varsa siparişten önce garsonumuza da söyleyin.</p></div>' : '') + '</section>' : '';
+      return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') + filt +
         cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</section>'; }).join("") +
         '<p class="c-foot">Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.</p></main>' +
         '<div class="c-bar"><div class="c-wrap c-bar-in">' +
@@ -692,6 +745,8 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "inc": st.cart[v] = (st.cart[v] || 0) + 1; break;
         case "dec": if (st.cart[v]) { st.cart[v]--; if (!st.cart[v]) delete st.cart[v]; } break;
         case "send": send(); return;
+        case "algPanel": st.algOpen = !st.algOpen; break;
+        case "avoid": if (st.avoid[v]) delete st.avoid[v]; else st.avoid[v] = 1; S.lsSet("sirala-avoid", JSON.stringify(st.avoid)); break;
         case "ar": { var it = menu().find(function(x){ return x.id === v; }); if (it) S.openAR(it, "1 porsiyon" + (it.amount ? " · " + it.amount : "") + (Number(it.kcal) > 0 ? " · yaklaşık " + it.kcal + " kcal" : "") + "."); return; }
         case "menu": st.view = "menu"; window.scrollTo(0, 0); break;
         case "bill": st.view = "bill"; window.scrollTo(0, 0); break;
@@ -715,7 +770,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     var B = ctx.B, cafeId = ctx.cafeId;
     var st = { user: null, authKnown: false, loginErr: null, myCafes: null, cafe: null, cafeLoaded: false, denied: false,
       orders: [], ordLoaded: false, fromCache: false, tables: {}, tab: "siparis", openTable: null, confirmClose: false,
-      wTable: null, wCart: {}, wNote: "", busy: false, pinOk: false, log: [], seen: null, seenFlags: null };
+      wTable: null, moveFrom: null, repDays: "1", report: null, wCart: {}, wNote: "", busy: false, pinOk: false, log: [], seen: null, seenFlags: null };
     var alive = true, unsubs = [];
     var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
     var nTables = function(){ return Math.max(1, Math.min(80, Number(st.cafe && st.cafe.tables) || 10)); };
@@ -797,7 +852,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     function head(){
       var nNew = st.orders.filter(function(o){ return o.status === "new"; }).length;
       var nBill = Object.keys(st.tables).filter(function(t){ return st.tables[t].billRequested; }).length;
-      var tabs = [["siparis", "Siparişler", nNew], ["masalar", "Masalar", nBill], ["garson", "Garson siparişi", 0], ["menu", "Menü", 0]];
+      var tabs = [["siparis", "Siparişler", nNew], ["masalar", "Masalar", nBill], ["garson", "Garson siparişi", 0], ["menu", "Menü", 0], ["rapor", "Rapor", 0]];
       return '<header class="k-head"><div class="k-wrap k-head-in"><div><span class="label">Kasa · Mutfak</span><div class="k-name">' + S.esc((st.cafe && st.cafe.name) || "") + '</div></div>' +
         '<nav class="tabs" role="tablist" aria-label="Bölümler">' + tabs.map(function(t){ return '<button role="tab" aria-selected="' + (st.tab === t[0]) + '" data-act="tab" data-v="' + t[0] + '">' + t[1] + (t[2] ? '<span class="badge">' + t[2] + '</span>' : '') + '</button>'; }).join("") + '</nav>' +
         (ctx.setupHref ? '<a class="btn btn-sm" href="' + S.esc(ctx.setupHref) + '">Kurulum</a>' : '') + '</div></header>' +
@@ -846,8 +901,59 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
           ? '<button class="btn btn-primary" data-act="closeYes" data-v="' + S.esc(t) + '">Evet, ödendi · masayı kapat</button><button class="btn" data-act="closeNo">Vazgeç</button>'
           : '<button class="btn btn-primary" data-act="closeAsk">Ödeme alındı · masayı kapat</button>') : '') +
         '<button class="btn" data-act="wFor" data-v="' + S.esc(t) + '">Bu masaya sipariş ekle</button>' +
+        (keys.length ? '<button class="btn" data-act="moveAsk" data-v="' + S.esc(t) + '">Masayı taşı</button>' : '') +
         ((st.tables[String(t)] || {}).billRequested || (st.tables[String(t)] || {}).waiter ? '<button class="btn btn-ghost" data-act="gone" data-v="' + S.esc(t) + '">Uyarıyı kapat</button>' : '') +
-        '<button class="btn btn-ghost" data-act="closeDetail">Kapat</button></div></section>';
+        '<button class="btn btn-ghost" data-act="closeDetail">Kapat</button></div>' +
+        (st.moveFrom === String(t) ? moveHtml(t) : '') + '</section>';
+    }
+    function moveHtml(t){
+      var b = []; for (var x = 1; x <= nTables(); x++) if (String(x) !== String(t)) {
+        var busy = tableAgg(x).list.length;
+        b.push('<button data-act="moveTo" data-v="' + x + '"' + (busy ? ' class="busy" title="Bu masada açık sipariş var"' : '') + '>' + x + '</button>');
+      }
+      return '<div class="move-box"><span class="label">Masa ' + S.esc(t) + ' siparişleri hangi masaya taşınsın?</span><div class="pick-table">' + b.join("") + '</div>' +
+        '<p class="small muted">Dolu masaya taşırsanız siparişler o masanın hesabına eklenir.</p><button class="btn btn-sm btn-ghost" data-act="moveNo">Vazgeç</button></div>';
+    }
+    function reportTab(){
+      var R = st.report, ranges = [["1", "Bugün"], ["7", "Son 7 gün"], ["14", "Son 14 gün"]];
+      var head = '<div class="rep-head"><h2 class="k-h" style="margin:0">Rapor</h2><div class="pick-table">' + ranges.map(function(r){ return '<button aria-pressed="' + (st.repDays === r[0]) + '" data-act="repRange" data-v="' + r[0] + '">' + r[1] + '</button>'; }).join("") + '</div></div>';
+      if (!R) return head + '<p class="muted">Yükleniyor…</p>';
+      if (!R.n) return head + '<div class="empty-card"><p>Bu aralıkta sipariş yok.</p></div>';
+      var maxH = Math.max.apply(null, R.hours.map(function(h){ return h[1]; }));
+      return head + '<div class="rep-tiles">' +
+        tile("Sipariş", R.n, R.items + " ürün") + tile("QR'dan", "%" + R.qrPct, R.qr + " QR · " + R.garson + " garson") +
+        tile("Ciro", S.fmt(R.revenue), "iptaller hariç") + tile("Masa başı hesap", R.checks ? S.fmt(R.avgCheck) : "—", R.checks + " kapanan masa") +
+        tile("Hazırlanma", R.prepN ? "~" + R.avgPrep + " dk" : "—", R.prepN ? "%" + R.onTime + " zamanında" : "henüz yok") + '</div>' +
+        '<div class="k-cols" style="margin-top:20px"><section class="k-panel"><span class="label">En çok satanlar</span><ol class="rep-top">' +
+        R.top.map(function(t){ return '<li><span>' + S.esc(t[0]) + '</span><b class="num">' + t[1] + '</b></li>'; }).join("") + '</ol></section>' +
+        '<section class="k-panel"><span class="label">Saatlere göre sipariş</span><div class="rep-hours">' +
+        R.hours.map(function(h){ return '<div class="rep-bar"><span class="num">' + h[0] + ':00</span><i style="width:' + Math.max(4, Math.round(h[1] / maxH * 100)) + '%"></i><b>' + h[1] + '</b></div>'; }).join("") + '</div></section></div>' +
+        '<p class="small muted" style="margin-top:14px">"Eski siparişleri temizle" yapılırsa o günlerin raporu da silinir. Pilot bitmeden temizlemeyin, ekran görüntüsünü alın.</p>';
+    }
+    function tile(k, v, s){ return '<div class="rep-tile"><span class="label">' + k + '</span><b>' + v + '</b><small>' + S.esc(s) + '</small></div>'; }
+    function loadReport(){
+      st.report = null; render(true);
+      var d0 = new Date(); d0.setHours(0, 0, 0, 0); var since = d0.getTime() - (Number(st.repDays) - 1) * 86400000;
+      B.listOrders(cafeId, since).then(function(list){
+        var ok = list.filter(function(o){ return o.status !== "cancelled"; });
+        var R = { n: ok.length, items: 0, qr: 0, garson: 0, revenue: 0, checks: 0, avgCheck: 0, prepN: 0, avgPrep: 0, onTime: 0, top: [], hours: [] };
+        var counts = {}, hrs = {}, checks = {}, prepSum = 0, onTime = 0;
+        ok.forEach(function(o){
+          (o.items || []).forEach(function(i){ R.items += i.qty; counts[i.name] = (counts[i.name] || 0) + i.qty; });
+          if (o.source === "garson") R.garson++; else R.qr++;
+          var tot = Number(o.total) || S.sum(o.items); R.revenue += tot;
+          var h = new Date(o.createdAt || 0).getHours(); hrs[h] = (hrs[h] || 0) + 1;
+          if (o.closed && o.closedAt) { var k = o.table + "@" + o.closedAt; checks[k] = (checks[k] || 0) + tot; }
+          if (o.doneAt && o.createdAt) { R.prepN++; prepSum += (o.doneAt - o.createdAt) / 60000; if (o.doneAt <= o.createdAt + (o.eta || S.DEFAULT_MINS) * 60000) onTime++; }
+        });
+        R.qrPct = R.n ? Math.round(R.qr / R.n * 100) : 0;
+        var cv = Object.keys(checks).map(function(k){ return checks[k]; });
+        R.checks = cv.length; R.avgCheck = cv.length ? cv.reduce(function(a, b){ return a + b; }, 0) / cv.length : 0;
+        R.avgPrep = R.prepN ? Math.round(prepSum / R.prepN) : 0; R.onTime = R.prepN ? Math.round(onTime / R.prepN * 100) : 0;
+        R.top = Object.keys(counts).map(function(k){ return [k, counts[k]]; }).sort(function(a, b){ return b[1] - a[1]; }).slice(0, 6);
+        R.hours = Object.keys(hrs).map(Number).sort(function(a, b){ return a - b; }).map(function(h){ return [(h < 10 ? "0" : "") + h, hrs[h]]; });
+        st.report = R; render(true);
+      }).catch(function(e){ S.toast(S.errText(e)); st.report = { n: 0 }; render(true); });
     }
     function waiterTab(){
       var items = menu().filter(function(i){ return !i.out; });
@@ -896,7 +1002,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (st.denied) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Erişim yok</h1><p class="muted">' + S.esc(st.denied) + '</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
       if (!st.cafeLoaded || !st.ordLoaded) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
       if (!st.cafe) { app.innerHTML = '<main class="login"><div class="login-card"><h1>İşletme bulunamadı</h1><p class="muted">"' + S.esc(cafeId) + '" kodlu işletme kayıtlı değil.</p></div></main>'; return; }
-      app.innerHTML = head() + (S.audioReady ? '' : '<button class="sound-bar" data-act="sound">Sipariş sesini ve ekranın açık kalmasını etkinleştirmek için buraya dokunun</button>') + '<main class="k-wrap">' + alertsHtml() + (st.tab === "siparis" ? ordersTab() : st.tab === "masalar" ? tablesTab() : st.tab === "garson" ? waiterTab() : menuTab()) + '</main>';
+      app.innerHTML = head() + (S.audioReady ? '' : '<button class="sound-bar" data-act="sound">Sipariş sesini ve ekranın açık kalmasını etkinleştirmek için buraya dokunun</button>') + '<main class="k-wrap">' + alertsHtml() + (st.tab === "siparis" ? ordersTab() : st.tab === "masalar" ? tablesTab() : st.tab === "garson" ? waiterTab() : st.tab === "rapor" ? reportTab() : menuTab()) + '</main>';
     }
     var tick = setInterval(function(){ if (st.tab === "siparis") render(); }, 30000);
 
@@ -908,7 +1014,12 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
       var v = b.dataset.v, o = st.orders.find(function(x){ return x.id === v; });
       switch (b.dataset.act) {
-        case "tab": st.tab = v; st.pinOk = v === "menu" && st.pinOk; st.openTable = null; st.confirmClose = false; break;
+        case "tab": st.tab = v; st.pinOk = v === "menu" && st.pinOk; st.openTable = null; st.confirmClose = false; st.moveFrom = null; if (v === "rapor") { loadReport(); return; } break;
+        case "repRange": st.repDays = v; loadReport(); return;
+        case "moveAsk": st.moveFrom = v; break;
+        case "moveNo": st.moveFrom = null; break;
+        case "moveTo": { var from = st.moveFrom; st.moveFrom = null;
+          B.moveTable(cafeId, String(from), String(v)).then(function(n){ S.toast("Masa " + from + " → Masa " + v + " taşındı (" + n + " sipariş)"); st.openTable = String(v); render(true); }).catch(function(e){ S.toast(S.errText(e)); }); return; }
         case "done": if (o) upd(o, { status: "done", doneAt: Date.now() }); return;
         case "undo": if (o) upd(o, { status: "new" }); return;
         case "openTable": st.tab = "masalar"; st.openTable = v; st.confirmClose = false; render(true); var d = S.$("detail"); if (d) d.scrollIntoView({ block: "nearest" }); return;
