@@ -91,6 +91,34 @@ h1,h2,h3{margin:0;font-family:var(--f-d);font-weight:600;line-height:1.05;text-w
 footer{background:var(--ink);color:var(--sand);text-align:center;padding-block:44px;font-size:.88rem}
 footer .f-logo{font-family:var(--f-d);font-size:2.2rem;font-weight:700;color:var(--cream);display:block;margin-bottom:6px}
 
+
+/* ---------- ziyaret ---------- */
+.visit{padding-block:90px 70px;scroll-margin-top:70px}
+.visit-head{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:44px}
+.visit-head .pre{font-size:.76rem;letter-spacing:.36em;text-transform:uppercase;color:var(--wine);padding-left:.36em}
+.visit-head h2{font-size:clamp(2.6rem,7vw,4rem)}
+.v-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:760px){.v-grid{grid-template-columns:1fr}}
+.v-card{background:#FFFDF8;border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.v-card .lbl{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--wine)}
+.v-card h3{font-size:1.6rem}
+.v-card p,.v-card dd{color:var(--soft);margin:0}
+.v-card a.lnk{color:var(--wine);font-weight:500;text-decoration:none;border-bottom:1px solid currentColor;align-self:flex-start;margin-top:auto}
+.v-card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.95rem}
+.v-card dt{font-weight:500}.v-card dd{text-align:right;font-variant-numeric:tabular-nums}
+.v-big{font-family:var(--f-d);font-size:1.7rem;font-weight:700;color:var(--ink);text-decoration:none;font-variant-numeric:tabular-nums}
+.map{margin-top:18px;border-radius:14px;overflow:hidden;border:1px solid var(--line);height:300px;background:
+ linear-gradient(90deg,transparent 48%,#F6E9D2 48% 52%,transparent 52%),
+ linear-gradient(0deg,transparent 30%,#F6E9D2 30% 34%,transparent 34%),
+ linear-gradient(28deg,transparent 60%,#EAD7B4 60% 63%,transparent 63%),
+ linear-gradient(-12deg,transparent 72%,#CFE0C4 72% 86%,transparent 86%),var(--sand);position:relative}
+.map iframe{width:100%;height:100%;border:0;display:block;filter:sepia(.25) saturate(.9)}
+.pin{position:absolute;left:50%;top:44%;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center}
+.pin b{background:var(--wine);color:#fff;font-weight:500;font-size:.85rem;padding:6px 12px;border-radius:999px;box-shadow:0 8px 18px -8px rgba(58,10,10,.6);white-space:nowrap}
+.pin i{width:2px;height:16px;background:var(--wine)}
+.pin::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--red);box-shadow:0 0 0 6px rgba(214,40,40,.2)}
+footer .f-row{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-top:10px}
+
 /* ---------- geçişler (yalnızca JS ve hareket açıkken) ---------- */
 .js .logo span{opacity:0;transform:translateY(.4em) rotate(4deg);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(1.3s + var(--i) * .06s)}
 .js .ember{transform:scaleX(0);animation:draw .9s 1.9s cubic-bezier(.6,0,.2,1) forwards}
@@ -145,6 +173,18 @@ footer .f-logo{font-family:var(--f-d);font-size:2.2rem;font-weight:700;color:var
   </div>
 </main>
 
+
+<section class="visit" id="ziyaret">
+  <div class="wrap">
+    <div class="visit-head rv"><span class="pre">Ziyaret</span><h2>Bizi bulun</h2></div>
+    <div class="v-grid">
+      <div class="v-card rv"><span class="lbl">Adres</span><h3>Odunpazarı</h3><p>Ateşbaz Sokak No: 7<br>Odunpazarı / Eskişehir</p><a class="lnk" href="https://www.google.com/maps/search/?api=1&query=Odunpazar%C4%B1+Eski%C5%9Fehir" target="_blank" rel="noopener">Yol tarifi al</a></div>
+      <div class="v-card rv" style="--d:.08s"><span class="lbl">Çalışma saatleri</span><h3>Her gün açığız</h3><dl><dt>Pazartesi – Perşembe</dt><dd>11:00 – 23:00</dd><dt>Cuma – Cumartesi</dt><dd>11:00 – 00:00</dd><dt>Pazar</dt><dd>12:00 – 22:00</dd></dl></div>
+      <div class="v-card rv" style="--d:.16s"><span class="lbl">Rezervasyon</span><a class="v-big" href="tel:+902220000000">0222 000 00 00</a><p>merhaba@adanalim.com.tr</p><p>Kalabalık gruplar için bir gün önceden arayın.</p></div>
+    </div>
+    <div class="map rv" id="map"><iframe title="Adanalım konumu" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=30.5190%2C39.7600%2C30.5330%2C39.7675&amp;layer=mapnik&amp;marker=39.7637%2C30.5258"></iframe></div>
+  </div>
+</section>
 <section class="order">
   <div class="wrap rv">
     <h2>Masanızdan <em>sipariş verin</em></h2>
@@ -156,6 +196,7 @@ footer .f-logo{font-family:var(--f-d);font-size:2.2rem;font-weight:700;color:var
 <footer>
   <span class="f-logo">Adanalım</span>
   Ocakbaşı · Eskişehir
+  <div class="f-row"><span>Ateşbaz Sokak No: 7, Odunpazarı</span><span>0222 000 00 00</span><span>Her gün 11:00'den itibaren</span></div>
 </footer>
 
 <script>
@@ -205,7 +246,7 @@ footer .f-logo{font-family:var(--f-d);font-size:2.2rem;font-weight:700;color:var
           '<div class="d-price">' + fmt(it.p) + (it.p15 ? '<small>1,5 porsiyon · ' + fmt(it.p15) + '</small>' : '') + '</div></article>';
       }).join("") + '</section>';
   }).join("");
-  document.getElementById("tabs").innerHTML = MENU.map(function(c){ return '<a href="#' + slug(c.cat) + '">' + esc(c.cat) + '</a>'; }).join("");
+  document.getElementById("tabs").innerHTML = MENU.map(function(c){ return '<a href="#' + slug(c.cat) + '">' + esc(c.cat) + '</a>'; }).join("") + '<a href="#ziyaret">Ziyaret</a>';
 
   /* görünür olunca beliren öğeler */
   var rv = document.querySelectorAll(".rv");
@@ -215,7 +256,7 @@ footer .f-logo{font-family:var(--f-d);font-size:2.2rem;font-weight:700;color:var
   } else rv.forEach(function(el){ el.classList.add("in"); });
 
   /* kaydırınca: giriş yazısı küçülüp söner, üst şerit iner, aktif kategori işaretlenir */
-  var intro = document.getElementById("introIn"), bar = document.getElementById("bar"), tabs = document.querySelectorAll("#tabs a"), cats = document.querySelectorAll(".cat"), ticking = false;
+  var intro = document.getElementById("introIn"), bar = document.getElementById("bar"), tabs = document.querySelectorAll("#tabs a"), cats = document.querySelectorAll(".cat, .visit"), ticking = false;
   function onScroll(){
     var y = window.pageYOffset, h = window.innerHeight;
     if (!reduce) { var t = Math.min(1, y / (h * 0.7)); intro.style.transform = "translateY(" + (y * 0.35) + "px) scale(" + (1 - t * 0.18) + ")"; intro.style.opacity = String(1 - t); }
