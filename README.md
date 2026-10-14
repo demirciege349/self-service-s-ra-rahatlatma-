@@ -17,16 +17,20 @@ Telefonla açın, sipariş verin, üstteki **Mutfak / kasa** düğmesiyle sipari
 - **1 / 1,5 porsiyon** seçimi; gram ve kalori kendiliğinden 1,5 katına çıkar
 - **Porsiyonu masada gör (3D):** yemek, telefon kamerasıyla masanın üstünde gerçek boyutunda görünür
 - Sipariş notu ("acısız"), gönderince **tahmini süre**; menüye dönünce üstte **kalan dakika** şeridi
+- **Yoğunluğa göre süre:** mutfakta bekleyen sipariş arttıkça süreler kendiliğinden uzar, misafir "Mutfağımız şu an yoğun" uyarısını görür
+- Sipariş misafir tarafından iptal edilemez; kasa iptal ederse misafir bunu görür
 - Her ekranda **Garson çağır**, hesap ekranında **Hesap iste**
 
 ## İşletme ne görür?
 
 **Kasa / mutfak ekranı** (tablet ya da bilgisayar, şifreli):
 - Gelen siparişler: masa, saat, not, kalan süre (geciken kırmızı), **Hazırlandı**
-- **Masalar:** açık hesaplar, hesap isteyen masa kırmızı, **Ödeme alındı · masayı kapat**, **Masayı taşı**
+- **Siparişi iptal et** (yalnızca hazırlanmamış siparişler, onaylı; şaka siparişlere karşı)
+- **Mutfak yoğunluğu:** bekleyen siparişe göre otomatik ek süre + elle **+10 / +20 dk**
+- **Masalar:** açık hesaplar, hesap isteyen masa kırmızı, **Hesap fişi yazdır**, **Ödeme alındı · masayı kapat**, **Masayı taşı**
 - **Garson siparişi:** QR kullanmayan misafir için
 - **Menü:** **Tükendi** (tek dokunuş), fiyat ve süre değişikliği (patron PIN'i, kayıtlı), **Basılı fiyat listesini yazdır**
-- **Rapor:** sipariş sayısı, QR/garson oranı, ciro, masa başı hesap, hazırlanma süresi, en çok satanlar, yoğun saatler
+- **Rapor:** sipariş sayısı, QR/garson oranı, ciro, masa başı hesap, hazırlanma süresi, en çok satanlar, yoğun saatler, **satış dökümü (.csv, Excel)**
 - Yeni sipariş, garson çağrısı ve hesap isteğinde ses
 
 **Kurulum ekranı:** menü editörü (fotoğraf, fiyat, porsiyon, kalori, süre, alerjenler, 3D model, sıralama), masa QR kartları (PNG / yazdır), PIN, kasa hesapları.
@@ -50,7 +54,7 @@ Telefonla açın, sipariş verin, üstteki **Mutfak / kasa** düğmesiyle sipari
 
 ## Bilinen sınırlar
 
-- Masadan online ödeme ve adisyon programı bağlantısı henüz yok
+- Masadan online ödeme ve adisyon programı bağlantısı henüz yok. Adisyon kullanan işletme için ara çözüm: hesap fişi ve gün sonu satış dökümü
 - Kalori, gramaj ve alerjen bilgilerini işletme girer; menüde yaklaşık olduğu belirtilir
 - Basılı fiyat listesi yönetmelik gereği masada ve girişte bulunmalıdır; sistem bu listeyi tek tuşla üretir
 
