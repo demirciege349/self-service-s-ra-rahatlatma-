@@ -816,9 +816,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
           return '<article class="ticket' + (late ? " late" : "") + '"><div class="t-top"><span class="t-table">Masa ' + S.esc(o.table) + '</span><span class="t-time">' + S.clock(o.createdAt) + '<br>' + (o.source === "garson" ? "garson" : "QR") + '</span></div>' +
             '<ul class="t-items">' + (o.items || []).map(function(i){ return '<li><b>' + i.qty + '×</b>' + S.esc(i.name) + '</li>'; }).join("") + '</ul>' +
             (o.note ? '<div class="t-note">Not: ' + S.esc(o.note) + '</div>' : '') + etaHtml(o) +
-            (st.confirmCancel === o.id
-              ? '<div class="row-btns"><button class="btn btn-bad" style="flex:1" data-act="cancelYes" data-v="' + S.esc(o.id) + '">Evet, iptal et</button><button class="btn" data-act="cancelNo">Vazgeç</button></div>'
-              : '<div class="row-btns"><button class="btn btn-primary" style="flex:1" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button><button class="btn btn-ghost" data-act="cancelAsk" data-v="' + S.esc(o.id) + '">İptal</button></div>') + '</article>';
+            '<button class="btn btn-primary" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button></article>';
         }).join("") + '</div>' : '<div class="empty-card"><p>Bekleyen sipariş yok. Masalardan gelen siparişler burada belirir ve ses çıkarır.</p></div>') +
         '</section><section><h2 class="k-h">Hazırlananlar</h2>' +
         (dn.length ? '<div class="done-list">' + dn.map(function(o){ return '<div class="done-row"><b>M' + S.esc(o.table) + '</b><span class="d">' + S.esc(S.summary(o.items)) + '</span><span class="small muted">' + S.clock(o.doneAt) + '</span><button class="btn btn-sm btn-ghost" data-act="undo" data-v="' + S.esc(o.id) + '" aria-label="Geri al">Geri al</button></div>'; }).join("") + '</div>' : '<p class="muted small">Henüz yok.</p>') +
@@ -913,9 +911,6 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "tab": st.tab = v; st.pinOk = v === "menu" && st.pinOk; st.openTable = null; st.confirmClose = false; break;
         case "done": if (o) upd(o, { status: "done", doneAt: Date.now() }); return;
         case "undo": if (o) upd(o, { status: "new" }); return;
-        case "cancelAsk": st.confirmCancel = v; break;
-        case "cancelNo": st.confirmCancel = null; break;
-        case "cancelYes": st.confirmCancel = null; if (o) upd(o, { status: "cancelled", cancelledAt: Date.now(), cancelledBy: "kasa" }).then(function(){ S.toast("Masa " + o.table + " siparişi iptal edildi"); }); return;
         case "openTable": st.tab = "masalar"; st.openTable = v; st.confirmClose = false; render(true); var d = S.$("detail"); if (d) d.scrollIntoView({ block: "nearest" }); return;
         case "closeDetail": st.openTable = null; st.confirmClose = false; break;
         case "closeAsk": st.confirmClose = true; break;
