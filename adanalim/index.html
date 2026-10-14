@@ -313,7 +313,7 @@ footer .f-row{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;ma
           '<div class="i-top"><h4 class="i-name">' + esc(it.n) + '</h4><span class="lead" aria-hidden="true"></span><span class="i-price">' + fmt(it.p) + '</span></div>' +
           '<p class="i-desc">' + esc(it.d) + '</p>' +
           '<div class="i-meta"><span>' + esc(it.a) + '</span><span>~' + it.m + ' dk</span><span>' + it.k + ' kcal</span>' + (ALG[it.n] ? '<span class="i-alg">' + esc(ALG[it.n]) + '</span>' : '') + '</div>' +
-          (it.p15 ? '<div class="i-15">1,5 porsiyon · ' + esc(it.a15) + ' · <b>' + fmt(it.p15) + '</b></div>' : '') + '</div></article>';
+          (it.p15 ? '<div class="i-15">1,5 porsiyon · ' + esc(it.a15) + ' · ' + Math.round(it.k * 1.5) + ' kcal · <b>' + fmt(it.p15) + '</b></div>' : '') + '</div></article>';
       }).join("") + '</div></section>';
   }).join("");
   /* imza tabak kendi bölümünün (Kebaplar) başına taşınır */
