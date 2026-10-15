@@ -1,0 +1,1500 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3A0A0A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Garson">
+<meta name="description" content="QR ile masadan sipariş demosu">
+<link rel="manifest" href="garson.webmanifest">
+<link rel="icon" href="garson-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="garson-icon.svg">
+<title>Garson · Kuzey Sofrası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap">
+<style>
+/* Adanalım — ortak stil. Palet: krem #FFF8EC, kum #F2E3C6, kırmızı #D62828, bordo #9D0208, kahve-siyah #3A0A0A.
+   Tek görünüm (marka kimliği); her renk açıkça tanımlı. */
+:root{
+  --cream:#FFF8EC; --sand:#F2E3C6; --red:#D62828; --wine:#9D0208; --ink:#3A0A0A;
+  --soft:#6E4A42; --line:#E8D8BA; --line-2:#DCC59C; --white:#FFFDF8;
+  --ok:#2E6B3A; --ok-soft:#E3EFDC; --warn-soft:#FBE3D9;
+  --f-display:"Cormorant Garamond","Cormorant",Garamond,"Times New Roman",serif;
+  --f-body:"Jost",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--cream);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;letter-spacing:-.005em}
+[hidden]{display:none!important}
+a{color:var(--wine)}
+button{font:inherit;cursor:pointer;color:inherit}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--white);border:1px solid var(--line-2);border-radius:4px;padding:.6rem .7rem;width:100%;min-width:0}
+textarea{resize:vertical}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--wine);outline-offset:2px}
+.muted{color:var(--soft)} .small{font-size:.86rem} .center{text-align:center} .wide{width:100%}
+.num{font-family:var(--f-display);font-variant-numeric:lining-nums tabular-nums}
+.label{display:block;font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:46px;padding:.55rem 1.1rem;border-radius:4px;border:1px solid var(--line-2);background:var(--white);color:var(--ink);font-weight:500;text-decoration:none;text-align:center}
+.btn:hover{border-color:var(--wine)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--wine);border-color:var(--wine);color:var(--cream)}
+.btn-primary:hover{background:var(--ink);border-color:var(--ink)}
+.btn-red{background:var(--red);border-color:var(--red);color:var(--cream)}
+.btn-ghost{background:transparent}
+.btn-ok{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+.btn-bad{background:var(--warn-soft);border-color:transparent;color:var(--wine)}
+.btn-sm{min-height:36px;padding:.3rem .75rem;font-size:.88rem}
+.btn-lg{min-height:54px;font-size:1.02rem;letter-spacing:.04em}
+.row-btns{display:flex;flex-wrap:wrap;gap:10px}
+.sound-bar{display:block;width:100%;border:0;background:var(--red);color:#fff;font-weight:500;padding:12px 16px;text-align:center}
+@media (max-width:820px){input,textarea,select{font-size:16px}}
+.toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:.7rem 1.1rem;border-radius:4px;font-weight:500;z-index:50;max-width:calc(100% - 32px);text-align:center;box-shadow:0 10px 30px -10px rgba(58,10,10,.5)}
+.empty-card{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:8px}
+.empty-card h2{font-size:1.6rem}
+.empty-card p{color:var(--soft)}
+.offline{background:var(--warn-soft);color:var(--wine);font-weight:500;font-size:.88rem;text-align:center;padding:8px 16px}
+.chip{font-size:.72rem;font-weight:500;padding:.15rem .5rem;border-radius:3px;background:var(--sand);color:var(--ink);white-space:nowrap}
+
+/* ---------- giriş ---------- */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.login-card{width:100%;max-width:400px;background:var(--white);border:1px solid var(--line);padding:30px 26px;display:flex;flex-direction:column;gap:14px;box-shadow:0 0 0 8px var(--cream),0 0 0 9px var(--line)}
+.login-card h1{font-size:2rem}
+.brand-sm{font-family:var(--f-display);font-weight:700;font-size:1.3rem;color:var(--wine)}
+.login-form{display:flex;flex-direction:column;gap:12px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:.78rem;font-weight:500;letter-spacing:.06em;color:var(--soft);min-width:0}
+.form-err{color:var(--wine);font-weight:500;font-size:.9rem}
+
+/* ---------- müşteri ---------- */
+.c-wrap{max-width:560px;margin:0 auto;padding-inline:16px}
+.c-head{background:var(--cream);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:10}
+.c-head-in{display:flex;align-items:center;gap:12px;padding-block:14px 10px}
+.c-name{flex:1;min-width:0;font-family:var(--f-display);font-weight:700;font-size:1.65rem;line-height:1.05;overflow-wrap:anywhere}
+.waiter-btn{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;border:1px solid var(--wine);background:var(--white);color:var(--wine);border-radius:999px;padding:7px 12px;font-size:.82rem;font-weight:500;white-space:nowrap}
+.waiter-btn.on{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+@media (max-width:420px){.c-name{font-size:1.35rem}}
+@media (max-width:380px){.waiter-btn{padding:7px 9px;font-size:.76rem}}
+.c-table{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);background:var(--wine);padding:6px 10px;border-radius:3px;white-space:nowrap}
+.c-chips{display:flex;gap:6px;overflow-x:auto;padding-block:4px 12px;scrollbar-width:none}
+.c-chips::-webkit-scrollbar{display:none}
+.c-chips a,.c-chips button{font-family:inherit;cursor:pointer;flex-shrink:0;text-decoration:none;color:var(--ink);font-size:.86rem;border:1px solid var(--line-2);border-radius:999px;padding:6px 13px;background:var(--white)}
+.c-main{display:flex;flex-direction:column;gap:26px;padding-block:20px 40px}
+.c-main.has-bar{padding-bottom:200px}
+.c-intro{font-family:var(--f-display);font-style:italic;font-size:1.15rem;color:var(--soft);text-align:center}
+.ar-open{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin-top:6px;background:var(--sand);border:1px solid var(--line-2);color:var(--wine);border-radius:999px;padding:6px 12px;font-size:.8rem;font-weight:500}
+#arLayer{position:fixed;inset:0;z-index:60;background:rgba(58,10,10,.55);display:flex;align-items:flex-end;justify-content:center}
+.ar-box{width:100%;max-width:560px;max-height:100%;background:var(--cream);border-radius:14px 14px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px}
+.ar-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.ar-head h2{font-size:1.7rem;line-height:1.1}
+.ar-stage{position:relative;height:min(58vh,440px);border-radius:10px;overflow:hidden;background:var(--sand);display:flex;align-items:center;justify-content:center}
+.ar-wait{color:var(--soft);font-size:.9rem;text-align:center;padding:20px}
+.ar-btn{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;background:var(--wine);color:var(--cream);border:0;border-radius:999px;padding:12px 20px;font-weight:500;box-shadow:0 8px 20px -6px rgba(58,10,10,.5)}
+.ar-note{font-size:.84rem;color:var(--soft)}
+.alg-line{font-size:.76rem;color:var(--soft);letter-spacing:.02em}
+.alg-warn{display:inline-flex;align-items:center;gap:5px;align-self:flex-start;font-size:.74rem;font-weight:600;color:#fff;background:var(--red);border-radius:3px;padding:3px 8px}
+.dish.avoid .dish-img{opacity:.55}
+.dish.avoid .dish-name{color:var(--soft)}
+.alg-filter{display:flex;flex-direction:column;gap:8px}
+.alg-toggle{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;background:transparent;border:1px solid var(--line-2);border-radius:999px;padding:7px 13px;font-size:.84rem;color:var(--ink)}
+.alg-panel{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;font-size:.88rem;color:var(--soft)}
+.alg-chips{display:flex;flex-wrap:wrap;gap:6px}
+.alg-chip{border:1px solid var(--line-2);background:var(--cream);border-radius:999px;padding:7px 12px;font-size:.84rem;color:var(--ink)}
+.alg-chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.alg-small{font-size:.76rem}
+.eta-list{display:flex;flex-direction:column;gap:8px}
+.eta-banner{display:flex;align-items:center;gap:12px;background:var(--ink);color:var(--cream);border-radius:6px;padding:12px 14px}
+.eta-banner svg{flex-shrink:0;color:var(--sand)}
+.eta-txt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.eta-txt b{font-family:var(--f-display);font-size:1.2rem;font-weight:600}
+.eta-txt span{font-size:.8rem;color:#C9AE95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eta-num{display:flex;flex-direction:column;align-items:flex-end;line-height:1}
+.eta-num strong{font-family:var(--f-display);font-size:2rem;font-weight:700;color:var(--sand)}
+.eta-num strong.soon{font-size:1.15rem}
+.eta-num small{font-size:.68rem;letter-spacing:.08em;color:#C9AE95;margin-top:2px}
+.cat-h{display:flex;align-items:center;gap:12px;font-family:var(--f-display);font-size:1.6rem;font-weight:600;margin-bottom:6px}
+.cat-h::after{content:"";flex:1;height:1px;background:var(--line-2)}
+.dish{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.dish:last-child{border-bottom:0}
+.dish-img{width:104px;height:104px;border-radius:6px;overflow:hidden;background:var(--sand);position:relative}
+.dish-img img,.dish-img .ph-svg{width:100%;height:100%;object-fit:cover;display:block}
+.dish.out .dish-img{filter:grayscale(1);opacity:.55}
+.dish-body{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dish-name{font-family:var(--f-display);font-size:1.32rem;font-weight:600;line-height:1.15;overflow-wrap:anywhere}
+.dish-desc{font-size:.86rem;color:var(--soft);line-height:1.4}
+.dish-meta{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:4px}
+.dish-price{font-family:var(--f-display);font-weight:700;font-size:1.3rem;white-space:nowrap}
+.dish-time{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;color:var(--soft)}
+.dish-time svg{flex-shrink:0}
+.dish-time{flex-wrap:wrap}
+.kcal{display:inline-flex;align-items:center;gap:4px;flex-basis:100%;margin-top:2px}
+.por-l{display:flex;flex-direction:column;line-height:1.2}
+.por-l small{font-size:.7rem;color:var(--soft);opacity:.85}
+.dish-meta.portion{padding-top:6px;gap:8px}
+.dish-meta.portion .round{width:34px;height:34px}
+.dish-meta.portion .stepper{gap:6px}
+.dish-meta.portion .dish-price{font-size:1.15rem}
+.dish-meta.portion+.dish-meta.portion{border-top:1px dashed var(--line);margin-top:4px}
+.por-l{font-size:.8rem;color:var(--soft);white-space:nowrap}
+.dish-out{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--wine);font-weight:500}
+.stepper{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.stepper .q{min-width:1.4em;text-align:center;font-family:var(--f-display);font-weight:700;font-size:1.2rem}
+.round{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:var(--white);display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;line-height:1}
+.round-add{background:var(--wine);border-color:var(--wine);color:var(--cream)}
+.c-bar{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--white);border-top:1px solid var(--line-2);padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 30px -18px rgba(58,10,10,.35)}
+.c-bar-in{display:flex;flex-direction:column;gap:8px}
+.c-bar-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:.9rem;color:var(--soft)}
+.c-bar-top b{font-family:var(--f-display);font-size:1.35rem;color:var(--ink)}
+.note-in{font-size:.92rem}
+.done{background:var(--white);border:1px solid var(--line);padding:10px}
+.done-in{border:1px solid var(--line-2);padding:30px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.done-ico{width:64px;height:64px;border-radius:50%;background:var(--wine);color:var(--cream);display:flex;align-items:center;justify-content:center}
+.done h2{font-size:2rem;line-height:1.1}
+.done-eta{font-family:var(--f-display);font-size:3.4rem;font-weight:700;line-height:1;color:var(--wine)}
+.done-eta small{font-size:1.2rem;font-weight:600;color:var(--ink)}
+.done p{color:var(--soft)}
+.bill{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.bill h3{font-size:1.35rem;display:flex;justify-content:space-between;align-items:baseline}
+.bill ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:.94rem}
+.bill li{display:flex;justify-content:space-between;gap:12px}
+.bill li span:last-child{white-space:nowrap}
+.bill-total{display:flex;justify-content:space-between;border-top:1px solid var(--line-2);padding-top:8px;font-weight:500}
+.bill-total b{font-family:var(--f-display);font-size:1.35rem}
+.bill-state{font-size:.88rem;color:var(--ok);font-weight:500;text-align:center}
+.c-foot{text-align:center;font-size:.78rem;color:var(--soft);letter-spacing:.06em}
+
+/* ---------- kasa ---------- */
+.k-wrap{max-width:1240px;margin:0 auto;padding-inline:16px}
+.k-head{background:var(--ink);color:var(--sand)}
+.k-head-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.k-name{font-family:var(--f-display);font-weight:700;font-size:1.5rem;color:var(--cream)}
+.k-head .label{color:#C9AE95}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button{position:relative;min-height:42px;padding:.4rem 1rem;border-radius:4px;border:1px solid rgba(242,227,198,.3);background:transparent;color:var(--sand);font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.tabs .badge{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;border-radius:10px;background:var(--red);color:#fff;font-size:.72rem;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.k-head .btn{background:transparent;color:var(--sand);border-color:rgba(242,227,198,.3)}
+@media (max-width:720px){
+  .k-head-in{display:grid;grid-template-columns:minmax(0,1fr) auto}
+  .k-head-in .tabs{grid-column:1 / -1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .k-head-in .tabs button{padding-inline:.3rem;font-size:.86rem}
+}
+main.k-wrap{padding-block:20px 48px}
+.alerts{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.alert{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--red);color:#fff;border-radius:4px;padding:12px 16px;font-weight:500}
+.alert .btn{background:#fff;color:var(--wine);border-color:#fff;min-height:36px}
+.k-cols{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:900px){.k-cols{grid-template-columns:minmax(0,1fr)}}
+.k-h{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--f-display);font-size:1.5rem;font-weight:600;margin-bottom:10px}
+.k-h .label{font-family:var(--f-body)}
+.tickets{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ticket{background:var(--white);border:1px solid var(--line);border-top:4px solid var(--wine);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.ticket.late{border-top-color:var(--red);box-shadow:0 0 0 2px var(--red)}
+.t-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.t-table{font-family:var(--f-display);font-size:1.7rem;font-weight:700;line-height:1}
+.t-time{font-size:.8rem;color:var(--soft);text-align:right}
+.t-items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;font-size:1rem}
+.t-items b{font-family:var(--f-display);font-size:1.15rem;margin-right:4px}
+.t-note{background:var(--sand);border-radius:3px;padding:6px 9px;font-size:.88rem}
+.t-eta{font-size:.82rem;color:var(--soft)}
+.t-eta.late{color:var(--red);font-weight:600}
+.done-list{display:flex;flex-direction:column;gap:6px}
+.done-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--white);border:1px solid var(--line);border-radius:4px;font-size:.9rem}
+.done-row .d{flex:1;min-width:0;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.done-row b{font-family:var(--f-display);font-size:1.1rem}
+.tables{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tbl{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:6px;text-align:left;min-height:118px}
+.tbl:hover{border-color:var(--wine)}
+.tbl.busy{border-color:var(--line-2);background:var(--cream)}
+.tbl.bill{border:2px solid var(--red);background:var(--warn-soft)}
+.tbl-n{font-family:var(--f-display);font-size:1.6rem;font-weight:700;line-height:1}
+.tbl-t{font-family:var(--f-display);font-size:1.3rem;font-weight:600;margin-top:auto}
+.tbl-s{font-size:.78rem;color:var(--soft)}
+.tbl.bill .tbl-s{color:var(--wine);font-weight:600}
+.detail{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.detail h3{font-size:1.8rem}
+.detail ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.detail li{display:flex;justify-content:space-between;gap:12px}
+.detail li span:last-child{white-space:nowrap}
+.move-box{border-top:1px dashed var(--line-2);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.pick-table button.busy{border-style:dashed;color:var(--soft)}
+.rep-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.rep-head .pick-table button{min-width:auto;padding:0 14px;font-family:var(--f-body);font-weight:500;font-size:.9rem}
+.rep-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.rep-tile{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.rep-tile b{font-family:var(--f-display);font-size:2rem;font-weight:700;line-height:1.1}
+.rep-tile small{color:var(--soft);font-size:.8rem}
+.rep-top{margin:10px 0 0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.rep-top li span{display:inline-block;min-width:60%}
+.rep-top b{float:right;font-size:1.1rem}
+.rep-hours{display:flex;flex-direction:column;gap:5px;margin-top:10px}
+.rep-bar{display:grid;grid-template-columns:52px minmax(0,1fr) 30px;align-items:center;gap:8px;font-size:.84rem}
+.rep-bar i{display:block;height:12px;background:var(--wine);border-radius:2px}
+.rep-bar b{text-align:right}
+.pl-box{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--white);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.pl-box div{display:flex;flex-direction:column;min-width:0;flex:1 1 220px}
+.k-narrow{max-width:760px;display:flex;flex-direction:column;gap:16px}
+.k-panel{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.pick-table{display:flex;flex-wrap:wrap;gap:6px}
+.pick-table button{min-width:52px;min-height:44px;border:1px solid var(--line-2);border-radius:4px;background:var(--white);font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.pick-table button[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:var(--cream)}
+.w-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.w-item:last-child{border-bottom:0}
+.w-item .nm{min-width:0}
+.w-item .nm b{display:block;font-weight:500}
+.pinbox{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--sand);border-radius:4px;padding:12px 14px}
+.pinbox input{width:120px}
+.m-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.m-row:last-child{border-bottom:0}
+.m-row.is-out .m-nm{text-decoration:line-through;opacity:.55}
+.m-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.price-in{width:96px}
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:.84rem;color:var(--soft)}
+
+/* ---------- kurulum ---------- */
+.s-wrap{max-width:1100px;margin:0 auto;padding-inline:16px}
+.s-head{background:var(--ink);color:var(--sand)}
+.s-head-in{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:14px}
+.s-head .brand-sm{color:var(--cream);font-size:1.6rem;text-decoration:none}
+.s-head .btn{background:transparent;color:var(--sand);border-color:rgba(242,227,198,.3)}
+.s-head-r{display:flex;align-items:center;gap:10px;min-width:0}
+.s-head-r .small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:40vw;color:#C9AE95}
+.s-main{display:flex;flex-direction:column;gap:34px;padding-block:28px 64px}
+.s-hero{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;background:var(--white);border:1px solid var(--line);padding:26px}
+.s-hero h1{font-size:clamp(2rem,4vw,2.8rem);line-height:1.05}
+.s-sec{display:flex;flex-direction:column;gap:14px}
+.s-sec h2{font-size:1.9rem}
+.s-sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.note{font-size:.88rem;color:var(--soft)}
+.form-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;background:var(--white);border:1px solid var(--line);padding:16px}
+.form-row .fld{flex:2 1 220px}
+.form-row .fld-s{flex:1 1 110px}
+.ed-list{display:flex;flex-direction:column;gap:10px}
+.ed{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;background:var(--white);border:1px solid var(--line);padding:12px}
+.ed-left{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.ed-mini{border:1px solid var(--line-2);background:var(--white);border-radius:4px;padding:4px 6px;font-size:.74rem;color:var(--soft)}
+.ed-mini:disabled{opacity:.35}
+.ed-move{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.alg-edit{border:1px dashed var(--line-2);border-radius:4px;padding:6px 10px 8px;margin:0;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.8rem;color:var(--ink)}
+.alg-edit legend{font-size:.78rem;letter-spacing:.06em;color:var(--soft);padding:0 4px}
+.alg-edit label{display:inline-flex;align-items:center;gap:4px}
+.alg-edit input{width:auto}
+.ed-photo{position:relative;width:96px;height:96px;border-radius:6px;overflow:hidden;background:var(--sand);border:1px dashed var(--line-2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ed-photo img,.ed-photo .ph-svg{width:100%;height:100%;object-fit:cover}
+.ed-photo span{position:absolute;bottom:0;left:0;right:0;background:rgba(58,10,10,.72);color:var(--cream);font-size:.7rem;text-align:center;padding:3px}
+.ed-photo input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.ed-fields{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) 86px 96px;gap:8px;align-items:end}
+.ed-fields .fld-amt{grid-column:1 / 3}
+.ed-fields .fld-desc{grid-column:1 / 4}
+.ed-fields .del{align-self:end}
+@media (max-width:640px){
+  .ed{grid-template-columns:76px minmax(0,1fr)}
+  .ed-photo{width:76px;height:76px}
+  .ed-fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .ed-fields .fld-name,.ed-fields .fld-desc{grid-column:1 / -1}
+}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.qr-card{background:var(--white);border:1px solid var(--line);padding:8px}
+.qr-in{border:1px solid var(--wine);outline:1px solid var(--wine);outline-offset:-4px;padding:16px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.qr-cafe{font-family:var(--f-display);font-weight:700;font-size:1.1rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qr-label{font-family:var(--f-display);font-style:italic;font-size:1.8rem;line-height:1.1}
+.qr-img{width:140px;height:140px;display:flex;align-items:center;justify-content:center}
+.qr-img img,.qr-img canvas{width:140px!important;height:140px!important}
+.qr-hint{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
+.pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.pick-card{display:flex;flex-direction:column;gap:2px;background:var(--white);border:1px solid var(--line);padding:16px;color:var(--ink);text-decoration:none}
+.pick-card b{font-family:var(--f-display);font-size:1.4rem}
+.s-danger{border-top:1px solid var(--line-2);padding-top:26px}
+@media (max-width:480px){
+  .qr-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .qr-img,.qr-img img,.qr-img canvas{width:110px!important;height:110px!important}
+  .qr-label{font-size:1.4rem}
+}
+@media print{
+  body{background:#fff}
+  .s-head,.s-hero,.no-print,.toast{display:none!important}
+  .s-main{padding:0}
+  .qr-grid{grid-template-columns:repeat(3,1fr);gap:8mm}
+  .qr-card{break-inside:avoid}
+}
+
+/* Yoğunluk ve iptal */
+.busy-note{display:flex;align-items:center;gap:8px;background:#FBE9D0;border:1px solid #E9C48F;color:var(--wine);border-radius:6px;padding:10px 12px;margin:0 0 14px;font-size:.9rem}
+.busy-note svg{flex-shrink:0}
+.busy-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--white);border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin-bottom:18px}
+.busy-bar>div:first-child{display:flex;flex-direction:column;min-width:0;flex:1 1 240px}
+.busy-bar .pick-table{align-items:center}
+.eta-banner.cancelled{background:var(--white);color:var(--ink);border:1px solid var(--red)}
+.eta-banner.cancelled b{color:var(--red)}
+.t-cancel-link{background:none;border:0;color:var(--soft);font:inherit;font-size:.8rem;text-decoration:underline;cursor:pointer;padding:6px 0 0;align-self:center}
+.t-cancel{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.82rem;margin-top:6px}
+.t-cancel span{flex:1 1 100%;color:var(--red)}
+.eta-banner.cancelled .eta-txt span{color:var(--soft);white-space:normal}
+.busy-bar .pick-table button{font-family:var(--f-body,inherit);font-size:.88rem;font-weight:500}
+.t-left{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.t-left span{flex:1 1 100%}
+.t-left button{flex:1;min-width:44px;min-height:40px;border:1px solid var(--line-2);background:var(--white);color:var(--ink);border-radius:4px;font:inherit;font-weight:600;cursor:pointer}
+.t-left button:active{background:var(--sand)}
+
+/* ================= Garson uygulaması ================= */
+body.g-body{background:var(--cream)}
+.g-app{min-height:100svh;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+.g-head{position:sticky;top:0;z-index:15;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:var(--cream);padding:calc(12px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px))}
+.g-head div{display:flex;flex-direction:column;line-height:1.15}
+.g-kick{font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:#C9AE95}
+.g-head b{font-family:var(--f-display);font-size:1.4rem;font-weight:600}
+.g-pulse{background:var(--red);color:#fff;font-size:.8rem;font-weight:600;padding:6px 12px;border-radius:999px;animation:gpulse 1.4s ease-in-out infinite}
+@keyframes gpulse{50%{box-shadow:0 0 0 6px rgba(214,40,40,.3)}}
+.g-ok{font-size:.8rem;color:#C9AE95;border:1px solid rgba(242,227,198,.3);padding:5px 12px;border-radius:999px}
+.g-sound{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;background:var(--sand);color:var(--ink);font:inherit;font-size:.86rem;padding:12px 16px;cursor:pointer}
+.g-main{padding:16px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.g-h{font-family:var(--f-display);font-size:1.7rem;font-weight:700;margin:6px 0 2px;display:flex;align-items:center;gap:10px}
+.g-h span{font-family:var(--f-body);font-size:.8rem;background:var(--ok);color:#fff;border-radius:999px;padding:2px 10px}
+.g-calls{display:flex;flex-direction:column;gap:8px}
+.g-call{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--white);border:1px solid var(--line);border-left:5px solid #E0A13A;border-radius:10px;padding:12px}
+.g-call.bill{border-left-color:var(--red)}
+.g-ci{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#FBEBC9;color:#8A5A0B}
+.g-call.bill .g-ci{background:var(--warn-soft);color:var(--wine)}
+.g-call b{display:block;font-size:1.05rem}.g-call small{color:var(--soft);font-size:.82rem}
+.g-btn{min-height:44px;padding:0 16px;border-radius:8px;border:0;background:var(--wine);color:#fff;font:inherit;font-weight:500;font-size:.92rem;cursor:pointer}
+.g-btn.wide{width:100%}
+.g-btn:active{transform:scale(.98)}
+.g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.g-tbl{position:relative;aspect-ratio:1/1;border-radius:12px;border:1px solid var(--line);background:var(--white);color:var(--ink);font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;cursor:pointer;transition:transform .15s}
+.g-tbl:active{transform:scale(.96)}
+.g-tbl .n{font-family:var(--f-display);font-size:2rem;font-weight:700;line-height:1}
+.g-tbl .s{font-size:.74rem;color:var(--soft)}
+.g-tbl .t{font-size:.72rem;font-weight:600;font-variant-numeric:tabular-nums}
+.g-tbl.busy{background:var(--sand);border-color:var(--line-2)}
+.g-tbl.ready{background:var(--ok-soft);border-color:var(--ok)}.g-tbl.ready .s{color:var(--ok);font-weight:600}
+.g-tbl.wait{background:#FBEBC9;border-color:#E0A13A}.g-tbl.wait .s{color:#8A5A0B;font-weight:600}
+.g-tbl.bill{background:var(--red);border-color:var(--red);color:#fff}.g-tbl.bill .s{color:#fff;font-weight:600}
+.g-tbl.bill,.g-tbl.wait{animation:gpulse 1.4s ease-in-out infinite}
+.g-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.76rem;color:var(--soft);margin-top:4px}
+.g-legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line-2)}
+.g-legend .busy::before{background:var(--sand)}.g-legend .ready::before{background:var(--ok-soft);border-color:var(--ok)}.g-legend .wait::before{background:#FBEBC9;border-color:#E0A13A}.g-legend .bill::before{background:var(--red);border-color:var(--red)}
+.g-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;color:var(--soft);background:var(--white);border:1px dashed var(--line-2);border-radius:12px;padding:32px 20px}
+.g-empty svg{width:40px;height:40px;color:var(--line-2)}
+.g-ready{background:var(--white);border:1px solid var(--line);border-top:5px solid var(--ok);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.g-ready.late{border-top-color:var(--red)}
+.g-r-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.g-r-top b{font-family:var(--f-display);font-size:1.6rem}
+.g-r-top small{color:var(--soft);font-size:.8rem}.g-ready.late .g-r-top small{color:var(--red);font-weight:600}
+.g-ready ul{margin:0;padding:0;list-style:none;font-size:1rem}
+.g-note{font-size:.86rem;color:var(--wine);background:var(--warn-soft);border-radius:6px;padding:6px 10px;margin:0}
+.g-lbl{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.g-pick{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.g-pick::-webkit-scrollbar{display:none}
+.g-pick button{flex-shrink:0;min-width:46px;min-height:46px;border-radius:10px;border:1px solid var(--line-2);background:var(--white);color:var(--ink);font:inherit;font-weight:600;font-size:1.05rem;cursor:pointer}
+.g-pick button[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:#fff}
+.g-cat{font-family:var(--f-display);font-size:1.3rem;font-weight:700;margin:10px 0 0;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.g-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.g-item b{display:block;font-weight:500}.g-item b em{font-style:normal;font-size:.78rem;color:var(--wine);background:var(--warn-soft);border-radius:4px;padding:1px 6px;margin-left:4px}
+.g-item small{color:var(--soft);font-size:.8rem}
+.g-sendbar{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--cream);border-top:1px solid var(--line);padding-top:10px;margin-top:8px;display:flex;flex-direction:column;gap:8px;box-shadow:0 -12px 20px -16px rgba(58,10,10,.4)}
+.g-sum{display:flex;justify-content:space-between;align-items:baseline;font-size:.9rem}.g-sum b{font-family:var(--f-display);font-size:1.3rem}
+.g-nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);background:var(--white);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -10px 30px -20px rgba(58,10,10,.5)}
+.g-nav button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:66px;border:0;background:none;color:var(--soft);font:inherit;font-size:.74rem;cursor:pointer}
+.g-nav button[aria-current="page"]{color:var(--wine);font-weight:600}
+.g-nav button[aria-current="page"]::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:var(--wine)}
+.g-badge{position:absolute;top:8px;left:calc(50% + 6px);min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-style:normal;font-size:.7rem;font-weight:700;display:grid;place-items:center}
+.g-scrim{position:fixed;inset:0;z-index:30;background:rgba(58,10,10,.45);animation:gfade .25s ease}
+.g-sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;max-height:86svh;overflow-y:auto;background:var(--cream);border-radius:20px 20px 0 0;padding:10px max(18px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));animation:gup .32s cubic-bezier(.2,.7,.2,1);max-width:720px;margin:0 auto}
+@keyframes gup{from{transform:translateY(100%)}to{transform:none}}
+@keyframes gfade{from{opacity:0}to{opacity:1}}
+.g-grab{display:block;width:44px;height:5px;border-radius:3px;background:var(--line-2);margin:0 auto 10px}
+.g-s-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.g-s-top h3{font-family:var(--f-display);font-size:2rem;font-weight:700;margin:0}
+.g-tag{font-size:.76rem;font-weight:600;padding:4px 10px;border-radius:999px}
+.g-tag.bill{background:var(--red);color:#fff}.g-tag.wait{background:#FBEBC9;color:#8A5A0B}
+.g-bill{margin:0;padding:0;list-style:none}
+.g-bill li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.g-info{font-size:.86rem;color:var(--soft);margin:8px 0 0}
+.g-s-acts{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+@media (prefers-reduced-motion:reduce){.g-pulse,.g-tbl.bill,.g-tbl.wait{animation:none}.g-sheet,.g-scrim{animation:none}}
+.g-body .toast{top:calc(78px + env(safe-area-inset-top,0px));bottom:auto}
+
+#demoBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#3A0A0A;color:#C9AE95;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
+#demoBar nav{display:flex;gap:6px;align-items:center}
+#demoBar a,#demoBar button{color:#F2E3C6;text-decoration:none;border:1px solid rgba(242,227,198,.3);border-radius:3px;padding:5px 9px;font:inherit;letter-spacing:.06em;background:transparent;cursor:pointer}
+#demoBar a[aria-current="page"]{background:#F2E3C6;color:#3A0A0A}
+</style>
+</head>
+<body data-default="garson">
+<div id="demoBar"></div>
+<div id="app"><p style="padding:40px 16px;text-align:center;color:#6E4A42">Yükleniyor…</p></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "amount": "300 ml", "allergens": ["sut", "kereviz"], "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "amount": "1 adet, 70 gr kıyma", "allergens": ["gluten"], "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "amount": "180 gr et", "allergens": ["gluten"], "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "amount": "200 gr köfte", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "amount": "200 gr tavuk", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "amount": "180 gr kuzu eti", "allergens": [], "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Künefe", "price": 180, "mins": 14, "desc": "Antep fıstıklı, sıcak servis", "p15": 0, "kcal": 520, "amount": "180 gr", "allergens": ["gluten", "sut", "kuruyemis"], "model": "", "out": false}, {"id": "m07", "cat": "Tatlılar", "name": "Met helvası", "price": 110, "mins": 5, "desc": "Eskişehir'e özgü, tahinli", "p15": 0, "kcal": 290, "amount": "100 gr", "allergens": ["gluten", "susam"], "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "amount": "300 ml", "allergens": ["sut"], "model": "", "out": false}, {"id": "m09", "cat": "İçecekler", "name": "Şalgam", "price": 50, "mins": 2, "desc": "", "p15": 0, "kcal": 25, "amount": "330 ml", "allergens": [], "model": "", "out": false}, {"id": "m10", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "amount": "1 fincan", "allergens": [], "model": "", "out": false}]}}, "orders": {}, "tables": {}, "photos": {}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
+/* Adanalım — ortak yardımcılar (klasik script; window.S altına yazar). */
+(function(){
+  "use strict";
+  var S = window.S = window.S || {};
+
+  S.$ = function(id){ return document.getElementById(id); };
+  S.esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+  S.fmt = function(n){ return Math.round(Number(n) || 0).toLocaleString("tr-TR") + " ₺"; };
+  S.sum = function(items){ return (items || []).reduce(function(s, i){ return s + (Number(i.price) || 0) * (Number(i.qty) || 0); }, 0); };
+  S.summary = function(items){ return (items || []).map(function(i){ return i.qty + "× " + i.name; }).join(", "); };
+  S.newId = function(){ return "i" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); };
+  S.clock = function(ms){ return new Date(ms || Date.now()).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }); };
+  S.ago = function(ms){ var m = Math.max(0, Math.round((Date.now() - (ms || 0)) / 60000)); return m < 1 ? "şimdi" : m + " dk önce"; };
+  S.DEFAULT_MINS = 15;
+  /* Tahmini süre: yemekler mutfakta paralel hazırlanır, en uzun süren belirler. */
+  S.eta = function(items, menu){
+    var max = 0;
+    (items || []).forEach(function(i){
+      var m = (menu || []).find(function(x){ return x.id === i.id; });
+      var mins = Number(m && m.mins) || S.DEFAULT_MINS;
+      if (mins > max) max = mins;
+    });
+    return max || S.DEFAULT_MINS;
+  };
+  /* Mutfak yoğunluğu: hazırlanmayı bekleyen sipariş sayısına göre otomatik ek süre + kasanın elle eklediği süre.
+     2 siparişe kadar ek yok; sonra her 2 sipariş için +5 dk (en fazla +30). */
+  S.loadInfo = function(orders, cafe){
+    var queue = (orders || []).filter(function(o){ return o.status === "new"; }).length;
+    var auto = Math.min(30, Math.max(0, Math.ceil((queue - 2) / 2)) * 5);
+    var manual = Math.max(0, Math.min(60, Number(cafe && cafe.busyExtra) || 0));
+    return { queue: queue, auto: auto, manual: manual, extra: auto + manual };
+  };
+
+  /* Masa hesap fişi (bilgi fişi; mali belge değildir). */
+  S.billHtml = function(cafe, table, lines, total){
+    var d = new Date();
+    return '<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Masa ' + S.esc(table) + ' hesap</title><style>@page{size:80mm auto;margin:4mm}body{margin:0;font-family:Arial,sans-serif;font-size:11pt;color:#000;width:72mm}' +
+      'h1{font-size:14pt;text-align:center;margin:0 0 2pt}.c{text-align:center;font-size:9pt;margin-bottom:6pt}table{width:100%;border-collapse:collapse}td{padding:2pt 0;vertical-align:top}td.r{text-align:right;white-space:nowrap}' +
+      '.t td{border-top:1pt dashed #000;font-weight:700;font-size:13pt;padding-top:5pt}.f{margin-top:8pt;font-size:8.5pt;text-align:center}</style></head><body>' +
+      '<h1>' + S.esc((cafe && cafe.name) || "") + '</h1><div class="c">Masa ' + S.esc(table) + ' · ' + d.toLocaleDateString("tr-TR") + ' ' + S.clock(d) + '</div><table>' +
+      lines.map(function(i){ return '<tr><td>' + i.qty + '× ' + S.esc(i.name) + '</td><td class="r">' + S.fmt(i.price * i.qty) + '</td></tr>'; }).join("") +
+      '<tr class="t"><td>TOPLAM</td><td class="r">' + S.fmt(total) + '</td></tr></table><div class="f">Bilgi fişidir, mali değeri yoktur.<br>KDV dahildir.</div></body></html>';
+  };
+  /* Dosya indir (CSV vb.). */
+  S.downloadText = function(text, name, type){
+    try { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type || "text/plain" })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 2000); }
+    catch(e){ S.toast("Dosya indirilemedi"); }
+  };
+  /* Porsiyon: ürünün "p15" (1,5 porsiyon fiyatı) alanı doluysa iki seçenek olur. Sepet anahtarı: "id" ya da "id@15". */
+  S.options = function(i){
+    var k = Number(i.kcal) || 0;
+    var o = [{ key: i.id, label: "1 porsiyon", price: Number(i.price) || 0, kcal: k, amount: S.amountText(i, 1) }];
+    if (Number(i.p15) > 0) o.push({ key: i.id + "@15", label: "1,5 porsiyon", price: Number(i.p15), kcal: Math.round(k * 1.5), amount: S.amountText(i, 1.5) });
+    return o;
+  };
+  /* Porsiyon miktarı serbest metin ("180 gr et", "300 ml"). Baştaki gr/ml sayısı 1,5 porsiyonda ölçeklenir. */
+  S.amountText = function(i, factor){
+    var t = String(i.amount || "").trim(); if (!t) return "";
+    if (!factor || factor === 1) return t;
+    var m = t.match(/^(\d+(?:[.,]\d+)?)\s*(gr|g|ml|cl|kg)\b(.*)$/i);
+    if (!m) return t + " × 1,5";
+    var n = Math.round(parseFloat(m[1].replace(",", ".")) * factor);
+    return n + " " + m[2] + m[3];
+  };
+  S.cartLines = function(cart, menu){
+    var out = [];
+    (menu || []).forEach(function(i){
+      if (i.out) return;
+      S.options(i).forEach(function(o, n){
+        var q = cart[o.key] || 0;
+        if (q > 0) out.push({ id: i.id, name: i.name + (n ? " (1,5 porsiyon)" : ""), price: o.price, qty: q });
+      });
+    });
+    return out;
+  };
+  /* Alerjenler (Türk Gıda Kodeksi'ndeki başlıca gruplardan sade bir seçim). */
+  S.ALLERGENS = [["gluten","Gluten"],["sut","Süt"],["yumurta","Yumurta"],["kuruyemis","Kabuklu yemiş"],["yerfistigi","Yer fıstığı"],["susam","Susam"],["soya","Soya"],["balik","Balık"],["kabuklu","Kabuklu deniz ürünü"],["hardal","Hardal"],["kereviz","Kereviz"]];
+  S.allergenName = function(k){ var a = S.ALLERGENS.find(function(x){ return x[0] === k; }); return a ? a[1] : k; };
+  S.slugify = function(s){
+    var map = { "ç":"c","ğ":"g","ı":"i","İ":"i","ö":"o","ş":"s","ü":"u","Ç":"c","Ğ":"g","Ö":"o","Ş":"s","Ü":"u" };
+    return String(s || "").replace(/[çğıİöşüÇĞÖŞÜ]/g, function(c){ return map[c]; }).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+  };
+  S.sha256 = function(text){
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return b.toString(16).padStart(2, "0"); }).join("");
+    });
+  };
+  S.lsGet = function(k){ try { return localStorage.getItem(k); } catch(e){ return null; } };
+  S.lsSet = function(k, v){ try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, String(v)); } catch(e){} };
+
+  var toastT;
+  S.toast = function(msg){
+    var t = S.$("toast"); if (!t) return;
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function(){ t.hidden = true; }, 2800);
+  };
+  S.errText = function(e){
+    var c = (e && (e.code || e.message)) || "";
+    if (/permission|invalid_argument/.test(c)) return "Bu işlem için yetkin yok.";
+    if (/unavailable|offline/.test(c)) return "İnternet bağlantısı yok. Bağlantı gelince tekrar dene.";
+    if (/invalid-credential|wrong-password|user-not-found/.test(c)) return "E-posta ya da şifre hatalı.";
+    if (/too-many-requests/.test(c)) return "Çok fazla deneme yapıldı, biraz bekle.";
+    if (/operation-not-allowed|admin-restricted/.test(c)) return "Giriş yöntemi Firebase'de açılmamış (README, Adım 3).";
+    if (/quota/.test(c)) return "Depolama doldu. Kurulumdan eski siparişleri temizle.";
+    return "İşlem yapılamadı, tekrar dene.";
+  };
+
+  /* ses (ilk dokunuşta açılır) */
+  var AC = null, unlockCbs = [];
+  S.audioReady = false;
+  document.addEventListener("pointerdown", function(){
+    try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); } catch(e){}
+    /* ekranı dokunuş bittikten sonra yenile; yoksa ilk dokunuştaki düğme kaybolur ve basış boşa gider */
+    if (!S.audioReady) { S.audioReady = true; setTimeout(function(){ unlockCbs.splice(0).forEach(function(f){ try { f(); } catch(e){} }); }, 350); }
+  }, { passive: true });
+  S.onAudioReady = function(f){ if (S.audioReady) f(); else unlockCbs.push(f); };
+  /* Kasa tableti uykuya geçmesin (destekleyen tarayıcılarda). */
+  var wake = null;
+  S.keepAwake = function(){
+    try { if (navigator.wakeLock && !wake && document.visibilityState === "visible") navigator.wakeLock.request("screen").then(function(w){ wake = w; w.addEventListener("release", function(){ wake = null; }); }).catch(function(){}); } catch(e){}
+  };
+  S.beep = function(times, freq){
+    try {
+      if (!AC) return;
+      var t0 = AC.currentTime;
+      for (var i = 0; i < times; i++) {
+        var o = AC.createOscillator(), g = AC.createGain(), t = t0 + i * 0.28;
+        o.type = "sine"; o.frequency.value = freq; o.connect(g); g.connect(AC.destination);
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.25, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+        o.start(t); o.stop(t + 0.24);
+      }
+    } catch(e){}
+  };
+
+  /* Fotoğrafı küçült: en uzun kenar 640px, JPEG. Veritabanında saklanır (Storage gerekmez). */
+  S.shrinkPhoto = function(file){
+    return new Promise(function(resolve, reject){
+      if (!file || !/^image\//.test(file.type)) { reject(new Error("not-image")); return; }
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function(){
+        var max = 640, w = img.naturalWidth, h = img.naturalHeight, r = Math.min(1, max / Math.max(w, h));
+        var c = document.createElement("canvas"); c.width = Math.round(w * r); c.height = Math.round(h * r);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        var q = 0.78, out = c.toDataURL("image/jpeg", q);
+        while (out.length > 180000 && q > 0.4) { q -= 0.08; out = c.toDataURL("image/jpeg", q); }
+        resolve(out);
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error("bad-image")); };
+      img.src = url;
+    });
+  };
+
+  /* Fotoğrafı olmayan ürün için zarif yer tutucu (tabak + baş harfler). */
+  S.placeholder = function(name){
+    var words = String(name || "?").trim().split(/\s+/), ini = (words[0][0] + (words[1] ? words[1][0] : "")).toLocaleUpperCase("tr-TR");
+    return '<svg viewBox="0 0 120 120" aria-hidden="true" class="ph-svg"><rect width="120" height="120" fill="#F2E3C6"/>' +
+      '<circle cx="60" cy="60" r="40" fill="#FFF8EC" stroke="#E4D2B0" stroke-width="2"/><circle cx="60" cy="60" r="30" fill="none" stroke="#E4D2B0" stroke-width="1"/>' +
+      '<text x="60" y="68" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" font-weight="600" fill="#9D0208">' + S.esc(ini) + '</text></svg>';
+  };
+
+  /* 3D / artırılmış gerçeklik: Google model-viewer ile, uygulama gerekmez.
+     Android: Scene Viewer, iPhone: AR Quick Look (USDZ'yi kendisi üretir). ar-scale="fixed": gerçek boyut, büyütülemez. */
+  var MV = "https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js", mvLoad = null;
+  function loadMV(){
+    if (window.customElements && customElements.get("model-viewer")) return Promise.resolve();
+    if (!mvLoad) mvLoad = new Promise(function(res, rej){ var s = document.createElement("script"); s.type = "module"; s.src = MV; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    return mvLoad;
+  }
+  S.openAR = function(item, info){
+    var lay = document.getElementById("arLayer");
+    if (!lay) { lay = document.createElement("div"); lay.id = "arLayer"; document.body.appendChild(lay); }
+    lay.hidden = false; document.body.style.overflow = "hidden";
+    lay.innerHTML = '<div class="ar-box" role="dialog" aria-modal="true" aria-label="' + S.esc(item.name) + ' 3D görünüm">' +
+      '<div class="ar-head"><div><span class="label">Gerçek porsiyon' + (item.amount ? ' · ' + S.esc(item.amount) : '') + '</span><h2>' + S.esc(item.name) + '</h2></div><button class="btn btn-sm" data-ar="close">Kapat</button></div>' +
+      '<div class="ar-stage"><p class="ar-wait">3D model yükleniyor…</p></div>' +
+      '<p class="ar-note">' + S.esc(info || "") + ' Parmağınızla çevirin. Telefonda <b>Masaya yerleştir</b>e basın, kamerayı masaya tutun; tabak gerçek boyutunda masanızda görünür.</p></div>';
+    lay.onclick = function(e){ if (e.target === lay || (e.target.closest && e.target.closest('[data-ar="close"]'))) S.closeAR(); };
+    loadMV().then(function(){
+      var st = lay.querySelector(".ar-stage"); if (!st) return;
+      st.innerHTML = '<model-viewer src="' + S.esc(item.model) + '" alt="' + S.esc(item.name) + ' porsiyonu" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" auto-rotate shadow-intensity="1" exposure="1.05" camera-orbit="30deg 60deg 0.55m" min-camera-orbit="auto auto 0.3m" style="width:100%;height:100%;background:#F2E3C6">' +
+        '<button slot="ar-button" class="ar-btn">' + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Masaya yerleştir</button></model-viewer>';
+    }).catch(function(){ var st = lay.querySelector(".ar-stage"); if (st) st.innerHTML = '<p class="ar-wait">3D görüntüleyici yüklenemedi. İnternet bağlantınızı kontrol edin.</p>'; });
+  };
+  S.closeAR = function(){ var lay = document.getElementById("arLayer"); if (lay) { lay.hidden = true; lay.innerHTML = ""; } document.body.style.overflow = ""; };
+
+  /* Basılı fiyat listesi (Fiyat Etiketi Yönetmeliği: girişte ve masalarda). Güncel menüden A4 sayfa üretir. */
+  S.priceListHtml = function(cafe, menu){
+    var items = (menu || []).filter(function(i){ return i.name; }), cats = [];
+    items.forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
+    var now = new Date(), date = now.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" });
+    var row = function(name, sub, price){
+      return '<div class="r"><span class="n">' + S.esc(name) + (sub ? '<small>' + S.esc(sub) + '</small>' : '') + '</span><span class="d"></span><span class="p">' + S.fmt(price) + '</span></div>';
+    };
+    return '<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>' + S.esc((cafe && cafe.name) || "Fiyat listesi") + ' · Fiyat listesi</title>' +
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Jost:wght@400;500&display=swap">' +
+      '<style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{margin:0;font-family:Jost,Arial,sans-serif;color:#3A0A0A;background:#fff;font-size:11pt}' +
+      '.sheet{border:1.5pt solid #9D0208;outline:.6pt solid #9D0208;outline-offset:-5pt;padding:14mm 14mm 10mm;min-height:268mm;display:flex;flex-direction:column}' +
+      'h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:30pt;font-weight:700;text-align:center;margin:0}' +
+      '.sub{text-align:center;font-size:8.5pt;letter-spacing:.3em;text-transform:uppercase;color:#9D0208;margin:4pt 0 2pt}' +
+      '.date{text-align:center;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:11pt;color:#6E4A42;margin-bottom:12pt}' +
+      '.cols{columns:2;column-gap:12mm;flex:1}.cat{break-inside:avoid;margin-bottom:10pt}' +
+      'h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:15pt;font-weight:700;margin:0 0 4pt;border-bottom:.8pt solid #9D0208;padding-bottom:2pt}' +
+      '.r{display:flex;align-items:baseline;gap:4pt;padding:2.5pt 0;break-inside:avoid}.n{font-weight:500}.n small{display:block;font-weight:400;font-size:8.5pt;color:#6E4A42}' +
+      '.d{flex:1;border-bottom:.8pt dotted #B9A58A;transform:translateY(-3pt);min-width:8pt}.p{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;font-size:12.5pt;white-space:nowrap}' +
+      '.foot{border-top:.6pt solid #DCC59C;margin-top:10pt;padding-top:6pt;font-size:8.5pt;color:#6E4A42;text-align:center;line-height:1.5}</style></head><body><div class="sheet">' +
+      '<h1>' + S.esc((cafe && cafe.name) || "") + '</h1><div class="sub">Fiyat listesi</div><div class="date">Güncelleme: ' + S.esc(date) + '</div><div class="cols">' +
+      cats.map(function(c){
+        return '<section class="cat"><h2>' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(function(i){
+          var out = row(i.name, i.amount || "", i.price);
+          if (Number(i.p15) > 0) out += row(i.name + " · 1,5 porsiyon", S.amountText(i, 1.5), i.p15);
+          return out;
+        }).join("") + '</section>';
+      }).join("") + '</div><div class="foot">Fiyatlarımıza KDV dahildir.<br>Menümüzü masanızdaki QR kodu okutarak da görebilir, siparişinizi oradan verebilirsiniz.</div></div></body></html>';
+  };
+  S.printPriceList = function(cafe, menu){ S.printHtml(S.priceListHtml(cafe, menu)); };
+  S.printHtml = function(html){
+    var f = document.createElement("iframe");
+    f.setAttribute("aria-hidden", "true"); f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0";
+    document.body.appendChild(f);
+    var done = false, go = function(){
+      if (done) return; done = true;
+      try { f.contentWindow.focus(); f.contentWindow.print(); } catch(e){ S.toast("Bu ekranda yazdırma açılamadı"); }
+      setTimeout(function(){ f.remove(); }, 60000);
+    };
+    f.onload = function(){ var d = f.contentDocument; (d && d.fonts ? d.fonts.ready : Promise.resolve()).then(function(){ setTimeout(go, 150); }); setTimeout(go, 2500); };
+    f.srcdoc = html;
+  };
+
+  S.loginView = function(title, error){
+    return '<main class="login"><div class="login-card"><div class="brand-sm">Adanalım</div>' +
+      '<h1>' + S.esc(title) + '</h1><p class="muted">İşletme hesabınla giriş yap.</p>' +
+      '<form id="loginForm" class="login-form" novalidate>' +
+      '<label class="fld" for="lg-email"><span>E-posta</span><input id="lg-email" type="email" autocomplete="username" required></label>' +
+      '<label class="fld" for="lg-pass"><span>Şifre</span><input id="lg-pass" type="password" autocomplete="current-password" required></label>' +
+      (error ? '<p class="form-err" role="alert">' + S.esc(error) + '</p>' : '') +
+      '<button class="btn btn-primary btn-lg wide" type="submit">Giriş yap</button></form></div></main>';
+  };
+  S.bindLogin = function(B, onError){
+    var f = S.$("loginForm"); if (!f) return;
+    f.addEventListener("submit", function(e){
+      e.preventDefault();
+      var email = S.$("lg-email").value.trim(), pass = S.$("lg-pass").value;
+      if (!email || !pass) { onError("E-posta ve şifre gerekli."); return; }
+      B.login(email, pass).catch(function(err){ onError(S.errText(err)); });
+    });
+  };
+  S.isEditing = function(){
+    var a = document.activeElement;
+    return !!(a && a.closest && a.closest("#app") && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.type !== "file");
+  };
+})();
+
+/* Adanalım — yerel demo arka ucu: giriş yok, veriler bu telefonun tarayıcısında durur. Aynı arayüz. */
+(function(){
+  "use strict";
+  var KEY = "sirala-local-v4", mem = null, subs = [];
+  function load(){
+    if (mem) return mem;
+    try { mem = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ mem = null; }
+    if (!mem) mem = JSON.parse(JSON.stringify(window.SIRALA_SEED || { cafes: {}, orders: {}, tables: {}, photos: {}, priv: {} }));
+    return mem;
+  }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch(e){} subs.slice().forEach(function(f){ try { f(); } catch(e){} }); }
+  window.addEventListener("storage", function(e){ if (e.key === KEY) { mem = null; load(); subs.slice().forEach(function(f){ f(); }); } });
+  function watch(fn){ subs.push(fn); setTimeout(fn, 0); return function(){ subs = subs.filter(function(x){ return x !== fn; }); }; }
+  var clone = function(o){ return o == null ? o : JSON.parse(JSON.stringify(o)); };
+  var USER = { uid: "yerel", email: "demo", staff: true, anon: false };
+  function ordersOf(id){ var d = load(); return Object.keys(d.orders).map(function(k){ var o = clone(d.orders[k]); o.id = k; return o; }).filter(function(o){ return o.cafe === id; }); }
+
+  window.SiralaBackend = {
+    kind: "local",
+    ready: Promise.resolve(),
+    onAuth: function(cb){ setTimeout(function(){ cb(USER); }, 0); },
+    currentUser: function(){ return USER; },
+    ensureCustomer: function(){ return Promise.resolve(); },
+    login: function(){ return Promise.resolve(); },
+    logout: function(){ return Promise.resolve(); },
+
+    watchCafe: function(id, cb){ return watch(function(){ cb(clone(load().cafes[id]) || null); }); },
+    cafeExists: function(id){ return Promise.resolve(!!load().cafes[id]); },
+    createCafe: function(id, data){ load().cafes[id] = clone(data); save(); return Promise.resolve(); },
+    updateCafe: function(id, patch){ var d = load(); d.cafes[id] = Object.assign(d.cafes[id] || {}, clone(patch)); save(); return Promise.resolve(); },
+    listMyCafes: function(){ return Promise.resolve([]); },
+
+    watchOrders: function(id, opts, cb){
+      return watch(function(){ cb(ordersOf(id).filter(function(o){ return !o.closed && (!opts || !opts.table || o.table === opts.table); }), false); });
+    },
+    addOrder: function(id, data){ var oid = "o" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); var x = clone(data); x.cafe = id; load().orders[oid] = x; save(); return Promise.resolve(oid); },
+    updateOrder: function(id, oid, patch){ var d = load(); if (d.orders[oid]) Object.assign(d.orders[oid], clone(patch)); save(); return Promise.resolve(); },
+    closeTable: function(id, table){
+      var d = load(), now = Date.now();
+      Object.keys(d.orders).forEach(function(k){ var o = d.orders[k]; if (o.cafe === id && o.table === table && !o.closed) { o.closed = true; o.closedAt = now; } });
+      d.tables[id + "/" + table] = { billRequested: false, waiter: false, updatedAt: now }; save(); return Promise.resolve();
+    },
+    moveTable: function(id, from, to){
+      var d = load(), now = Date.now(), n = 0;
+      Object.keys(d.orders).forEach(function(k){ var o = d.orders[k]; if (o.cafe === id && o.table === from && !o.closed) { o.table = to; o.movedFrom = from; o.movedAt = now; n++; } });
+      d.tables[id + "/" + from] = { billRequested: false, waiter: false, updatedAt: now }; save(); return Promise.resolve(n);
+    },
+    listOrders: function(id, since){ return Promise.resolve(ordersOf(id).filter(function(o){ return (o.createdAt || 0) >= since; })); },
+    purgeClosed: function(id){ var d = load(), n = 0; Object.keys(d.orders).forEach(function(k){ if (d.orders[k].cafe === id && d.orders[k].closed) { delete d.orders[k]; n++; } }); save(); return Promise.resolve(n); },
+
+    watchTables: function(id, cb){ return watch(function(){ var d = load(), m = {}; Object.keys(d.tables).forEach(function(k){ if (k.indexOf(id + "/") === 0) m[k.slice(id.length + 1)] = clone(d.tables[k]); }); cb(m); }); },
+    setTable: function(id, table, patch){ var d = load(), k = id + "/" + table; d.tables[k] = Object.assign(d.tables[k] || {}, clone(patch)); save(); return Promise.resolve(); },
+
+    watchPhotos: function(id, cb){ return watch(function(){ cb(clone(load().photos[id] || {})); }); },
+    setPhoto: function(id, itemId, data){ var d = load(); d.photos[id] = d.photos[id] || {}; if (data) d.photos[id][itemId] = data; else delete d.photos[id][itemId]; save(); return Promise.resolve(); },
+
+    getPrivate: function(id){ return Promise.resolve(clone(load().priv[id] || {})); },
+    setPrivate: function(id, patch){ var d = load(); d.priv[id] = Object.assign(d.priv[id] || {}, clone(patch)); save(); return Promise.resolve(); },
+
+    reset: function(){ mem = null; try { localStorage.removeItem(KEY); } catch(e){} load(); save(); }
+  };
+})();
+
+/* Adanalım — müşteri ekranı: fotoğraflı menü, yaklaşık süre, sipariş, masa hesabı. */
+(function(){
+  "use strict";
+  window.SiralaApp = window.SiralaApp || {};
+  var FIRE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-3 2-4 2-7 1.5 1 2 2.5 2 4 1-2 1-5 1-8z"/></svg>';
+  var BELL = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>';
+  var WARN = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>';
+  var SCALE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 20h14l-2-11H7z"/><path d="M9 9a3 3 0 0 1 6 0"/></svg>';
+  var CLOCK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+  window.SiralaApp.musteri = function(ctx){
+    var B = ctx.B, cafeId = ctx.cafeId, table = ctx.table;
+    var st = { avoid: (function(){ try { return JSON.parse(S.lsGet("sirala-avoid") || "{}") || {}; } catch(e){ return {}; } })(), algOpen: false, cafe: null, cafeLoaded: false, photos: {}, orders: [], all: [], ordLoaded: false, cart: {}, note: "", view: "menu", last: null, busy: false, tbl: {}, err: null, offline: !navigator.onLine };
+    var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
+    var cartItems = function(){ return S.cartLines(st.cart, menu()); };
+    var tableLabel = "Masa " + table;
+    var load = function(){ return S.loadInfo(st.all, st.cafe); };
+    var alive = true, unsubs = [];
+
+    if (!table) { S.$("app").innerHTML = '<main class="c-wrap c-main"><div class="empty-card"><h2>Masadaki QR kodu okutun</h2><p>Sipariş vermek için oturduğunuz masadaki QR kodu telefonunuzun kamerasıyla okutun.</p></div></main>'; return; }
+    render();
+    B.ready.then(function(){ return B.ensureCustomer(); }).then(function(){
+      if (!alive) return;
+      unsubs.push(B.watchCafe(cafeId, function(d){ st.cafe = d; st.cafeLoaded = true; dropSoldOut(); document.title = ((d && d.name) || "Menü") + " · " + tableLabel; render(); }, fail));
+      unsubs.push(B.watchPhotos(cafeId, function(m){ st.photos = m; render(); }));
+      unsubs.push(B.watchOrders(cafeId, null, function(list){ st.all = list; st.orders = list.filter(function(o){ return String(o.table) === String(table); }); st.ordLoaded = true; render(); }, fail));
+      unsubs.push(B.watchTables(cafeId, function(m){ st.tbl = m[String(table)] || {}; render(); }));
+    }).catch(fail);
+    function dropSoldOut(){
+      var gone = [];
+      Object.keys(st.cart).forEach(function(k){
+        var it = menu().find(function(x){ return x.id === k.split("@")[0]; });
+        if (!it || it.out) { delete st.cart[k]; if (it && gone.indexOf(it.name) < 0) gone.push(it.name); }
+      });
+      if (gone.length) S.toast(gone.join(", ") + " az önce tükendi, sepetinizden çıkarıldı");
+    }
+    function fail(e){ st.err = S.errText(e); render(); }
+    window.addEventListener("online", function(){ st.offline = false; render(); });
+    window.addEventListener("offline", function(){ st.offline = true; render(); });
+
+    function head(){
+      var cats = [];
+      if (st.view === "menu") menu().forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
+      return '<header class="c-head"><div class="c-wrap"><div class="c-head-in">' +
+        (ctx.back ? '<button class="btn btn-sm btn-ghost" data-act="back">‹</button>' : '') +
+        '<div class="c-name">' + S.esc((st.cafe && st.cafe.name) || "Menü") + '</div>' +
+        (st.cafeLoaded && st.cafe ? (st.tbl.waiter || st.tbl.billRequested
+          ? '<span class="waiter-btn on" role="status">' + BELL + 'Garson geliyor</span>'
+          : '<button class="waiter-btn" data-act="waiter">' + BELL + 'Garson çağır</button>') : '') +
+        '<div class="c-table">' + S.esc(tableLabel) + '</div></div>' +
+        (cats.length > 1 ? '<nav class="c-chips" aria-label="Kategoriler">' + cats.map(function(c){ return '<button type="button" data-act="cat" data-v="kat-' + S.slugify(c) + '">' + S.esc(c) + '</button>'; }).join("") + '</nav>' : '') +
+        '</div></header>' + (st.offline ? '<div class="offline">İnternet bağlantısı yok. Bağlantı gelince siparişinizi gönderebilirsiniz.</div>' : '');
+    }
+    function photo(i){ var p = st.photos[i.id]; return p ? '<img src="' + S.esc(p) + '" alt="' + S.esc(i.name) + '" loading="lazy">' : S.placeholder(i.name); }
+    function stepper(key, name){
+      var q = st.cart[key] || 0;
+      return '<div class="stepper">' + (q ? '<button class="round" data-act="dec" data-v="' + S.esc(key) + '" aria-label="' + S.esc(name) + ' azalt">−</button><span class="q">' + q + '</span>' : '') +
+        '<button class="round' + (q ? "" : " round-add") + '" data-act="inc" data-v="' + S.esc(key) + '" aria-label="' + S.esc(name) + ' ekle">+</button></div>';
+    }
+    function avoidedIn(i){ return (i.allergens || []).filter(function(a){ return st.avoid[a]; }); }
+    function dish(i){
+      var base = Number(i.mins) || S.DEFAULT_MINS, mins = base + load().extra, opts = S.options(i), hit = avoidedIn(i);
+      var buy = i.out ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span></div>'
+        : opts.length === 1 ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span>' + stepper(i.id, i.name) + '</div>'
+        : opts.map(function(o){ return '<div class="dish-meta portion"><span class="por-l">' + o.label + ((o.amount || o.kcal) ? '<small>' + [o.amount, o.kcal ? o.kcal + ' kcal' : ''].filter(Boolean).map(S.esc).join(' · ') + '</small>' : '') + '</span><span class="dish-price">' + S.fmt(o.price) + '</span>' + stepper(o.key, i.name + " " + o.label) + '</div>'; }).join("");
+      return '<article class="dish' + (i.out ? " out" : "") + (hit.length ? " avoid" : "") + '"><div class="dish-img">' + photo(i) + '</div><div class="dish-body">' +
+        (hit.length ? '<span class="alg-warn">' + WARN + S.esc(hit.map(S.allergenName).join(", ")) + ' içerir</span>' : '') +
+        '<h3 class="dish-name">' + S.esc(i.name) + '</h3>' + (i.desc ? '<p class="dish-desc">' + S.esc(i.desc) + '</p>' : '') +
+        ((i.allergens || []).length ? '<span class="alg-line">İçerir: ' + S.esc(i.allergens.map(S.allergenName).join(" · ")) + '</span>' : '') +
+        (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + (mins > base ? 'Şu an yaklaşık ' + mins + ' dakikada hazır' : 'Ortalama ' + mins + ' dakikada hazır') + (opts.length === 1 && i.amount ? '<span class="kcal">' + SCALE + 'Porsiyon: ' + S.esc(i.amount) + '</span>' : '') +
+        (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
+        (i.model && !i.out ? '<button class="ar-open" data-act="ar" data-v="' + S.esc(i.id) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Porsiyonu masada gör · 3D</button>' : '') +
+        buy + '</div></article>';
+    }
+    function etaBanner(){
+      var act = st.orders.filter(function(o){ return o.status === "new"; }).sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); });
+      var can = st.orders.filter(function(o){ return o.status === "cancelled" && Date.now() - (o.cancelledAt || 0) < 20 * 60000; });
+      if (!act.length && !can.length) return "";
+      return '<section class="eta-list" aria-live="polite">' + can.map(function(o){
+        return '<div class="eta-banner cancelled"><div class="eta-txt"><b>Bir siparişiniz iptal edildi</b><span>' + S.esc(S.summary(o.items)) + ' · hesabınıza yazılmadı. Sorunuz varsa garsonumuza danışın.</span></div></div>';
+      }).join("") + act.map(function(o){
+        var left = Math.ceil(((o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000 - Date.now()) / 60000);
+        return '<div class="eta-banner">' + CLOCK.replace('width="13" height="13"', 'width="20" height="20"') +
+          '<div class="eta-txt"><b>' + (o.etaSetAt && Date.now() - o.etaSetAt < 15 * 60000 ? 'Mutfak süreyi güncelledi' : 'Siparişiniz hazırlanıyor') + '</b><span>' + S.esc(S.summary(o.items)) + '</span></div>' +
+          '<div class="eta-num">' + (left > 0 ? '<strong>~' + left + '</strong><small>dk kaldı</small>' : '<strong class="soon">Az kaldı</strong>') + '</div></div>';
+      }).join("") + '</section>';
+    }
+    function menuView(){
+      var items = menu();
+      if (!items.length) return '<main class="c-wrap c-main"><div class="empty-card"><h2>Menü hazırlanıyor</h2><p>Siparişinizi garsonumuza verebilirsiniz.</p></div></main>';
+      var cats = []; items.forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
+      var sel = cartItems(), total = S.sum(sel), count = sel.reduce(function(s, i){ return s + i.qty; }, 0);
+      var tableTotal = S.sum([].concat.apply([], st.orders.filter(function(o){ return o.status !== "cancelled"; }).map(function(o){ return o.items || []; })));
+      var used = {}; items.forEach(function(i){ (i.allergens || []).forEach(function(a){ used[a] = 1; }); });
+      var nAvoid = Object.keys(st.avoid).length;
+      var filt = Object.keys(used).length ? '<section class="alg-filter"><button class="alg-toggle" data-act="algPanel" aria-expanded="' + !!st.algOpen + '">' + WARN + (nAvoid ? 'Alerjen filtresi · ' + nAvoid + ' seçili' : 'Alerjiniz mi var?') + '</button>' +
+        (st.algOpen ? '<div class="alg-panel"><p>İçermesini istemediklerinizi seçin; bunları içeren yemekler işaretlenir.</p><div class="alg-chips">' +
+          S.ALLERGENS.filter(function(a){ return used[a[0]]; }).map(function(a){ return '<button class="alg-chip" aria-pressed="' + !!st.avoid[a[0]] + '" data-act="avoid" data-v="' + a[0] + '">' + S.esc(a[1]) + '</button>'; }).join("") +
+          '</div><p class="alg-small">Bilgiler işletme tarafından girilir. Ciddi alerjiniz varsa siparişten önce garsonumuza da söyleyin.</p></div>' : '') + '</section>' : '';
+      var L = load();
+      var busy = L.extra > 0 ? '<p class="busy-note">' + CLOCK + '<span>Mutfağımız şu an yoğun · süreler yaklaşık <b>+' + L.extra + ' dk</b> uzun</span></p>' : '';
+      return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') + busy + filt +
+        cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</section>'; }).join("") +
+        '<p class="c-foot">Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.</p></main>' +
+        '<div class="c-bar"><div class="c-wrap c-bar-in">' +
+        (count
+          ? '<div class="c-bar-top"><span>' + count + ' ürün · yaklaşık ' + (S.eta(sel, items) + L.extra) + ' dk</span><b>' + S.fmt(total) + '</b></div>' +
+            '<label class="sr" for="note">Sipariş notu</label><input id="note" class="note-in" maxlength="120" placeholder="Not ekleyin (ör. acısız, az pişmiş)" value="' + S.esc(st.note) + '">' +
+            '<button class="btn btn-primary btn-lg wide" data-act="send"' + (st.busy ? " disabled" : "") + '>' + (st.busy ? "Gönderiliyor…" : "Siparişi gönder") + '</button>'
+          : (st.orders.length
+              ? '<button class="btn btn-lg wide" data-act="bill">Masanın hesabı · ' + S.fmt(tableTotal) + '</button>'
+              : '<p class="c-foot" style="padding-block:10px">Ürünlerin yanındaki + ile seçin.</p>')) +
+        '</div></div>';
+    }
+    function doneView(){
+      var o = st.last;
+      return '<main class="c-wrap c-main"><section class="done"><div class="done-in">' +
+        '<span class="done-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>' +
+        '<h2>Siparişiniz alındı</h2><span class="label">Tahmini süre</span><div class="done-eta">~' + o.eta + ' <small>dk</small></div>' +
+        '<p>' + S.esc(S.summary(o.items)) + '</p></div></section>' +
+        '<div class="row-btns"><button class="btn btn-primary btn-lg" style="flex:1" data-act="menu">Menüye dön</button><button class="btn btn-lg" style="flex:1" data-act="bill">Masanın hesabı</button></div></main>';
+    }
+    function billView(){
+      var lines = {}, order = [];
+      st.orders.filter(function(o){ return o.status !== "cancelled"; }).sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); }).forEach(function(o){
+        (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!lines[k]) { lines[k] = { name: i.name, price: i.price, qty: 0 }; order.push(k); } lines[k].qty += i.qty; });
+      });
+      var all = order.map(function(k){ return lines[k]; }), total = S.sum(all);
+      var req = st.tbl.billRequested, waiter = st.tbl.waiter;
+      return '<main class="c-wrap c-main"><section class="bill"><h3>Masanın hesabı <span class="label">' + S.esc(tableLabel) + '</span></h3>' +
+        (all.length ? '<ul>' + all.map(function(i){ return '<li><span>' + i.qty + '× ' + S.esc(i.name) + '</span><span class="num">' + S.fmt(i.price * i.qty) + '</span></li>'; }).join("") + '</ul>' +
+          '<div class="bill-total"><span>Toplam</span><b>' + S.fmt(total) + '</b></div>' : '<p class="muted">Bu masadan henüz sipariş verilmedi.</p>') +
+        (req ? '<p class="bill-state">Hesap istendi. Garsonumuz masanıza geliyor.</p>' : '') +
+        (waiter && !req ? '<p class="bill-state">Garsonumuz masanıza geliyor.</p>' : '') +
+        '</section><div class="row-btns">' +
+        (all.length && !req ? '<button class="btn btn-primary btn-lg" style="flex:1" data-act="askBill">Hesap iste</button>' : '') +
+
+        '</div><button class="btn btn-ghost" data-act="menu">‹ Menüye dön</button>' +
+        '<p class="c-foot">Ödemenizi garsonumuza ya da kasaya yapabilirsiniz.</p></main>';
+    }
+    function render(){
+      if (!alive || S.isEditing()) return;
+      var app = S.$("app");
+      if (st.err) { app.innerHTML = head() + '<main class="c-wrap c-main"><div class="empty-card"><h2>Bağlantı kurulamadı</h2><p>' + S.esc(st.err) + ' Siparişinizi garsonumuza verebilirsiniz.</p></div></main>'; return; }
+      if (!st.cafeLoaded || !st.ordLoaded) { app.innerHTML = head() + '<main class="c-wrap c-main"><p class="muted center">Menü yükleniyor…</p></main>'; return; }
+      if (!st.cafe) { app.innerHTML = head() + '<main class="c-wrap c-main"><div class="empty-card"><h2>Restoran bulunamadı</h2><p>Bu QR kod geçerli bir işletmeye bağlı değil.</p></div></main>'; return; }
+      app.innerHTML = head() + (st.view === "done" && st.last ? doneView() : st.view === "bill" ? billView() : menuView());
+    }
+
+    function send(){
+      var items = cartItems(); if (!items.length || st.busy) return;
+      var u = B.currentUser(); st.busy = true; render();
+      var now = Date.now(), eta = S.eta(items, menu()) + load().extra;
+      B.addOrder(cafeId, { table: String(table), items: items, total: S.sum(items), eta: eta, note: st.note.trim().slice(0, 120), uid: u ? u.uid : "", source: "qr", status: "new", closed: false, createdAt: now })
+        .then(function(){ st.last = { items: items, eta: eta }; st.cart = {}; st.note = ""; st.view = "done"; window.scrollTo(0, 0); })
+        .catch(function(e){ S.toast(S.errText(e)); })
+        .then(function(){ st.busy = false; render(); });
+    }
+    function flag(patch, msg){
+      B.setTable(cafeId, String(table), Object.assign({ updatedAt: Date.now() }, patch)).then(function(){ S.toast(msg); }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+
+    S.$("app").oninput = function(e){ if (e.target.id === "note") st.note = e.target.value; };
+    S.$("app").onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    S.$("app").onclick = function(e){
+      var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+      var v = b.dataset.v;
+      switch (b.dataset.act) {
+        case "inc": st.cart[v] = (st.cart[v] || 0) + 1; break;
+        case "dec": if (st.cart[v]) { st.cart[v]--; if (!st.cart[v]) delete st.cart[v]; } break;
+        case "send": send(); return;
+        case "algPanel": st.algOpen = !st.algOpen; break;
+        case "avoid": if (st.avoid[v]) delete st.avoid[v]; else st.avoid[v] = 1; S.lsSet("sirala-avoid", JSON.stringify(st.avoid)); break;
+        case "ar": { var it = menu().find(function(x){ return x.id === v; }); if (it) S.openAR(it, "1 porsiyon" + (it.amount ? " · " + it.amount : "") + (Number(it.kcal) > 0 ? " · yaklaşık " + it.kcal + " kcal" : "") + "."); return; }
+        case "cat": { var sec = document.getElementById(v), hd = document.querySelector(".c-head");
+          if (sec) window.scrollTo({ top: sec.getBoundingClientRect().top + window.pageYOffset - (hd ? hd.offsetHeight : 0) - 8, behavior: "smooth" }); return; }
+        case "menu": st.view = "menu"; window.scrollTo(0, 0); break;
+        case "bill": st.view = "bill"; window.scrollTo(0, 0); break;
+        case "askBill": flag({ billRequested: true, requestedAt: Date.now() }, "Hesap istendi"); return;
+        case "waiter": flag({ waiter: true, waiterAt: Date.now() }, "Garson çağrıldı"); return;
+        case "back": ctx.back(); return;
+      }
+      render();
+    };
+    var tick = setInterval(function(){ if (st.view === "menu") render(); }, 30000);
+    return function(){ alive = false; clearInterval(tick); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
+  };
+})();
+
+/* Adanalım — kasa / mutfak ekranı: gelen siparişler, masalar ve hesap, garson siparişi, menü. */
+(function(){
+  "use strict";
+  window.SiralaApp = window.SiralaApp || {};
+
+  window.SiralaApp.kasa = function(ctx){
+    var B = ctx.B, cafeId = ctx.cafeId;
+    var st = { user: null, authKnown: false, loginErr: null, myCafes: null, cafe: null, cafeLoaded: false, denied: false,
+      orders: [], ordLoaded: false, fromCache: false, tables: {}, tab: "siparis", openTable: null, confirmClose: false,
+      wTable: null, moveFrom: null, repDays: "1", report: null, wCart: {}, wNote: "", busy: false, pinOk: false, log: [], seen: null, seenFlags: null, confirmCancel: null };
+    var alive = true, unsubs = [];
+    var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
+    var nTables = function(){ return Math.max(1, Math.min(80, Number(st.cafe && st.cafe.tables) || 10)); };
+
+    B.onAuth(function(u){
+      if (!alive) return;
+      st.user = u && u.staff ? u : null; st.authKnown = true;
+      unsubs.forEach(function(x){ try { x(); } catch(e){} }); unsubs = [];
+      if (!st.user) { render(true); return; }
+      if (!cafeId) { B.listMyCafes(st.user.email).then(function(l){ st.myCafes = l; render(true); }); return; }
+      subscribe();
+    });
+    B.ready.catch(function(){ st.authKnown = true; st.denied = "Sisteme bağlanılamadı."; render(true); });
+
+    function subscribe(){
+      unsubs.push(B.watchCafe(cafeId, function(d){
+        st.cafe = d; st.cafeLoaded = true;
+        st.denied = !!(d && B.kind === "firebase" && (d.staffEmails || []).indexOf(st.user.email) < 0) && "Bu hesap bu işletmenin kasa hesapları arasında değil.";
+        document.title = "Kasa · " + ((d && d.name) || cafeId); render();
+      }, function(){ st.denied = "Bu işletmeye erişim yok."; render(true); }));
+      unsubs.push(B.watchOrders(cafeId, null, function(list, cache){
+        st.orders = list; st.ordLoaded = true; st.fromCache = cache;
+        var keys = {}; list.forEach(function(o){ keys[o.id] = 1; });
+        if (st.seen) { for (var k in keys) if (!st.seen[k]) { S.beep(2, 660); break; } }
+        st.seen = keys; render();
+      }));
+      unsubs.push(B.watchTables(cafeId, function(m){
+        var flags = {}; Object.keys(m).forEach(function(t){ if (m[t].billRequested) flags["b" + t] = 1; if (m[t].waiter) flags["w" + t] = 1; });
+        if (st.seenFlags) { for (var f in flags) if (!st.seenFlags[f]) { S.beep(3, 880); break; } }
+        st.seenFlags = flags; st.tables = m; render();
+      }));
+    }
+
+    /* ---------- işlemler ---------- */
+    function upd(o, patch){ return B.updateOrder(cafeId, o.id, patch).catch(function(e){ S.toast(S.errText(e)); }); }
+    function clearFlags(t){ return B.setTable(cafeId, String(t), { billRequested: false, waiter: false, updatedAt: Date.now() }).catch(function(e){ S.toast(S.errText(e)); }); }
+    function closeTable(t){
+      B.closeTable(cafeId, String(t)).then(function(){ S.toast("Masa " + t + " kapatıldı"); st.openTable = null; st.confirmClose = false; render(true); }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+    function sendWaiter(){
+      var items = S.cartLines(st.wCart, menu());
+      if (!st.wTable || !items.length || st.busy) return;
+      st.busy = true; render(true);
+      B.addOrder(cafeId, { table: String(st.wTable), items: items, total: S.sum(items), eta: S.eta(items, menu()) + S.loadInfo(st.orders, st.cafe).extra, note: st.wNote.trim().slice(0, 120), uid: st.user.uid, source: "garson", status: "new", closed: false, createdAt: Date.now() })
+        .then(function(){ S.toast("Masa " + st.wTable + " siparişi mutfağa gönderildi"); st.wCart = {}; st.wNote = ""; })
+        .catch(function(e){ S.toast(S.errText(e)); })
+        .then(function(){ st.busy = false; render(true); });
+    }
+    function saveMenu(items, msg){ return B.updateCafe(cafeId, { menu: items }).then(function(){ if (msg) S.toast(msg); }).catch(function(e){ S.toast(S.errText(e)); }); }
+    function unlock(){
+      var pin = (S.$("pin") || {}).value || "";
+      Promise.all([B.getPrivate(cafeId), S.sha256(cafeId + ":" + pin)]).then(function(r){
+        if (r[0].pinHash && r[0].pinHash === r[1]) { st.pinOk = true; st.log = r[0].log || []; render(true); } else S.toast("PIN yanlış");
+      }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+    function saveItem(id){
+      var items = menu().map(function(x){ return Object.assign({}, x); }), it = items.find(function(x){ return x.id === id; }); if (!it) return;
+      var p = Math.max(0, Math.round(Number((S.$("pr-" + id) || {}).value) || 0)), m = Math.max(1, Math.min(180, Math.round(Number((S.$("mn-" + id) || {}).value) || S.DEFAULT_MINS)));
+      var changes = [];
+      if (p > 0 && p !== Number(it.price)) changes.push(it.name + ": " + it.price + " → " + p + " ₺");
+      if (m !== (Number(it.mins) || S.DEFAULT_MINS)) changes.push(it.name + " süresi: " + (Number(it.mins) || S.DEFAULT_MINS) + " → " + m + " dk");
+      if (!changes.length) { S.toast("Değişiklik yok"); return; }
+      if (p > 0) it.price = p; it.mins = m;
+      var d = new Date(), stamp = d.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit" }) + " " + S.clock(d);
+      st.log = changes.map(function(c){ return stamp + "  " + c; }).concat(st.log).slice(0, 60);
+      saveMenu(items, p > 0 && changes.some(function(c){ return c.indexOf("₺") > 0; }) ? "Kaydedildi · basılı fiyat listesini yeniden yazdırmayı unutmayın" : "Kaydedildi").then(function(){ return B.setPrivate(cafeId, { log: st.log }); }).then(function(){ render(true); });
+    }
+
+    /* ---------- görünüm ---------- */
+    function alertsHtml(){
+      var out = [];
+      Object.keys(st.tables).sort(function(a, b){ return a - b; }).forEach(function(t){
+        var x = st.tables[t];
+        if (x.billRequested) out.push('<div class="alert"><span>Masa ' + S.esc(t) + ' hesap istiyor · ' + S.ago(x.requestedAt) + '</span><span class="row-btns"><button class="btn btn-sm" data-act="openTable" data-v="' + S.esc(t) + '">Hesabı aç</button></span></div>');
+        else if (x.waiter) out.push('<div class="alert"><span>Masa ' + S.esc(t) + ' garson çağırıyor · ' + S.ago(x.waiterAt) + '</span><button class="btn btn-sm" data-act="gone" data-v="' + S.esc(t) + '">Gidildi</button></div>');
+      });
+      return out.length ? '<div class="alerts">' + out.join("") + '</div>' : '';
+    }
+    function head(){
+      var nNew = st.orders.filter(function(o){ return o.status === "new"; }).length;
+      var nBill = Object.keys(st.tables).filter(function(t){ return st.tables[t].billRequested; }).length;
+      var tabs = [["siparis", "Siparişler", nNew], ["masalar", "Masalar", nBill], ["garson", "Garson siparişi", 0], ["menu", "Menü", 0], ["rapor", "Rapor", 0]];
+      return '<header class="k-head"><div class="k-wrap k-head-in"><div><span class="label">Kasa · Mutfak</span><div class="k-name">' + S.esc((st.cafe && st.cafe.name) || "") + '</div></div>' +
+        '<nav class="tabs" role="tablist" aria-label="Bölümler">' + tabs.map(function(t){ return '<button role="tab" aria-selected="' + (st.tab === t[0]) + '" data-act="tab" data-v="' + t[0] + '">' + t[1] + (t[2] ? '<span class="badge">' + t[2] + '</span>' : '') + '</button>'; }).join("") + '</nav>' +
+        (ctx.setupHref ? '<a class="btn btn-sm" href="' + S.esc(ctx.setupHref) + '">Kurulum</a>' : '') + '</div></header>' +
+        (!navigator.onLine || st.fromCache ? '<div class="offline">İnternet bağlantısı yok. Liste son hâliyle duruyor; telefondan internet paylaşımı açarak devam edebilirsiniz.</div>' : '');
+    }
+    function etaHtml(o){
+      var left = Math.round(((o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000 - Date.now()) / 60000);
+      return left >= 0 ? '<span class="t-eta">Tahmini · ' + left + ' dk kaldı</span>' : '<span class="t-eta late">' + (-left) + ' dk gecikti</span>';
+    }
+    function ordersTab(){
+      var nw = st.orders.filter(function(o){ return o.status === "new"; }).sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); });
+      var dn = st.orders.filter(function(o){ return o.status === "done"; }).sort(function(a, b){ return (b.doneAt || 0) - (a.doneAt || 0); }).slice(0, 10);
+      var L = S.loadInfo(st.orders, st.cafe), opts = [0, 10, 20];
+      var busyBar = '<div class="busy-bar"><div><b>Mutfak yoğunluğu</b><span class="small muted">' + L.queue + ' sipariş bekliyor · otomatik ' + (L.auto ? '+' + L.auto + ' dk' : 'ek yok') +
+        ' · müşteriye ' + (L.extra ? '+' + L.extra + ' dk' : 'normal süre') + ' gösteriliyor</span></div><div class="pick-table"><span class="small">Elle ekle:</span>' +
+        opts.map(function(x){ return '<button aria-pressed="' + (L.manual === x) + '" data-act="busy" data-v="' + x + '">' + (x ? '+' + x + ' dk' : 'Yok') + '</button>'; }).join("") + '</div></div>';
+      return busyBar + '<div class="k-cols"><section><h2 class="k-h">Hazırlanacak <span class="label">' + nw.length + ' sipariş</span></h2>' +
+        (nw.length ? '<div class="tickets">' + nw.map(function(o){
+          var late = Date.now() > (o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000;
+          return '<article class="ticket' + (late ? " late" : "") + '"><div class="t-top"><span class="t-table">Masa ' + S.esc(o.table) + '</span><span class="t-time">' + S.clock(o.createdAt) + '<br>' + (o.source === "garson" ? "garson" : "QR") + '</span></div>' +
+            '<ul class="t-items">' + (o.items || []).map(function(i){ return '<li><b>' + i.qty + '×</b>' + S.esc(i.name) + '</li>'; }).join("") + '</ul>' +
+            (o.note ? '<div class="t-note">Not: ' + S.esc(o.note) + '</div>' : '') + etaHtml(o) +
+            '<div class="t-left"><span class="small muted">Kaç dk sonra çıkar?</span>' + [5, 10, 15, 20].map(function(x){ return '<button data-act="leftSet" data-v="' + S.esc(o.id) + '" data-m="' + x + '">' + x + '</button>'; }).join("") + '</div>' +
+            '<button class="btn btn-primary" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button>' +
+            (st.confirmCancel === o.id
+              ? '<div class="t-cancel"><span>İptal edilsin mi? Hesaptan düşer.</span><button class="btn btn-sm btn-bad" data-act="cancelYes" data-v="' + S.esc(o.id) + '">Evet, iptal</button><button class="btn btn-sm" data-act="cancelNo">Vazgeç</button></div>'
+              : '<button class="t-cancel-link" data-act="cancelAsk" data-v="' + S.esc(o.id) + '">Siparişi iptal et</button>') + '</article>';
+        }).join("") + '</div>' : '<div class="empty-card"><p>Bekleyen sipariş yok. Masalardan gelen siparişler burada belirir ve ses çıkarır.</p></div>') +
+        '</section><section><h2 class="k-h">Hazırlananlar</h2>' +
+        (dn.length ? '<div class="done-list">' + dn.map(function(o){ return '<div class="done-row"><b>M' + S.esc(o.table) + '</b><span class="d">' + S.esc(S.summary(o.items)) + '</span><span class="small muted">' + S.clock(o.doneAt) + '</span><button class="btn btn-sm btn-ghost" data-act="undo" data-v="' + S.esc(o.id) + '" aria-label="Geri al">Geri al</button></div>'; }).join("") + '</div>' : '<p class="muted small">Henüz yok.</p>') +
+        '</section></div>';
+    }
+    function tableAgg(t){
+      var list = st.orders.filter(function(o){ return String(o.table) === String(t) && o.status !== "cancelled"; });
+      return { list: list, total: list.reduce(function(s, o){ return s + (Number(o.total) || S.sum(o.items)); }, 0) };
+    }
+    function tablesTab(){
+      var cells = [];
+      for (var t = 1; t <= nTables(); t++) {
+        var a = tableAgg(t), f = st.tables[String(t)] || {};
+        cells.push('<button class="tbl' + (f.billRequested ? " bill" : a.list.length ? " busy" : "") + '" data-act="openTable" data-v="' + t + '"><span class="tbl-n">' + t + '</span>' +
+          '<span class="tbl-s">' + (f.billRequested ? "Hesap istendi" : f.waiter ? "Garson çağırıyor" : a.list.length ? a.list.length + " sipariş" : "Boş") + '</span>' +
+          (a.list.length ? '<span class="tbl-t">' + S.fmt(a.total) + '</span>' : '') + '</button>');
+      }
+      return '<h2 class="k-h">Masalar <span class="label">Hesabı görmek için masaya dokunun</span></h2><div class="tables">' + cells.join("") + '</div>' + (st.openTable ? detail(st.openTable) : '');
+    }
+    function billLines(t){
+      var a = tableAgg(t), m = {}, out = [];
+      a.list.forEach(function(o){ (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!m[k]) { m[k] = { name: i.name, price: i.price, qty: 0 }; out.push(m[k]); } m[k].qty += i.qty; }); });
+      return { lines: out, total: a.total };
+    }
+    function exportCsv(){
+      var R = st.report; if (!R || !R.n) return;
+      var q = function(x){ return '"' + String(x).replace(/"/g, '""') + '"'; };
+      var rows = [["Ürün", "Adet", "Birim fiyat", "Tutar"]].concat(R.lines.map(function(l){ return [l.name, l.qty, l.price, l.price * l.qty]; }));
+      rows.push(["TOPLAM", R.items, "", R.revenue]);
+      var d = new Date();
+      S.downloadText("\ufeff" + rows.map(function(r){ return r.map(q).join(";"); }).join("\r\n"), (cafeId || "adanalim") + "-satis-" + d.toISOString().slice(0, 10) + ".csv", "text/csv");
+    }
+    function detail(t){
+      var a = tableAgg(t), lines = {}, keys = [];
+      a.list.forEach(function(o){ (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!lines[k]) { lines[k] = { name: i.name, price: i.price, qty: 0 }; keys.push(k); } lines[k].qty += i.qty; }); });
+      return '<section class="detail" id="detail"><h3>Masa ' + S.esc(t) + '</h3>' +
+        (keys.length ? '<ul>' + keys.map(function(k){ var i = lines[k]; return '<li><span>' + i.qty + '× ' + S.esc(i.name) + '</span><span class="num">' + S.fmt(i.price * i.qty) + '</span></li>'; }).join("") + '</ul>' +
+          '<div class="bill-total"><span>Toplam</span><b>' + S.fmt(a.total) + '</b></div>' : '<p class="muted">Açık sipariş yok.</p>') +
+        '<div class="row-btns">' + (keys.length ? (st.confirmClose
+          ? '<button class="btn btn-primary" data-act="closeYes" data-v="' + S.esc(t) + '">Evet, ödendi · masayı kapat</button><button class="btn" data-act="closeNo">Vazgeç</button>'
+          : '<button class="btn btn-primary" data-act="closeAsk">Ödeme alındı · masayı kapat</button>') : '') +
+        (keys.length ? '<button class="btn" data-act="printBill" data-v="' + S.esc(t) + '">Hesap fişi yazdır</button>' : '') +
+        '<button class="btn" data-act="wFor" data-v="' + S.esc(t) + '">Bu masaya sipariş ekle</button>' +
+        (keys.length ? '<button class="btn" data-act="moveAsk" data-v="' + S.esc(t) + '">Masayı taşı</button>' : '') +
+        ((st.tables[String(t)] || {}).billRequested || (st.tables[String(t)] || {}).waiter ? '<button class="btn btn-ghost" data-act="gone" data-v="' + S.esc(t) + '">Uyarıyı kapat</button>' : '') +
+        '<button class="btn btn-ghost" data-act="closeDetail">Kapat</button></div>' +
+        (st.moveFrom === String(t) ? moveHtml(t) : '') + '</section>';
+    }
+    function moveHtml(t){
+      var b = []; for (var x = 1; x <= nTables(); x++) if (String(x) !== String(t)) {
+        var busy = tableAgg(x).list.length;
+        b.push('<button data-act="moveTo" data-v="' + x + '"' + (busy ? ' class="busy" title="Bu masada açık sipariş var"' : '') + '>' + x + '</button>');
+      }
+      return '<div class="move-box"><span class="label">Masa ' + S.esc(t) + ' siparişleri hangi masaya taşınsın?</span><div class="pick-table">' + b.join("") + '</div>' +
+        '<p class="small muted">Dolu masaya taşırsanız siparişler o masanın hesabına eklenir.</p><button class="btn btn-sm btn-ghost" data-act="moveNo">Vazgeç</button></div>';
+    }
+    function reportTab(){
+      var R = st.report, ranges = [["1", "Bugün"], ["7", "Son 7 gün"], ["14", "Son 14 gün"]];
+      var head = '<div class="rep-head"><h2 class="k-h" style="margin:0">Rapor</h2><div class="pick-table">' + ranges.map(function(r){ return '<button aria-pressed="' + (st.repDays === r[0]) + '" data-act="repRange" data-v="' + r[0] + '">' + r[1] + '</button>'; }).join("") + '</div></div>';
+      if (!R) return head + '<p class="muted">Yükleniyor…</p>';
+      if (!R.n) return head + '<div class="empty-card"><p>Bu aralıkta sipariş yok.</p></div>';
+      var maxH = Math.max.apply(null, R.hours.map(function(h){ return h[1]; }));
+      return head + '<div class="rep-tiles">' +
+        tile("Sipariş", R.n, R.items + " ürün") + tile("QR'dan", "%" + R.qrPct, R.qr + " QR · " + R.garson + " garson") +
+        tile("Ciro", S.fmt(R.revenue), R.cancelled ? R.cancelled + " iptal hariç" : "iptal yok") + tile("Masa başı hesap", R.checks ? S.fmt(R.avgCheck) : "—", R.checks + " kapanan masa") +
+        tile("Hazırlanma", R.prepN ? "~" + R.avgPrep + " dk" : "—", R.prepN ? "%" + R.onTime + " zamanında" : "henüz yok") + '</div>' +
+        '<div class="k-cols" style="margin-top:20px"><section class="k-panel"><span class="label">En çok satanlar</span><ol class="rep-top">' +
+        R.top.map(function(t){ return '<li><span>' + S.esc(t[0]) + '</span><b class="num">' + t[1] + '</b></li>'; }).join("") + '</ol></section>' +
+        '<section class="k-panel"><span class="label">Saatlere göre sipariş</span><div class="rep-hours">' +
+        R.hours.map(function(h){ return '<div class="rep-bar"><span class="num">' + h[0] + ':00</span><i style="width:' + Math.max(4, Math.round(h[1] / maxH * 100)) + '%"></i><b>' + h[1] + '</b></div>'; }).join("") + '</div></section></div>' +
+        '<div class="pl-box" style="margin-top:20px"><div><b>Satış dökümü (Excel)</b><span class="small muted">Seçili aralıkta hangi üründen kaç adet satıldı. Adisyon programınıza ya da muhasebeye toplu girmek için.</span></div><button class="btn" data-act="csv">İndir (.csv)</button></div>' +
+        '<p class="small muted" style="margin-top:14px">"Eski siparişleri temizle" yapılırsa o günlerin raporu da silinir. Pilot bitmeden temizlemeyin, ekran görüntüsünü alın.</p>';
+    }
+    function tile(k, v, s){ return '<div class="rep-tile"><span class="label">' + k + '</span><b>' + v + '</b><small>' + S.esc(s) + '</small></div>'; }
+    function loadReport(){
+      st.report = null; render(true);
+      var d0 = new Date(); d0.setHours(0, 0, 0, 0); var since = d0.getTime() - (Number(st.repDays) - 1) * 86400000;
+      B.listOrders(cafeId, since).then(function(list){
+        var ok = list.filter(function(o){ return o.status !== "cancelled"; });
+        var R = { n: ok.length, items: 0, qr: 0, garson: 0, revenue: 0, checks: 0, avgCheck: 0, prepN: 0, avgPrep: 0, onTime: 0, top: [], hours: [] };
+        var counts = {}, hrs = {}, checks = {}, lines = {}, prepSum = 0, onTime = 0;
+        ok.forEach(function(o){
+          (o.items || []).forEach(function(i){ R.items += i.qty; counts[i.name] = (counts[i.name] || 0) + i.qty; var lk = i.name + "|" + i.price; if (!lines[lk]) lines[lk] = { name: i.name, price: Number(i.price) || 0, qty: 0 }; lines[lk].qty += i.qty; });
+          if (o.source === "garson") R.garson++; else R.qr++;
+          var tot = Number(o.total) || S.sum(o.items); R.revenue += tot;
+          var h = new Date(o.createdAt || 0).getHours(); hrs[h] = (hrs[h] || 0) + 1;
+          if (o.closed && o.closedAt) { var k = o.table + "@" + o.closedAt; checks[k] = (checks[k] || 0) + tot; }
+          if (o.doneAt && o.createdAt) { R.prepN++; prepSum += (o.doneAt - o.createdAt) / 60000; if (o.doneAt <= o.createdAt + (o.eta || S.DEFAULT_MINS) * 60000) onTime++; }
+        });
+        R.qrPct = R.n ? Math.round(R.qr / R.n * 100) : 0;
+        var cv = Object.keys(checks).map(function(k){ return checks[k]; });
+        R.checks = cv.length; R.avgCheck = cv.length ? cv.reduce(function(a, b){ return a + b; }, 0) / cv.length : 0;
+        R.avgPrep = R.prepN ? Math.round(prepSum / R.prepN) : 0; R.onTime = R.prepN ? Math.round(onTime / R.prepN * 100) : 0;
+        R.top = Object.keys(counts).map(function(k){ return [k, counts[k]]; }).sort(function(a, b){ return b[1] - a[1]; }).slice(0, 6);
+        R.hours = Object.keys(hrs).map(Number).sort(function(a, b){ return a - b; }).map(function(h){ return [(h < 10 ? "0" : "") + h, hrs[h]]; });
+        R.lines = Object.keys(lines).map(function(k){ return lines[k]; }).sort(function(a, b){ return b.qty - a.qty; });
+        R.cancelled = list.length - ok.length;
+        st.report = R; render(true);
+      }).catch(function(e){ S.toast(S.errText(e)); st.report = { n: 0 }; render(true); });
+    }
+    function waiterTab(){
+      var items = menu().filter(function(i){ return !i.out; });
+      var sel = S.cartLines(st.wCart, menu());
+      var tbs = []; for (var t = 1; t <= nTables(); t++) tbs.push('<button aria-pressed="' + (String(st.wTable) === String(t)) + '" data-act="wTable" data-v="' + t + '">' + t + '</button>');
+      return '<div class="k-narrow"><p class="muted">Misafir QR kullanmak istemezse siparişini buradan girin. Mutfağa aynı şekilde düşer, masanın hesabına eklenir.</p>' +
+        '<section class="k-panel"><span class="label" style="margin-bottom:8px">Masa</span><div class="pick-table">' + tbs.join("") + '</div></section>' +
+        '<section class="k-panel">' + (items.length ? items.map(function(i){
+          return S.options(i).map(function(o, n){ var q = st.wCart[o.key] || 0;
+            return '<div class="w-item"><span class="nm"><b>' + S.esc(i.name) + (n ? ' · 1,5 porsiyon' : '') + '</b><span class="small muted">' + S.fmt(o.price) + ' · ort. ' + (Number(i.mins) || S.DEFAULT_MINS) + ' dk</span></span><div class="stepper">' +
+              (q ? '<button class="round" data-act="wdec" data-v="' + S.esc(o.key) + '" aria-label="azalt">−</button><span class="q">' + q + '</span>' : '') +
+              '<button class="round' + (q ? "" : " round-add") + '" data-act="winc" data-v="' + S.esc(o.key) + '" aria-label="' + S.esc(i.name) + ' ekle">+</button></div></div>'; }).join(""); }).join("") : '<p class="muted">Menü boş.</p>') + '</section>' +
+        '<label class="fld" for="wnote"><span>Not</span><input id="wnote" maxlength="120" value="' + S.esc(st.wNote) + '" placeholder="ör. acısız"></label>' +
+        '<button class="btn btn-primary btn-lg" data-act="wSend"' + (st.wTable && sel.length && !st.busy ? "" : " disabled") + '>' +
+        (st.busy ? "Gönderiliyor…" : !st.wTable ? "Önce masa seçin" : "Masa " + st.wTable + " · mutfağa gönder · " + S.fmt(S.sum(sel))) + '</button></div>';
+    }
+    function menuTab(){
+      var items = menu();
+      return '<div class="k-narrow"><div class="pl-box"><div><b>Basılı fiyat listesi</b><span class="small muted">Girişte ve masalarda bulunması zorunlu. Fiyat değiştirdiğinizde yeniden yazdırın.</span></div><button class="btn" data-act="printList">Fiyat listesini yazdır</button></div><div class="pinbox">' +
+        (st.pinOk ? '<span>Fiyat ve süre düzenleme açık</span><button class="btn btn-sm" data-act="lock">Kilitle</button>'
+                  : '<label for="pin">Fiyat ve süre değiştirmek için patron PIN\'i</label><input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="6"><button class="btn btn-sm" data-act="unlock">Aç</button>') + '</div>' +
+        '<section class="k-panel">' + (items.length ? items.map(function(i){
+          return '<div class="m-row' + (i.out ? " is-out" : "") + '"><div><div class="m-nm">' + S.esc(i.name) + '</div><span class="small muted">' + S.esc(i.cat || "") + '</span></div><div class="m-ctl">' +
+            (st.pinOk
+              ? '<label class="sr" for="pr-' + S.esc(i.id) + '">Fiyat</label><input class="price-in" id="pr-' + S.esc(i.id) + '" type="number" min="0" inputmode="numeric" value="' + (Number(i.price) || 0) + '"><span class="small muted">₺</span>' +
+                '<label class="sr" for="mn-' + S.esc(i.id) + '">Süre</label><input class="price-in" style="width:70px" id="mn-' + S.esc(i.id) + '" type="number" min="1" max="180" inputmode="numeric" value="' + (Number(i.mins) || S.DEFAULT_MINS) + '"><span class="small muted">dk</span>' +
+                '<button class="btn btn-sm" data-act="saveItem" data-v="' + S.esc(i.id) + '">Kaydet</button>'
+              : '<span class="num" style="font-size:1.15rem">' + S.fmt(i.price) + '</span><span class="small muted">ort. ' + (Number(i.mins) || S.DEFAULT_MINS) + ' dk</span>') +
+            '<button class="btn btn-sm ' + (i.out ? "btn-ok" : "btn-bad") + '" data-act="out" data-v="' + S.esc(i.id) + '">' + (i.out ? "Geri aç" : "Tükendi") + '</button></div></div>';
+        }).join("") : '<p class="muted">Menü boş. Kurulumdan ürün ekleyin.</p>') + '</section>' +
+        (st.pinOk ? '<section class="k-panel"><span class="label">Değişiklik kaydı</span>' + (st.log.length ? '<ul class="log" style="margin-top:8px">' + st.log.map(function(l){ return '<li>' + S.esc(l) + '</li>'; }).join("") + '</ul>' : '<p class="muted small">Henüz değişiklik yok.</p>') + '</section>' : '') + '</div>';
+    }
+    function pickCafe(){
+      var l = st.myCafes || [];
+      return '<main class="login"><div class="login-card"><div class="brand-sm">Adanalım</div><h1>Kasa ekranı</h1>' +
+        (l.length ? '<p class="muted">Hangi işletme?</p>' + l.map(function(c){ return '<a class="btn btn-lg wide" href="kasa.html?k=' + encodeURIComponent(c.id) + '">' + S.esc(c.name || c.id) + '</a>'; }).join("")
+                  : '<p class="muted">Bu hesaba bağlı işletme yok. Önce kurulum ekranından işletme oluşturun.</p><a class="btn btn-primary wide" href="kurulum.html">Kuruluma git</a>') +
+        '<button class="btn btn-sm btn-ghost" data-act="logout">Çıkış yap</button></div></main>';
+    }
+    function render(force){
+      if (!alive || (!force && S.isEditing())) return;
+      var app = S.$("app");
+      if (!st.authKnown) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
+      if (!st.user) { app.innerHTML = S.loginView("Kasa ekranı", st.loginErr || st.denied); S.bindLogin(B, function(m){ st.loginErr = m; render(true); }); return; }
+      if (!cafeId) { app.innerHTML = pickCafe(); return; }
+      if (st.denied) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Erişim yok</h1><p class="muted">' + S.esc(st.denied) + '</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
+      if (!st.cafeLoaded || !st.ordLoaded) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
+      if (!st.cafe) { app.innerHTML = '<main class="login"><div class="login-card"><h1>İşletme bulunamadı</h1><p class="muted">"' + S.esc(cafeId) + '" kodlu işletme kayıtlı değil.</p></div></main>'; return; }
+      app.innerHTML = head() + (S.audioReady ? '' : '<button class="sound-bar" data-act="sound">Sipariş sesini ve ekranın açık kalmasını etkinleştirmek için buraya dokunun</button>') + '<main class="k-wrap">' + alertsHtml() + (st.tab === "siparis" ? ordersTab() : st.tab === "masalar" ? tablesTab() : st.tab === "garson" ? waiterTab() : st.tab === "rapor" ? reportTab() : menuTab()) + '</main>';
+    }
+    var tick = setInterval(function(){ if (st.tab === "siparis") render(); }, 30000);
+
+    var app = S.$("app");
+    app.onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    app.oninput = function(e){ if (e.target.id === "wnote") st.wNote = e.target.value; };
+    app.onkeydown = function(e){ if (e.key === "Enter" && e.target.id === "pin") { e.preventDefault(); unlock(); } };
+    app.onclick = function(e){
+      var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+      var v = b.dataset.v, o = st.orders.find(function(x){ return x.id === v; });
+      switch (b.dataset.act) {
+        case "tab": st.tab = v; st.pinOk = v === "menu" && st.pinOk; st.openTable = null; st.confirmClose = false; st.moveFrom = null; if (v === "rapor") { loadReport(); return; } break;
+        case "repRange": st.repDays = v; loadReport(); return;
+        case "printList": S.printPriceList(st.cafe, menu()); return;
+        case "moveAsk": st.moveFrom = v; break;
+        case "moveNo": st.moveFrom = null; break;
+        case "moveTo": { var from = st.moveFrom; st.moveFrom = null;
+          B.moveTable(cafeId, String(from), String(v)).then(function(n){ S.toast("Masa " + from + " → Masa " + v + " taşındı (" + n + " sipariş)"); st.openTable = String(v); render(true); }).catch(function(e){ S.toast(S.errText(e)); }); return; }
+        case "done": if (o) upd(o, { status: "done", doneAt: Date.now() }); return;
+        case "cancelAsk": st.confirmCancel = v; break;
+        case "cancelNo": st.confirmCancel = null; break;
+        case "cancelYes": st.confirmCancel = null; if (o && o.status === "new") upd(o, { status: "cancelled", cancelledAt: Date.now(), cancelledBy: (st.user && st.user.email) || "" }).then(function(){ S.toast("Masa " + o.table + " siparişi iptal edildi"); }); return;
+        case "leftSet": if (o) { var m = Number(b.dataset.m), now = Date.now();
+          upd(o, { eta: Math.max(1, Math.round((now - (o.createdAt || now)) / 60000) + m), etaSetAt: now }).then(function(){ S.toast("Masa " + o.table + ": " + m + " dk sonra çıkacak · müşteriye gösterildi"); }); } return;
+        case "busy": { var delta = (Number(v) || 0) - S.loadInfo(st.orders, st.cafe).manual;
+          st.orders.filter(function(x){ return x.status === "new"; }).forEach(function(x){ upd(x, { eta: Math.max(1, (Number(x.eta) || S.DEFAULT_MINS) + delta) }); }); }
+          B.updateCafe(cafeId, { busyExtra: Number(v) || 0 }).then(function(){ S.toast(Number(v) ? "Tüm sürelere +" + v + " dk eklendi" : "Elle ek süre kaldırıldı"); }).catch(function(e){ S.toast(S.errText(e)); }); return;
+        case "printBill": { var bl = billLines(v); S.printHtml(S.billHtml(st.cafe, v, bl.lines, bl.total)); return; }
+        case "csv": exportCsv(); return;
+        case "undo": if (o) upd(o, { status: "new" }); return;
+        case "openTable": st.tab = "masalar"; st.openTable = v; st.confirmClose = false; render(true); var d = S.$("detail"); if (d) d.scrollIntoView({ block: "nearest" }); return;
+        case "closeDetail": st.openTable = null; st.confirmClose = false; break;
+        case "closeAsk": st.confirmClose = true; break;
+        case "closeNo": st.confirmClose = false; break;
+        case "closeYes": closeTable(v); return;
+        case "gone": clearFlags(v); return;
+        case "wFor": st.tab = "garson"; st.wTable = v; st.openTable = null; break;
+        case "wTable": st.wTable = v; break;
+        case "winc": st.wCart[v] = (st.wCart[v] || 0) + 1; break;
+        case "wdec": if (st.wCart[v]) { st.wCart[v]--; if (!st.wCart[v]) delete st.wCart[v]; } break;
+        case "wSend": sendWaiter(); return;
+        case "out": { var items = menu().map(function(x){ return Object.assign({}, x, x.id === v ? { out: !x.out } : {}); }), it = items.find(function(x){ return x.id === v; });
+          saveMenu(items, it.out ? it.name + " tükendi, menüden kalktı" : it.name + " tekrar menüde"); return; }
+        case "unlock": unlock(); return;
+        case "lock": st.pinOk = false; break;
+        case "saveItem": saveItem(v); return;
+        case "logout": B.logout(); return;
+        case "sound": S.beep(1, 660); break;
+      }
+      render(true);
+    };
+    S.onAudioReady(function(){ S.keepAwake(); render(true); });
+    var onVis = function(){ if (document.visibilityState === "visible") S.keepAwake(); };
+    document.addEventListener("visibilitychange", onVis);
+    return function(){ alive = false; clearInterval(tick); document.removeEventListener("visibilitychange", onVis); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
+  };
+})();
+
+/* Adanalım — garson uygulaması (telefon): masalar ve çağrılar, mutfaktan hazır gelenler, sipariş alma, masa hesabı. */
+(function(){
+  "use strict";
+  window.SiralaApp = window.SiralaApp || {};
+  var IC = {
+    tables: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+    ready: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18M5 17a7 7 0 0 1 14 0M12 8V6M10 6h4"/></svg>',
+    order: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M12 17h3"/></svg>',
+    bell: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+    bill: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>'
+  };
+
+  window.SiralaApp.garson = function(ctx){
+    var B = ctx.B, cafeId = ctx.cafeId;
+    var st = { user: null, authKnown: false, loginErr: null, cafe: null, cafeLoaded: false, denied: false,
+      orders: [], tables: {}, tab: "masalar", sheet: null, confirmClose: false, wTable: null, wCart: {}, wNote: "", busy: false,
+      seenFlags: null, seenReady: null, fromCache: false };
+    var alive = true, unsubs = [];
+    var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
+    var nTables = function(){ return Math.max(1, Math.min(80, Number(st.cafe && st.cafe.tables) || 10)); };
+    var tick = setInterval(function(){ if (!S.isEditing()) render(); }, 30000);
+
+    B.onAuth(function(u){
+      if (!alive) return;
+      st.user = u && u.staff ? u : null; st.authKnown = true;
+      unsubs.forEach(function(x){ try { x(); } catch(e){} }); unsubs = [];
+      if (!st.user || !cafeId) { render(true); return; }
+      unsubs.push(B.watchCafe(cafeId, function(d){
+        st.cafe = d; st.cafeLoaded = true;
+        st.denied = !!(d && B.kind === "firebase" && (d.staffEmails || []).indexOf(st.user.email) < 0) && "Bu hesap bu işletmenin çalışanları arasında değil.";
+        document.title = "Garson · " + ((d && d.name) || cafeId); render();
+      }, function(){ st.denied = "Bu işletmeye erişim yok."; render(true); }));
+      unsubs.push(B.watchOrders(cafeId, null, function(list, cache){
+        st.orders = list; st.fromCache = cache;
+        var ready = {}; readyList().forEach(function(o){ ready[o.id] = 1; });
+        if (st.seenReady) { for (var k in ready) if (!st.seenReady[k]) { alertMe("Mutfaktan hazır: Masa " + (st.orders.find(function(o){ return o.id === k; }) || {}).table, 2, 740); break; } }
+        st.seenReady = ready; render();
+      }));
+      unsubs.push(B.watchTables(cafeId, function(m){
+        var flags = {}, msg = null;
+        Object.keys(m).forEach(function(t){ if (m[t].billRequested) flags["b" + t] = 1; if (m[t].waiter) flags["w" + t] = 1; });
+        if (st.seenFlags) for (var f in flags) if (!st.seenFlags[f]) { msg = "Masa " + f.slice(1) + (f[0] === "b" ? " hesap istiyor" : " garson çağırıyor"); break; }
+        st.seenFlags = flags; st.tables = m;
+        if (msg) alertMe(msg, 3, 880);
+        render();
+      }));
+    });
+    B.ready.catch(function(){ st.authKnown = true; st.denied = "Sisteme bağlanılamadı."; render(true); });
+
+    function alertMe(msg, n, freq){
+      S.beep(n, freq);
+      try { if (navigator.vibrate) navigator.vibrate([220, 120, 220]); } catch(e){}
+      S.toast(msg);
+    }
+
+    /* ---------- veri ---------- */
+    function readyList(){
+      var since = Date.now() - 3 * 3600000;
+      return st.orders.filter(function(o){ return o.status === "done" && !o.served && (o.doneAt || 0) > since; })
+        .sort(function(a, b){ return (a.doneAt || 0) - (b.doneAt || 0); });
+    }
+    function tableAgg(t){
+      var list = st.orders.filter(function(o){ return String(o.table) === String(t) && o.status !== "cancelled"; });
+      var lines = {}, keys = [];
+      list.forEach(function(o){ (o.items || []).forEach(function(i){ var k = i.name + "|" + i.price; if (!lines[k]) { lines[k] = { name: i.name, price: i.price, qty: 0 }; keys.push(k); } lines[k].qty += i.qty; }); });
+      return { list: list, lines: keys.map(function(k){ return lines[k]; }), total: list.reduce(function(s, o){ return s + (Number(o.total) || S.sum(o.items)); }, 0),
+        waiting: list.filter(function(o){ return o.status === "new"; }).length, ready: list.filter(function(o){ return o.status === "done" && !o.served; }).length };
+    }
+    function calls(){
+      return Object.keys(st.tables).filter(function(t){ return st.tables[t].billRequested || st.tables[t].waiter; })
+        .sort(function(a, b){ var x = st.tables[a], y = st.tables[b]; return (x.requestedAt || x.waiterAt || 0) - (y.requestedAt || y.waiterAt || 0); });
+    }
+
+    /* ---------- işlemler ---------- */
+    function clearFlags(t){ return B.setTable(cafeId, String(t), { billRequested: false, waiter: false, updatedAt: Date.now() }).catch(function(e){ S.toast(S.errText(e)); }); }
+    function served(o){ B.updateOrder(cafeId, o.id, { served: true, servedAt: Date.now() }).then(function(){ S.toast("Masa " + o.table + " servis edildi"); }).catch(function(e){ S.toast(S.errText(e)); }); }
+    function closeTable(t){
+      B.closeTable(cafeId, String(t)).then(function(){ S.toast("Masa " + t + " kapatıldı"); st.sheet = null; st.confirmClose = false; render(true); }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+    function send(){
+      var items = S.cartLines(st.wCart, menu());
+      if (!st.wTable || !items.length || st.busy) return;
+      st.busy = true; render(true);
+      B.addOrder(cafeId, { table: String(st.wTable), items: items, total: S.sum(items), eta: S.eta(items, menu()) + S.loadInfo(st.orders, st.cafe).extra,
+        note: st.wNote.trim().slice(0, 120), uid: st.user.uid, source: "garson", status: "new", closed: false, createdAt: Date.now() })
+        .then(function(){ S.toast("Masa " + st.wTable + " siparişi mutfakta"); st.wCart = {}; st.wNote = ""; })
+        .catch(function(e){ S.toast(S.errText(e)); })
+        .then(function(){ st.busy = false; render(true); });
+    }
+
+    /* ---------- görünüm ---------- */
+    function head(){
+      var nCalls = calls().length;
+      return '<header class="g-head"><div><span class="g-kick">Garson</span><b>' + S.esc((st.cafe && st.cafe.name) || "") + '</b></div>' +
+        (nCalls ? '<span class="g-pulse">' + nCalls + ' çağrı</span>' : '<span class="g-ok">Sakin</span>') + '</header>' +
+        (S.audioReady ? '' : '<button class="g-sound" data-act="sound">' + IC.bell + 'Bildirim sesini ve titreşimi açmak için dokunun</button>') +
+        (!navigator.onLine || st.fromCache ? '<div class="offline">İnternet yok. Liste son hâliyle duruyor.</div>' : '');
+    }
+    function tablesTab(){
+      var cs = calls();
+      var out = cs.length ? '<section class="g-calls">' + cs.map(function(t){
+        var x = st.tables[t], bill = x.billRequested;
+        return '<article class="g-call ' + (bill ? "bill" : "wait") + '"><span class="g-ci">' + (bill ? IC.bill : IC.bell) + '</span><div><b>Masa ' + S.esc(t) + '</b><small>' + (bill ? "Hesap istiyor" : "Garson çağırıyor") + ' · ' + S.ago(bill ? x.requestedAt : x.waiterAt) + '</small></div>' +
+          (bill ? '<button class="g-btn" data-act="sheet" data-v="' + S.esc(t) + '">Hesabı aç</button>' : '<button class="g-btn" data-act="going" data-v="' + S.esc(t) + '">Gidiyorum</button>') + '</article>';
+      }).join("") + '</section>' : '';
+      var cells = [];
+      for (var t = 1; t <= nTables(); t++) {
+        var a = tableAgg(t), f = st.tables[String(t)] || {};
+        var cls = f.billRequested ? "bill" : f.waiter ? "wait" : a.ready ? "ready" : a.list.length ? "busy" : "";
+        var sub = f.billRequested ? "Hesap" : f.waiter ? "Çağırıyor" : a.ready ? a.ready + " hazır" : a.waiting ? a.waiting + " mutfakta" : a.list.length ? "Yemekte" : "Boş";
+        cells.push('<button class="g-tbl ' + cls + '" data-act="sheet" data-v="' + t + '"><span class="n">' + t + '</span><span class="s">' + sub + '</span>' + (a.list.length ? '<span class="t">' + S.fmt(a.total) + '</span>' : '') + '</button>');
+      }
+      return out + '<h2 class="g-h">Masalar</h2><div class="g-grid">' + cells.join("") + '</div>' +
+        '<div class="g-legend"><span class="busy">Dolu</span><span class="ready">Hazır yemek</span><span class="wait">Çağırıyor</span><span class="bill">Hesap</span></div>';
+    }
+    function readyTab(){
+      var r = readyList();
+      if (!r.length) return '<h2 class="g-h">Mutfaktan hazır</h2><div class="g-empty">' + IC.ready + '<p>Şu an bekleyen yemek yok. Mutfak "Hazırlandı"ya bastığında burada belirir, telefon titrer.</p></div>';
+      return '<h2 class="g-h">Mutfaktan hazır <span>' + r.length + '</span></h2>' + r.map(function(o){
+        var wait = Math.max(0, Math.round((Date.now() - (o.doneAt || 0)) / 60000));
+        return '<article class="g-ready' + (wait >= 5 ? " late" : "") + '"><div class="g-r-top"><b>Masa ' + S.esc(o.table) + '</b><small>' + (wait < 1 ? "şimdi hazırlandı" : wait + " dk önce hazırlandı") + '</small></div>' +
+          '<ul>' + (o.items || []).map(function(i){ return '<li><b>' + i.qty + '×</b> ' + S.esc(i.name) + '</li>'; }).join("") + '</ul>' +
+          (o.note ? '<p class="g-note">Not: ' + S.esc(o.note) + '</p>' : '') +
+          '<button class="g-btn wide" data-act="served" data-v="' + S.esc(o.id) + '">Servis edildi</button></article>';
+      }).join("");
+    }
+    function orderTab(){
+      var items = menu().filter(function(i){ return !i.out; }), cats = [];
+      items.forEach(function(i){ var c = i.cat || "Diğer"; if (cats.indexOf(c) < 0) cats.push(c); });
+      var sel = S.cartLines(st.wCart, menu()), count = sel.reduce(function(s, i){ return s + i.qty; }, 0), L = S.loadInfo(st.orders, st.cafe);
+      var tbs = []; for (var t = 1; t <= nTables(); t++) tbs.push('<button aria-pressed="' + (String(st.wTable) === String(t)) + '" data-act="wTable" data-v="' + t + '">' + t + '</button>');
+      return '<h2 class="g-h">Sipariş al</h2><span class="g-lbl">Masa</span><div class="g-pick">' + tbs.join("") + '</div>' +
+        cats.map(function(c){ return '<h3 class="g-cat">' + S.esc(c) + '</h3>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(function(i){
+          return S.options(i).map(function(o){ var q = st.wCart[o.key] || 0;
+            return '<div class="g-item"><div><b>' + S.esc(i.name) + (o.label !== "1 porsiyon" && S.options(i).length > 1 ? ' <em>' + o.label + '</em>' : '') + '</b><small>' + S.fmt(o.price) + (o.amount ? ' · ' + S.esc(o.amount) : '') + '</small></div>' +
+              '<div class="stepper">' + (q ? '<button class="round" data-act="dec" data-v="' + S.esc(o.key) + '" aria-label="azalt">−</button><span class="q">' + q + '</span>' : '') +
+              '<button class="round' + (q ? "" : " round-add") + '" data-act="inc" data-v="' + S.esc(o.key) + '" aria-label="' + S.esc(i.name) + ' ekle">+</button></div></div>';
+          }).join(""); }).join(""); }).join("") +
+        '<div class="g-sendbar">' + (count ? '<div class="g-sum"><span>' + (st.wTable ? "Masa " + st.wTable : "Masa seçin") + ' · ' + count + ' ürün · ~' + (S.eta(sel, menu()) + L.extra) + ' dk</span><b>' + S.fmt(S.sum(sel)) + '</b></div>' +
+          '<label class="sr" for="gnote">Not</label><input id="gnote" class="note-in" maxlength="120" placeholder="Not (ör. acısız)" value="' + S.esc(st.wNote) + '">' : '') +
+          '<button class="btn btn-primary btn-lg wide" data-act="send"' + (st.wTable && count && !st.busy ? "" : " disabled") + '>' + (st.busy ? "Gönderiliyor…" : !st.wTable ? "Önce masa seçin" : !count ? "Ürün ekleyin" : "Mutfağa gönder") + '</button></div>';
+    }
+    function sheet(){
+      var t = st.sheet; if (!t) return "";
+      var a = tableAgg(t), f = st.tables[String(t)] || {};
+      return '<div class="g-scrim" data-act="sheetClose"></div><section class="g-sheet" role="dialog" aria-label="Masa ' + S.esc(t) + '"><span class="g-grab" aria-hidden="true"></span>' +
+        '<div class="g-s-top"><h3>Masa ' + S.esc(t) + '</h3>' + (f.billRequested ? '<span class="g-tag bill">Hesap istedi</span>' : f.waiter ? '<span class="g-tag wait">Çağırıyor</span>' : '') + '</div>' +
+        (a.lines.length ? '<ul class="g-bill">' + a.lines.map(function(i){ return '<li><span>' + i.qty + '× ' + S.esc(i.name) + '</span><span class="num">' + S.fmt(i.price * i.qty) + '</span></li>'; }).join("") + '</ul>' +
+          '<div class="bill-total"><span>Toplam</span><b>' + S.fmt(a.total) + '</b></div>' +
+          (a.waiting ? '<p class="g-info">' + a.waiting + ' sipariş hâlâ mutfakta.</p>' : '') : '<p class="muted">Bu masada açık sipariş yok.</p>') +
+        '<div class="g-s-acts">' +
+        (a.lines.length ? (st.confirmClose
+          ? '<button class="btn btn-primary btn-lg wide" data-act="closeYes" data-v="' + S.esc(t) + '">Evet, ödendi · masayı kapat</button><button class="btn wide" data-act="closeNo">Vazgeç</button>'
+          : '<button class="btn btn-primary btn-lg wide" data-act="closeAsk">Ödeme alındı · masayı kapat</button>') : '') +
+        '<button class="btn wide" data-act="addFor" data-v="' + S.esc(t) + '">Bu masaya sipariş ekle</button>' +
+        (f.billRequested || f.waiter ? '<button class="btn btn-ghost wide" data-act="going" data-v="' + S.esc(t) + '">Uyarıyı kapat</button>' : '') +
+        '</div></section>';
+    }
+    function nav(){
+      var nCalls = calls().length, nReady = readyList().length;
+      var tabs = [["masalar", "Masalar", IC.tables, nCalls], ["hazir", "Hazır", IC.ready, nReady], ["siparis", "Sipariş al", IC.order, 0]];
+      return '<nav class="g-nav" aria-label="Bölümler">' + tabs.map(function(x){
+        return '<button data-act="tab" data-v="' + x[0] + '" aria-current="' + (st.tab === x[0] ? "page" : "false") + '">' + x[2] + '<span>' + x[1] + '</span>' + (x[3] ? '<i class="g-badge">' + x[3] + '</i>' : '') + '</button>';
+      }).join("") + '</nav>';
+    }
+    function render(force){
+      if (!alive || (!force && S.isEditing())) return;
+      var app = S.$("app"), y = window.pageYOffset;
+      document.body.classList.add("g-body");
+      if (!st.authKnown) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
+      if (!st.user) { app.innerHTML = S.loginView("Garson girişi", st.loginErr); S.bindLogin(B, function(m){ st.loginErr = m; render(true); }); return; }
+      if (!cafeId) { app.innerHTML = '<main class="login"><div class="login-card"><h1>İşletme seçilmedi</h1><p class="muted">Garson uygulamasını işletmenin verdiği bağlantıdan açın.</p></div></main>'; return; }
+      if (st.denied) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Erişim yok</h1><p class="muted">' + S.esc(st.denied) + '</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
+      if (!st.cafeLoaded) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
+      app.innerHTML = '<div class="g-app">' + head() + '<main class="g-main">' + (st.tab === "hazir" ? readyTab() : st.tab === "siparis" ? orderTab() : tablesTab()) + '</main>' + nav() + sheet() + '</div>';
+      window.scrollTo(0, y);
+    }
+
+    var app = S.$("app");
+    app.oninput = function(e){ if (e.target.id === "gnote") st.wNote = e.target.value; };
+    app.onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    app.onclick = function(e){
+      var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+      var v = b.dataset.v;
+      switch (b.dataset.act) {
+        case "tab": st.tab = v; st.sheet = null; window.scrollTo(0, 0); break;
+        case "sheet": st.sheet = v; st.confirmClose = false; break;
+        case "sheetClose": st.sheet = null; st.confirmClose = false; break;
+        case "going": clearFlags(v).then(function(){ S.toast("Masa " + v + ": gidiyorsunuz"); }); if (st.sheet) st.sheet = null; break;
+        case "served": { var o = st.orders.find(function(x){ return x.id === v; }); if (o) served(o); return; }
+        case "closeAsk": st.confirmClose = true; break;
+        case "closeNo": st.confirmClose = false; break;
+        case "closeYes": closeTable(v); return;
+        case "addFor": st.tab = "siparis"; st.wTable = v; st.sheet = null; window.scrollTo(0, 0); break;
+        case "wTable": st.wTable = v; break;
+        case "inc": st.wCart[v] = (st.wCart[v] || 0) + 1; break;
+        case "dec": if (st.wCart[v]) { st.wCart[v]--; if (!st.wCart[v]) delete st.wCart[v]; } break;
+        case "send": send(); return;
+        case "sound": S.beep(1, 660); try { if (navigator.vibrate) navigator.vibrate(80); } catch(x){} break;
+        case "logout": B.logout(); return;
+      }
+      render(true);
+    };
+    S.onAudioReady(function(){ S.keepAwake(); render(true); });
+    var onVis = function(){ if (document.visibilityState === "visible") S.keepAwake(); };
+    document.addEventListener("visibilitychange", onVis);
+    return function(){ alive = false; clearInterval(tick); document.removeEventListener("visibilitychange", onVis); document.body.classList.remove("g-body"); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
+  };
+})();
+
+/* Adanalım — telefon demosu: QR doğrudan Masa 7 menüsünü açar; üst şeritten mutfak ekranına geçilir. */
+(function(){
+  "use strict";
+  var CAFE = "demo", stop = null, B = window.SiralaBackend;
+  var bar = document.getElementById("demoBar");
+  function route(){
+    if (stop) { stop(); stop = null; }
+    var h = (location.hash || "").replace(/^#/, ""), m = h.match(/^masa-(\d{1,3})$/);
+    window.scrollTo(0, 0);
+    if (!h && document.body.getAttribute("data-default")) h = document.body.getAttribute("data-default");
+    var kitchen = h === "mutfak", waiter = h === "garson";
+    bar.innerHTML = '<span>Demo</span><nav>' +
+      '<a href="#masa-7"' + (!kitchen && !waiter ? ' aria-current="page"' : '') + '>Misafir</a>' +
+      '<a href="#mutfak"' + (kitchen ? ' aria-current="page"' : '') + '>Mutfak</a>' +
+      '<a href="#garson"' + (waiter ? ' aria-current="page"' : '') + '>Garson</a>' +
+      '<button type="button" id="demoReset">Sıfırla</button></nav>';
+    S.$("demoReset").onclick = function(){ B.reset(); S.toast("Demo sıfırlandı"); route(); };
+    if (kitchen) stop = SiralaApp.kasa({ B: B, cafeId: CAFE });
+    else if (waiter) stop = SiralaApp.garson({ B: B, cafeId: CAFE });
+    else stop = SiralaApp.musteri({ B: B, cafeId: CAFE, table: m ? String(Number(m[1])) : "7" });
+  }
+  window.addEventListener("hashchange", route);
+  route();
+})();
+
+</script>
+</body>
+</html>

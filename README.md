@@ -33,6 +33,13 @@ Telefonla açın, sipariş verin, üstteki **Mutfak / kasa** düğmesiyle sipari
 - **Rapor:** sipariş sayısı, QR/garson oranı, ciro, masa başı hesap, hazırlanma süresi, en çok satanlar, yoğun saatler, **satış dökümü (.csv, Excel)**
 - Yeni sipariş, garson çağrısı ve hesap isteğinde ses
 
+**Garson uygulaması** (telefon, `garson.html`, ana ekrana eklenir):
+- Masalar renkli: dolu, mutfaktan hazır yemek var, garson çağırıyor, hesap istiyor
+- Çağrı ve hesap isteğinde ses ve titreşim; "Gidiyorum" ile uyarı kapanır
+- **Hazır:** mutfak "Hazırlandı"ya basınca yemek garsonun listesine düşer, "Servis edildi" ile kalkar
+- **Sipariş al:** masa seç, porsiyonla ekle, mutfağa gönder
+- Masa hesabı ve "Ödeme alındı · masayı kapat"
+
 **Kurulum ekranı:** menü editörü (fotoğraf, fiyat, porsiyon, kalori, süre, alerjenler, 3D model, sıralama), masa QR kartları (PNG / yazdır), PIN, kasa hesapları.
 
 ## Teknik yapı
@@ -46,7 +53,8 @@ Telefonla açın, sipariş verin, üstteki **Mutfak / kasa** düğmesiyle sipari
 
 | Dosya | Ne |
 |---|---|
-| `index.html` | Telefon demosu (misafir + mutfak/kasa) |
+| `index.html` | Telefon demosu (misafir + mutfak + garson) |
+| `garson.html` | Garson uygulaması demosu (ana ekrana eklenebilir) |
 | `tanitim.html` | İşletme sahiplerine tanıtım sitesi |
 | `site.html` | Örnek restoran web sitesi şablonu |
 | `models/adana.glb` | Gerçek boyutlu örnek 3D tabak (30 cm) |
