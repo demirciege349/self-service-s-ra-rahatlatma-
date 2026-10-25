@@ -429,6 +429,39 @@ body.g-body{background:var(--cream)}
 .dish-img{position:relative}
 .dish-img img{position:absolute;inset:0}
 
+/* ================= Premium menü kartları ================= */
+.cat-h{justify-content:center;text-align:center;font-size:2rem;font-weight:700;letter-spacing:-.01em;margin:26px 0 16px;gap:14px}
+.cat-h::before{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line-2))}
+.cat-h::after{background:linear-gradient(90deg,var(--line-2),transparent)}
+.dish-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+
+.dish{display:flex;flex-direction:column;gap:0;padding:0;background:var(--white);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 22px 44px -30px rgba(58,10,10,.55);border-bottom:1px solid var(--line)}
+.dish:last-child{border-bottom:1px solid var(--line)}
+.dish-img{width:100%;height:auto;aspect-ratio:16/10;max-width:100%;border-radius:0;background:#6B4220}
+.dish-img::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(transparent,rgba(30,6,4,.55));pointer-events:none}
+.dish-img img{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.dish:active .dish-img img{transform:scale(1.03)}
+.dish-tag{position:absolute;z-index:2;top:12px;left:12px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,248,236,.93);color:var(--ink);font-size:.8rem;font-weight:500;padding:5px 11px;border-radius:999px;box-shadow:0 4px 12px -6px rgba(0,0,0,.5)}
+.dish-tag.busy{background:var(--red);color:#fff}
+.dish-img .alg-warn{position:absolute;z-index:2;top:12px;right:12px}
+.dish-img .ar-open{position:absolute;z-index:2;left:12px;bottom:12px;margin:0;background:rgba(58,10,10,.82);border:1px solid rgba(242,227,198,.35);color:var(--cream);backdrop-filter:blur(4px)}
+.dish-body{padding:16px 18px 18px;gap:6px}
+.dish-name{font-size:1.7rem;font-weight:700;letter-spacing:-.01em}
+.dish-desc{font-family:var(--f-display);font-style:italic;font-size:1.08rem;line-height:1.35}
+.dish-facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.dish-facts span{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;color:var(--soft);background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.dish-facts .alg{color:var(--wine);background:var(--warn-soft);border-color:transparent}
+.dish-meta{margin-top:8px;padding-top:12px;border-top:1px dashed var(--line-2)}
+.dish-meta .dish-price{font-size:1.6rem}
+.dish-meta.portion+.dish-meta.portion{margin-top:0;padding-top:10px}
+.dish-meta.portion .dish-price{font-size:1.3rem;margin-left:auto}
+.dish-meta.portion .stepper{margin-left:12px}
+.dish.out .dish-img{filter:grayscale(1);opacity:.6}
+.dish-out{margin-left:auto}
+.dish.avoid{border-color:var(--red)}
+.dish.avoid .dish-img{opacity:.6}
+.c-intro{font-size:1.35rem;padding-block:6px 2px}
+
 #demoBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#3A0A0A;color:#C9AE95;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
 #demoBar nav{display:flex;gap:6px;align-items:center}
 #demoBar a,#demoBar button{color:#F2E3C6;text-decoration:none;border:1px solid rgba(242,227,198,.3);border-radius:3px;padding:5px 9px;font:inherit;letter-spacing:.06em;background:transparent;cursor:pointer}
@@ -878,16 +911,20 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     function avoidedIn(i){ return (i.allergens || []).filter(function(a){ return st.avoid[a]; }); }
     function dish(i){
       var base = Number(i.mins) || S.DEFAULT_MINS, mins = base + load().extra, opts = S.options(i), hit = avoidedIn(i);
-      var buy = i.out ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span></div>'
+      var buy = i.out ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span><span class="dish-out">Bugün tükendi</span></div>'
         : opts.length === 1 ? '<div class="dish-meta"><span class="dish-price">' + S.fmt(i.price) + '</span>' + stepper(i.id, i.name) + '</div>'
         : opts.map(function(o){ return '<div class="dish-meta portion"><span class="por-l">' + o.label + ((o.amount || o.kcal) ? '<small>' + [o.amount, o.kcal ? o.kcal + ' kcal' : ''].filter(Boolean).map(S.esc).join(' · ') + '</small>' : '') + '</span><span class="dish-price">' + S.fmt(o.price) + '</span>' + stepper(o.key, i.name + " " + o.label) + '</div>'; }).join("");
-      return '<article class="dish' + (i.out ? " out" : "") + (hit.length ? " avoid" : "") + '"><div class="dish-img">' + photo(i) + '</div><div class="dish-body">' +
+      var facts = [];
+      if (opts.length === 1 && i.amount) facts.push(SCALE + S.esc(i.amount));
+      if (opts.length === 1 && Number(i.kcal) > 0) facts.push(FIRE + Number(i.kcal) + ' kcal');
+      return '<article class="dish' + (i.out ? " out" : "") + (hit.length ? " avoid" : "") + '"><div class="dish-img">' + photo(i) +
+        (i.out ? '' : '<span class="dish-tag' + (mins > base ? ' busy' : '') + '">' + CLOCK + '~' + mins + ' dk</span>') +
         (hit.length ? '<span class="alg-warn">' + WARN + S.esc(hit.map(S.allergenName).join(", ")) + ' içerir</span>' : '') +
+        (i.model && !i.out ? '<button class="ar-open" data-act="ar" data-v="' + S.esc(i.id) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Masada gör · 3D</button>' : '') +
+        '</div><div class="dish-body">' +
         '<h3 class="dish-name">' + S.esc(i.name) + '</h3>' + (i.desc ? '<p class="dish-desc">' + S.esc(i.desc) + '</p>' : '') +
-        ((i.allergens || []).length ? '<span class="alg-line">İçerir: ' + S.esc(i.allergens.map(S.allergenName).join(" · ")) + '</span>' : '') +
-        (i.out ? '<span class="dish-out">Bugün tükendi</span>' : '<span class="dish-time">' + CLOCK + (mins > base ? 'Şu an yaklaşık ' + mins + ' dakikada hazır' : 'Ortalama ' + mins + ' dakikada hazır') + (opts.length === 1 && i.amount ? '<span class="kcal">' + SCALE + 'Porsiyon: ' + S.esc(i.amount) + '</span>' : '') +
-        (Number(i.kcal) > 0 && opts.length === 1 ? '<span class="kcal">' + FIRE + 'yaklaşık ' + Number(i.kcal) + ' kcal</span>' : '') + '</span>') +
-        (i.model && !i.out ? '<button class="ar-open" data-act="ar" data-v="' + S.esc(i.id) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>Porsiyonu masada gör · 3D</button>' : '') +
+        (facts.length || (i.allergens || []).length ? '<div class="dish-facts">' + facts.map(function(f){ return '<span>' + f + '</span>'; }).join("") +
+          ((i.allergens || []).length ? '<span class="alg">İçerir: ' + S.esc(i.allergens.map(S.allergenName).join(", ")) + '</span>' : '') + '</div>' : '') +
         buy + '</div></article>';
     }
     function etaBanner(){
@@ -918,7 +955,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       var L = load();
       var busy = L.extra > 0 ? '<p class="busy-note">' + CLOCK + '<span>Mutfağımız şu an yoğun · süreler yaklaşık <b>+' + L.extra + ' dk</b> uzun</span></p>' : '';
       return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') + busy + filt +
-        cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</section>'; }).join("") +
+        cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + '<div class="dish-grid">' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</div></section>'; }).join("") +
         '<p class="c-foot">Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.</p></main>' +
         '<div class="c-bar"><div class="c-wrap c-bar-in">' +
         (count
