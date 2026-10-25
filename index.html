@@ -417,6 +417,13 @@ body.g-body{background:var(--cream)}
 .g-s-acts{display:flex;flex-direction:column;gap:8px;margin-top:16px}
 @media (prefers-reduced-motion:reduce){.g-pulse,.g-tbl.bill,.g-tbl.wait{animation:none}.g-sheet,.g-scrim{animation:none}}
 .g-body .toast{top:calc(78px + env(safe-area-inset-top,0px));bottom:auto}
+.g-th{flex-shrink:0;width:58px;height:58px;border-radius:12px;overflow:hidden;box-shadow:0 4px 10px -6px rgba(58,10,10,.6);background:#6B4220}
+.g-th img,.g-th svg{width:100%;height:100%;object-fit:cover;display:block}
+.g-th.sm{width:40px;height:40px;border-radius:9px}
+.g-item{justify-content:flex-start}
+.g-it-txt{flex:1;min-width:0}
+.g-r-items{display:flex;flex-direction:column;gap:8px}
+.g-r-items li{display:flex;align-items:center;gap:10px}
 
 #demoBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#3A0A0A;color:#C9AE95;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
 #demoBar nav{display:flex;gap:6px;align-items:center}
@@ -589,6 +596,65 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     return '<svg viewBox="0 0 120 120" aria-hidden="true" class="ph-svg"><rect width="120" height="120" fill="#F2E3C6"/>' +
       '<circle cx="60" cy="60" r="40" fill="#FFF8EC" stroke="#E4D2B0" stroke-width="2"/><circle cx="60" cy="60" r="30" fill="none" stroke="#E4D2B0" stroke-width="1"/>' +
       '<text x="60" y="68" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" font-weight="600" fill="#9D0208">' + S.esc(ini) + '</text></svg>';
+  };
+
+  /* Fotoğrafı olmayan yemekler için çizim "tabak fotoğrafı" (üstten görünüm). Ada göre seçilir. */
+  var artN = 0;
+  S.foodArt = function(name){
+    var n = String(name || "").toLocaleLowerCase("tr-TR"), id = "fa" + (++artN), g = function(k){ return id + k; };
+    var defs = '<defs>' +
+      '<linearGradient id="' + g("w") + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9A6534"/><stop offset="1" stop-color="#6B4220"/></linearGradient>' +
+      '<radialGradient id="' + g("p") + '" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#FFFDF8"/><stop offset="1" stop-color="#EDE4D3"/></radialGradient>' +
+      '<linearGradient id="' + g("m") + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A3418"/><stop offset=".5" stop-color="#6A2410"/><stop offset="1" stop-color="#3E1206"/></linearGradient>' +
+      '<radialGradient id="' + g("s") + '" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#F0A64A"/><stop offset=".7" stop-color="#C8561E"/><stop offset="1" stop-color="#A2400F"/></radialGradient>' +
+      '<radialGradient id="' + g("k") + '" cx=".5" cy=".5" r=".55"><stop offset="0" stop-color="#F3B54A"/><stop offset=".8" stop-color="#D68A22"/><stop offset="1" stop-color="#9E5A10"/></radialGradient>' +
+      '</defs>';
+    var wood = '<rect width="120" height="120" fill="url(#' + g("w") + ')"/>' +
+      '<path d="M0 18 Q60 12 120 20 M0 47 Q60 41 120 50 M0 79 Q60 74 120 82 M0 106 Q60 101 120 109" stroke="#5A3618" stroke-opacity=".35" stroke-width="1.2" fill="none"/>';
+    var plate = '<ellipse cx="62" cy="64" rx="50" ry="49" fill="#000" opacity=".25"/><circle cx="60" cy="60" r="50" fill="url(#' + g("p") + ')"/><circle cx="60" cy="60" r="41" fill="none" stroke="#E2D6C2" stroke-width="1.2"/>';
+    var pepper = function(x, y, r){ return '<g transform="translate(' + x + ' ' + y + ') rotate(' + r + ')"><path d="M0 0 C10 -4 30 -4 38 0 C30 5 10 5 0 0Z" fill="#6E9A3C"/><path d="M3 -1 C12 -3 26 -3 33 -1" stroke="#B7D27A" stroke-width="1.4" fill="none"/><path d="M-4 0 L1 0" stroke="#4A6A24" stroke-width="2.2"/><circle cx="18" cy="0" r="2" fill="#2E3B14" opacity=".5"/></g>'; };
+    var tomato = function(x, y){ return '<circle cx="' + x + '" cy="' + y + '" r="8" fill="#D64E38"/><path d="M' + (x - 4) + ' ' + (y - 3) + ' q4 -3 8 0" stroke="#3A120A" stroke-width="2.5" opacity=".7" fill="none"/><circle cx="' + (x - 3) + '" cy="' + (y - 3) + '" r="2" fill="#fff" opacity=".35"/>'; };
+    var food;
+    if (/adana|urfa|kebap|kebab/.test(n) && !/balaban/.test(n)) {
+      food = '<rect x="20" y="40" width="80" height="40" rx="10" fill="#E8C690"/><circle cx="34" cy="48" r="2.5" fill="#B9853E" opacity=".6"/><circle cx="82" cy="72" r="3" fill="#B9853E" opacity=".6"/>' +
+        '<rect x="22" y="53" width="76" height="15" rx="7.5" fill="url(#' + g("m") + ')"/>' +
+        [30, 40, 50, 60, 70, 80, 90].map(function(x){ return '<path d="M' + x + ' 54 l-3 13" stroke="#2A0A03" stroke-width="1.6" opacity=".55"/>'; }).join("") +
+        '<path d="M26 57 H94" stroke="#E07A4A" stroke-width="1" opacity=".5"/>' + pepper(30, 40, -8) + pepper(56, 84, -6) + tomato(92, 40) + tomato(28, 82);
+    } else if (/balaban|köfte|kofte/.test(n)) {
+      food = '<rect x="24" y="36" width="72" height="48" rx="8" fill="#E8C690"/><path d="M70 76 q12 -10 22 0 q-10 8 -22 0" fill="#FBFAF4"/>' +
+        [[42, 52], [60, 50], [50, 66], [68, 64]].map(function(c){ return '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="9" fill="url(#' + g("m") + ')"/><circle cx="' + (c[0] - 3) + '" cy="' + (c[1] - 3) + '" r="2.4" fill="#fff" opacity=".25"/>'; }).join("") + pepper(30, 84, -12);
+    } else if (/şiş|sis/.test(n)) {
+      var dark = /kuzu/.test(n), c1 = dark ? "#6E1F0E" : "#D08A3A", c2 = dark ? "#4A1306" : "#A9621F";
+      food = '<path d="M18 62 L104 58" stroke="#9A948C" stroke-width="2.4"/>' +
+        [26, 40, 54, 68, 82].map(function(x, i){ return '<rect x="' + x + '" y="' + (51 - i * 0.4) + '" width="12" height="13" rx="3" fill="' + (i % 2 ? c2 : c1) + '"/><path d="M' + (x + 2) + ' ' + (55 - i * .4) + ' h8" stroke="#2A0A03" stroke-width="1.3" opacity=".5"/>'; }).join("") +
+        (dark ? pepper(34, 82, -4) + tomato(84, 82) : '<path d="M30 80 q30 10 60 0" stroke="#8B2E4A" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M34 40 q26 -8 52 0" stroke="#F3E3C6" stroke-width="6" fill="none" stroke-linecap="round"/>');
+    } else if (/çorba|corba/.test(n)) {
+      food = '<circle cx="60" cy="60" r="34" fill="#F6EFE3" stroke="#E2D6C2"/><circle cx="60" cy="60" r="28" fill="url(#' + g("s") + ')"/>' +
+        '<path d="M44 58 q8 -8 16 0 t16 0" stroke="#B3200F" stroke-width="2.6" fill="none" opacity=".75"/><circle cx="66" cy="66" r="3" fill="#B3200F" opacity=".7"/>' +
+        '<path d="M86 30 a12 12 0 0 1 10 20 z" fill="#F2D24A" stroke="#E0B92A"/>';
+    } else if (/çibörek|cibörek|börek|borek/.test(n)) {
+      food = '<path d="M24 70 A36 36 0 0 1 96 70 Z" fill="url(#' + g("k") + ')"/><path d="M24 70 H96" stroke="#B26A12" stroke-width="3" stroke-dasharray="3 3"/>' +
+        '<circle cx="48" cy="56" r="3" fill="#F7CF7A" opacity=".8"/><circle cx="66" cy="48" r="2.5" fill="#F7CF7A" opacity=".8"/><circle cx="78" cy="60" r="2" fill="#F7CF7A"/>' + '<path d="M34 84 q8 -6 16 0" stroke="#6E9A3C" stroke-width="4" fill="none" stroke-linecap="round"/>';
+    } else if (/künefe|kunefe/.test(n)) {
+      food = '<circle cx="60" cy="60" r="32" fill="url(#' + g("k") + ')"/>' +
+        [26, 20, 14].map(function(r){ return '<circle cx="60" cy="60" r="' + r + '" fill="none" stroke="#B9740F" stroke-width="1.4" stroke-dasharray="2 2"/>'; }).join("") +
+        '<circle cx="60" cy="60" r="8" fill="#7FA34A"/><circle cx="57" cy="57" r="2" fill="#B9D67A"/>';
+    } else if (/helva|tatlı|baklava/.test(n)) {
+      food = [[30, 40], [52, 46], [44, 64]].map(function(c){ return '<rect x="' + c[0] + '" y="' + c[1] + '" width="34" height="20" rx="3" fill="#EFE2C6" stroke="#D2BC92"/><path d="M' + (c[0] + 4) + ' ' + (c[1] + 7) + ' h26 M' + (c[0] + 4) + ' ' + (c[1] + 13) + ' h22" stroke="#C9A86E" stroke-width="1.2"/>'; }).join("");
+    } else if (/ayran|süt|yoğurt/.test(n)) {
+      food = '<circle cx="60" cy="60" r="26" fill="#E8EEF0" stroke="#C9D4D8" stroke-width="2"/><circle cx="60" cy="60" r="21" fill="#FFFFFF"/><circle cx="54" cy="56" r="4" fill="#F3F6F7"/><circle cx="64" cy="64" r="3" fill="#F3F6F7"/><circle cx="66" cy="54" r="2.5" fill="#F3F6F7"/>';
+    } else if (/şalgam|salgam/.test(n)) {
+      food = '<circle cx="60" cy="60" r="26" fill="#E8EEF0" stroke="#C9D4D8" stroke-width="2"/><circle cx="60" cy="60" r="21" fill="#7A1035"/><circle cx="53" cy="54" r="5" fill="#A8284F" opacity=".7"/><path d="M70 40 L86 24" stroke="#E07A2A" stroke-width="6" stroke-linecap="round"/>';
+    } else if (/kahve|çay|cay|latte/.test(n)) {
+      var tea = /çay|cay/.test(n);
+      food = '<circle cx="60" cy="60" r="30" fill="#F6EFE3" stroke="#E2D6C2"/><circle cx="60" cy="60" r="18" fill="#FFFDF8" stroke="#D9CBB2"/><circle cx="60" cy="60" r="14" fill="' + (tea ? "#A2330F" : "#3B2214") + '"/>' +
+        (tea ? '' : '<circle cx="60" cy="60" r="11" fill="#7A4A26" opacity=".55"/>') + '<path d="M78 56 q8 4 0 8" stroke="#D9CBB2" stroke-width="4" fill="none"/>' +
+        '<rect x="28" y="80" width="10" height="10" rx="2" fill="#F6C6D2" stroke="#E8A9B9"/>';
+    } else {
+      var w = (S.esc(name || "?").trim().split(/\s+/)), ini = ((w[0] || "?")[0] + (w[1] ? w[1][0] : "")).toLocaleUpperCase("tr-TR");
+      food = '<circle cx="60" cy="60" r="28" fill="url(#' + g("s") + ')"/><text x="60" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#FFF8EC">' + ini + '</text>';
+    }
+    return '<svg viewBox="0 0 120 120" aria-hidden="true" class="ph-svg">' + defs + wood + plate + food + '</svg>';
   };
 
   /* 3D / artırılmış gerçeklik: Google model-viewer ile, uygulama gerekmez.
@@ -799,7 +865,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         (cats.length > 1 ? '<nav class="c-chips" aria-label="Kategoriler">' + cats.map(function(c){ return '<button type="button" data-act="cat" data-v="kat-' + S.slugify(c) + '">' + S.esc(c) + '</button>'; }).join("") + '</nav>' : '') +
         '</div></header>' + (st.offline ? '<div class="offline">İnternet bağlantısı yok. Bağlantı gelince siparişinizi gönderebilirsiniz.</div>' : '');
     }
-    function photo(i){ var p = st.photos[i.id]; return p ? '<img src="' + S.esc(p) + '" alt="' + S.esc(i.name) + '" loading="lazy">' : S.placeholder(i.name); }
+    function photo(i){ var p = st.photos[i.id]; return p ? '<img src="' + S.esc(p) + '" alt="' + S.esc(i.name) + '" loading="lazy">' : S.foodArt(i.name); }
     function stepper(key, name){
       var q = st.cart[key] || 0;
       return '<div class="stepper">' + (q ? '<button class="round" data-act="dec" data-v="' + S.esc(key) + '" aria-label="' + S.esc(name) + ' azalt">−</button><span class="q">' + q + '</span>' : '') +
@@ -1275,7 +1341,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   window.SiralaApp.garson = function(ctx){
     var B = ctx.B, cafeId = ctx.cafeId;
     var st = { user: null, authKnown: false, loginErr: null, cafe: null, cafeLoaded: false, denied: false,
-      orders: [], tables: {}, tab: "masalar", sheet: null, confirmClose: false, wTable: null, wCart: {}, wNote: "", busy: false,
+      orders: [], tables: {}, photos: {}, tab: "masalar", sheet: null, confirmClose: false, wTable: null, wCart: {}, wNote: "", busy: false,
       seenFlags: null, seenReady: null, fromCache: false };
     var alive = true, unsubs = [];
     var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
@@ -1292,6 +1358,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         st.denied = !!(d && B.kind === "firebase" && (d.staffEmails || []).indexOf(st.user.email) < 0) && "Bu hesap bu işletmenin çalışanları arasında değil.";
         document.title = "Garson · " + ((d && d.name) || cafeId); render();
       }, function(){ st.denied = "Bu işletmeye erişim yok."; render(true); }));
+      unsubs.push(B.watchPhotos(cafeId, function(m){ st.photos = m || {}; render(); }));
       unsubs.push(B.watchOrders(cafeId, null, function(list, cache){
         st.orders = list; st.fromCache = cache;
         var ready = {}; readyList().forEach(function(o){ ready[o.id] = 1; });
@@ -1351,6 +1418,11 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     }
 
     /* ---------- görünüm ---------- */
+    function thumb(id, name, cls){
+      var p = st.photos[id];
+      return '<span class="g-th' + (cls ? " " + cls : "") + '">' + (p ? '<img src="' + S.esc(p) + '" alt="" loading="lazy">' : S.foodArt(name)) + '</span>';
+    }
+    var byName = function(nm){ return menu().find(function(m){ return m.name === nm; }) || {}; };
     function head(){
       var nCalls = calls().length;
       return '<header class="g-head"><div><span class="g-kick">Garson</span><b>' + S.esc((st.cafe && st.cafe.name) || "") + '</b></div>' +
@@ -1381,7 +1453,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       return '<h2 class="g-h">Mutfaktan hazır <span>' + r.length + '</span></h2>' + r.map(function(o){
         var wait = Math.max(0, Math.round((Date.now() - (o.doneAt || 0)) / 60000));
         return '<article class="g-ready' + (wait >= 5 ? " late" : "") + '"><div class="g-r-top"><b>Masa ' + S.esc(o.table) + '</b><small>' + (wait < 1 ? "şimdi hazırlandı" : wait + " dk önce hazırlandı") + '</small></div>' +
-          '<ul>' + (o.items || []).map(function(i){ return '<li><b>' + i.qty + '×</b> ' + S.esc(i.name) + '</li>'; }).join("") + '</ul>' +
+          '<ul class="g-r-items">' + (o.items || []).map(function(i){ var base = String(i.name).replace(/ \(1,5 porsiyon\)$/, ""); return '<li>' + thumb(byName(base).id || i.id, base, "sm") + '<span><b>' + i.qty + '×</b> ' + S.esc(i.name) + '</span></li>'; }).join("") + '</ul>' +
           (o.note ? '<p class="g-note">Not: ' + S.esc(o.note) + '</p>' : '') +
           '<button class="g-btn wide" data-act="served" data-v="' + S.esc(o.id) + '">Servis edildi</button></article>';
       }).join("");
@@ -1394,7 +1466,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       return '<h2 class="g-h">Sipariş al</h2><span class="g-lbl">Masa</span><div class="g-pick">' + tbs.join("") + '</div>' +
         cats.map(function(c){ return '<h3 class="g-cat">' + S.esc(c) + '</h3>' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(function(i){
           return S.options(i).map(function(o){ var q = st.wCart[o.key] || 0;
-            return '<div class="g-item"><div><b>' + S.esc(i.name) + (o.label !== "1 porsiyon" && S.options(i).length > 1 ? ' <em>' + o.label + '</em>' : '') + '</b><small>' + S.fmt(o.price) + (o.amount ? ' · ' + S.esc(o.amount) : '') + '</small></div>' +
+            return '<div class="g-item">' + thumb(i.id, i.name) + '<div class="g-it-txt"><b>' + S.esc(i.name) + (o.label !== "1 porsiyon" && S.options(i).length > 1 ? ' <em>' + o.label + '</em>' : '') + '</b><small>' + S.fmt(o.price) + (o.amount ? ' · ' + S.esc(o.amount) : '') + '</small></div>' +
               '<div class="stepper">' + (q ? '<button class="round" data-act="dec" data-v="' + S.esc(o.key) + '" aria-label="azalt">−</button><span class="q">' + q + '</span>' : '') +
               '<button class="round' + (q ? "" : " round-add") + '" data-act="inc" data-v="' + S.esc(o.key) + '" aria-label="' + S.esc(i.name) + ' ekle">+</button></div></div>';
           }).join(""); }).join(""); }).join("") +
