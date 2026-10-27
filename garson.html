@@ -563,10 +563,14 @@ body.g-body{background:var(--cream)}
 .login-place span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
 .login-place b{flex:1;font-size:1.05rem}
 
-#demoBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#3A0A0A;color:#C9AE95;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
-#demoBar nav{display:flex;gap:6px;align-items:center}
-#demoBar a,#demoBar button{color:#F2E3C6;text-decoration:none;border:1px solid rgba(242,227,198,.3);border-radius:3px;padding:5px 9px;font:inherit;letter-spacing:.06em;background:transparent;cursor:pointer}
-#demoBar a[aria-current="page"]{background:#F2E3C6;color:#3A0A0A}
+#demoBar{background:#3A0A0A;padding:10px 10px 12px;position:sticky;top:0;z-index:40;box-shadow:0 2px 10px rgba(58,10,10,.25)}
+#demoBar[hidden]{display:none}
+#demoBar nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#demoBar a,#demoBar button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:8px 6px;border-radius:10px;border:1px solid rgba(242,227,198,.28);background:rgba(242,227,198,.06);color:#F2E3C6;text-decoration:none;font:600 1rem/1.1 var(--f-body);letter-spacing:.02em;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s,transform .1s}
+#demoBar a:active,#demoBar button:active{transform:scale(.97)}
+#demoBar svg{width:20px;height:20px;flex:none}
+#demoBar a[aria-current="page"]{background:#F2E3C6;color:#3A0A0A;border-color:#F2E3C6}
+#demoBar button{color:#E19E6A;border-style:dashed}
 </style>
 </head>
 <body data-default="garson">
@@ -2094,9 +2098,12 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     if (!view) view = "garson";
     bar.hidden = !USER;
     window.scrollTo(0, 0);
-    var tabs = [["masa-7", "Misafir", "masa"], ["online", "Online", "online"], ["mutfak", "Mutfak", "mutfak"], ["garson", "Çalışan", "garson"], ["yonetim", "Yönetim", "yonetim"]];
-    bar.innerHTML = '<span>Demo</span><nav>' + tabs.map(function(t){ return '<a href="#' + t[0] + '"' + (view === t[2] ? ' aria-current="page"' : '') + '>' + t[1] + '</a>'; }).join("") +
-      '<button type="button" id="demoReset">Sıfırla</button></nav>';
+    var I = function(d){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; };
+    var tabs = [["masa-7", "Misafir", "masa", '<path d="M4 11h16M6 11v9M18 11v9M8 7h8l1 4H7z"/>'], ["online", "Online", "online", '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'],
+      ["mutfak", "Mutfak", "mutfak", '<path d="M6 13a6 6 0 1 1 12 0v6H6z"/><path d="M6 16h12"/>'], ["garson", "Çalışan", "garson", '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'],
+      ["yonetim", "Yönetim", "yonetim", '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>']];
+    bar.innerHTML = '<nav aria-label="Ekranlar">' + tabs.map(function(t){ return '<a href="#' + t[0] + '"' + (view === t[2] ? ' aria-current="page"' : '') + '>' + I(t[3]) + t[1] + '</a>'; }).join("") +
+      '<button type="button" id="demoReset">' + I('<path d="M4 4v6h6"/><path d="M20 12a8 8 0 1 1-2.3-5.7L4 10"/>') + 'Sıfırla</button></nav>';
     S.$("demoReset").onclick = function(){ B.reset(); try { localStorage.removeItem("sirala-demo-session"); localStorage.removeItem("sirala-online-ids"); } catch(e){} S.toast("Demo sıfırlandı"); location.reload(); };
     if (view === "mutfak") stop = SiralaApp.kasa({ B: B, cafeId: CAFE });
     else if (view === "garson") stop = SiralaApp.garson({ B: B, cafeId: CAFE, followLogin: true, loginHint: HINT });
