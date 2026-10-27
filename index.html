@@ -559,6 +559,9 @@ body.g-body{background:var(--cream)}
 #demoBar{overflow-x:auto}
 #demoBar nav{flex-shrink:0}
 .g-ord ul{margin:0;padding:0;list-style:none}
+.login-place{display:flex;align-items:center;gap:10px;background:var(--sand);border-radius:10px;padding:10px 12px;margin:6px 0 4px}
+.login-place span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.login-place b{flex:1;font-size:1.05rem}
 
 #demoBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#3A0A0A;color:#C9AE95;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
 #demoBar nav{display:flex;gap:6px;align-items:center}
@@ -891,26 +894,45 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     return u + "@" + String(code || "").trim().toLowerCase() + ".adanalim.app";
   };
   S.userName = function(email){ var e = String(email || ""); return /\.adanalim\.app$/.test(e) ? e.split("@")[0] : e; };
-  S.loginView = function(title, error, cafeCode, hint){
-    var code = S.lsGet("sirala-cafe-code") || cafeCode || "";
-    return '<main class="login"><div class="login-card"><div class="brand-sm">Adanalım</div>' +
-      '<h1>' + S.esc(title) + '</h1><p class="muted">Patronunuzun verdiği kullanıcı adı ve şifreyle girin.</p>' +
+  /* Giriş iki adımlı: ilk açılışta yalnızca iş yeri kodu sorulur ve telefona kaydedilir;
+     sonraki açılışlarda doğrudan kullanıcı adı + şifre gelir (kod "Değiştir" ile değişir). */
+  S.loginView = function(title, error, prefill, hint, noCode){
+    var code = S.lsGet("sirala-cafe-code") || prefill || "";
+    var top = '<main class="login"><div class="login-card"><div class="brand-sm">Adanalım</div><h1>' + S.esc(title) + '</h1>';
+    var err = error ? '<p class="form-err" role="alert">' + S.esc(error) + '</p>' : '';
+    var tip = hint ? '<p class="login-hint">' + hint + '</p>' : '';
+    if (!code && !noCode) {
+      return top + '<p class="muted">İş yerinizin kodunu yazın. Bu telefon kodu hatırlar, bir daha sorulmaz.</p>' +
+        '<form id="loginCode" class="login-form" novalidate>' +
+        '<label class="fld" for="lg-code"><span>İş yeri kodu</span><input id="lg-code" autocapitalize="none" autocomplete="organization" placeholder="ör. kuzey-sofrasi" required></label>' +
+        err + '<button class="btn btn-primary btn-lg wide" type="submit">Devam</button>' + tip + '</form></div></main>';
+    }
+    return top + (noCode ? '<p class="muted">Yönetici e-postanız ve şifrenizle girin.</p>' :
+        '<div class="login-place"><span>İş yeri</span><b>' + S.esc(code) + '</b><button type="button" class="btn btn-sm btn-ghost" data-login="change">Değiştir</button></div>') +
       '<form id="loginForm" class="login-form" novalidate>' +
-      '<label class="fld" for="lg-code"><span>İşletme kodu</span><input id="lg-code" autocapitalize="none" autocomplete="organization" value="' + S.esc(code) + '" placeholder="ör. kuzey-sofrasi"></label>' +
-      '<label class="fld" for="lg-user"><span>Kullanıcı adı</span><input id="lg-user" autocapitalize="none" autocomplete="username" required></label>' +
+      '<label class="fld" for="lg-user"><span>' + (noCode ? "E-posta" : "Kullanıcı adı") + '</span><input id="lg-user" autocapitalize="none" autocomplete="username" required></label>' +
       '<label class="fld" for="lg-pass"><span>Şifre</span><input id="lg-pass" type="password" autocomplete="current-password" required></label>' +
-      (error ? '<p class="form-err" role="alert">' + S.esc(error) + '</p>' : '') +
-      '<button class="btn btn-primary btn-lg wide" type="submit">Giriş yap</button>' +
-      (hint ? '<p class="login-hint">' + hint + '</p>' : '') + '</form></div></main>';
+      err + '<button class="btn btn-primary btn-lg wide" type="submit">Giriş yap</button>' + tip + '</form></div></main>';
   };
+  /* onError(mesaj): mesaj null ise sadece ekranı yeniler (adım değişti). */
   S.bindLogin = function(B, onError){
+    var c = S.$("loginCode");
+    if (c) c.addEventListener("submit", function(e){
+      e.preventDefault();
+      var code = S.slugify(S.$("lg-code").value || "");
+      if (code.length < 2) { onError("İş yeri kodunu yazın."); return; }
+      (B.cafeExists ? B.cafeExists(code) : Promise.resolve(true)).then(function(ok){
+        if (!ok) { onError("Bu kodla bir iş yeri bulunamadı. Patronunuza sorun."); return; }
+        S.lsSet("sirala-cafe-code", code); onError(null);
+      }).catch(function(err){ onError(S.errText(err)); });
+    });
+    var ch = document.querySelector("[data-login=change]");
+    if (ch) ch.addEventListener("click", function(){ S.lsSet("sirala-cafe-code", ""); onError(null); });
     var f = S.$("loginForm"); if (!f) return;
     f.addEventListener("submit", function(e){
       e.preventDefault();
-      var code = (S.$("lg-code").value || "").trim().toLowerCase(), user = S.$("lg-user").value.trim(), pass = S.$("lg-pass").value;
+      var code = S.lsGet("sirala-cafe-code") || "", user = S.$("lg-user").value.trim(), pass = S.$("lg-pass").value;
       if (!user || !pass) { onError("Kullanıcı adı ve şifre gerekli."); return; }
-      if (user.indexOf("@") < 0 && !code) { onError("İşletme kodunu yazın."); return; }
-      if (code) S.lsSet("sirala-cafe-code", code);
       B.login(S.userEmail(code, user), pass).catch(function(err){ onError(S.errText(err)); });
     });
   };
@@ -938,7 +960,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   var authCbs = [];
   /* Demo oturumu: ilk açılışta patron girişli gelir; "Çıkış yap" ile kullanıcı adı/şifre ekranı denenir. */
   var CUST = { uid: "yerel-musteri", email: "", staff: false, anon: true };
-  function session(){ var e = "mehmet@demo.adanalim.app"; try { var v = localStorage.getItem("sirala-demo-session"); if (v !== null) e = v; } catch(x){} return e; }
+  function session(){ var e = ""; try { var v = localStorage.getItem("sirala-demo-session"); if (v !== null) e = v; } catch(x){} return e; }
   function demoUser(){ var e = session(); return e ? { uid: "yerel-" + e, email: e, staff: true, anon: false } : null; }
   var USER = demoUser();
   function setSession(e){ try { localStorage.setItem("sirala-demo-session", e); } catch(x){} USER = demoUser(); authCbs.slice().forEach(function(cb){ cb(USER); }); }
@@ -1557,7 +1579,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     var tick = setInterval(function(){ if (st.tab === "siparis") render(); }, 30000);
 
     var app = S.$("app");
-    app.onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    app.onfocusout = function(){ if (!st.user) return; setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
     app.oninput = function(e){ if (e.target.id === "wnote") st.wNote = e.target.value; };
     app.onkeydown = function(e){ if (e.key === "Enter" && e.target.id === "pin") { e.preventDefault(); unlock(); } };
     app.onclick = function(e){
@@ -1605,7 +1627,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       }
       render(true);
     };
-    S.onAudioReady(function(){ S.keepAwake(); render(true); });
+    S.onAudioReady(function(){ S.keepAwake(); if (st.user && !S.isEditing()) render(true); });
     var onVis = function(){ if (document.visibilityState === "visible") S.keepAwake(); };
     document.addEventListener("visibilitychange", onVis);
     return function(){ alive = false; clearInterval(tick); document.removeEventListener("visibilitychange", onVis); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
@@ -1905,7 +1927,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       var app = S.$("app"), y = window.pageYOffset;
       document.body.classList.add("g-body");
       if (!st.authKnown) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
-      if (!st.user) { app.innerHTML = S.loginView("Çalışan girişi", st.loginErr, cafeId, ctx.loginHint || ""); S.bindLogin(B, function(m){ st.loginErr = m; render(true); }); return; }
+      if (!st.user) { app.innerHTML = S.loginView("Çalışan girişi", st.loginErr, "", ctx.loginHint || ""); S.bindLogin(B, function(m){ st.loginErr = m; render(true); }); return; }
       if (!cafeId) { app.innerHTML = '<p class="muted center" style="padding:40px">İşletmeniz bulunuyor…</p>'; return; }
       if (st.denied) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Erişim yok</h1><p class="muted">' + S.esc(st.denied) + '</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
       if (!st.cafeLoaded) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
@@ -1921,7 +1943,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (a === "setOnline") B.updateCafe(cafeId, { onlineOpen: e.target.checked }).then(function(){ S.toast(e.target.checked ? "Online sipariş açık" : "Online sipariş kapalı"); });
       if (a === "setDelivery") B.updateCafe(cafeId, { delivery: e.target.checked }).then(function(){ S.toast(e.target.checked ? "Paket servis açık" : "Sadece gel-al"); });
     };
-    app.onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    app.onfocusout = function(){ if (!st.user) return; setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
     app.onclick = function(e){
       var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
       var v = b.dataset.v;
@@ -1957,7 +1979,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       }
       render(true);
     };
-    S.onAudioReady(function(){ S.keepAwake(); render(true); });
+    S.onAudioReady(function(){ S.keepAwake(); if (st.user && !S.isEditing()) render(true); });
     var onVis = function(){ if (document.visibilityState === "visible") S.keepAwake(); };
     document.addEventListener("visibilitychange", onVis);
     return function(){ alive = false; clearInterval(tick); document.removeEventListener("visibilitychange", onVis); document.body.classList.remove("g-body"); unsubs.forEach(function(u){ try { u(); } catch(e){} }); };
@@ -2014,7 +2036,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (!alive || S.isEditing()) return;
       var app = S.$("app"), L = ctx.links || function(){ return {}; };
       if (!st.authKnown) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
-      if (!st.user) { app.innerHTML = S.loginView("Yönetim girişi", st.loginErr, "", ctx.loginHint || ""); S.bindLogin(B, function(m){ st.loginErr = m; render(); }); return; }
+      if (!st.user) { app.innerHTML = S.loginView("Yönetim girişi", st.loginErr, "", ctx.loginHint || "", true); S.bindLogin(B, function(m){ st.loginErr = m; render(); }); return; }
       if (st.admin === null) { app.innerHTML = '<p class="muted center" style="padding:40px">Kontrol ediliyor…</p>'; return; }
       if (!st.admin) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Yönetici değil</h1><p class="muted">' + S.esc(S.userName(st.user.email)) + ' hesabı yönetim ekranını açamaz.</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
       var cafes = st.cafes || [], tot = { n: 0, sum: 0 };
@@ -2045,7 +2067,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
 
     var app = S.$("app");
     app.oninput = function(e){ var m = { "y-name": "name", "y-code": "code", "y-tables": "tables", "y-owner": "owner", "y-user": "user", "y-pass": "pass" }[e.target.id]; if (m) st.form[m] = e.target.value; };
-    app.onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    app.onfocusout = function(){ if (!st.user) return; setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
     app.onsubmit = function(e){ if (e.target.id === "newCafe") { e.preventDefault(); create(); } };
     app.onclick = function(e){
       var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
@@ -2061,7 +2083,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   "use strict";
   var CAFE = "demo", stop = null, B = window.SiralaBackend;
   var bar = document.getElementById("demoBar");
-  var HINT = "Demo girişleri · işletme kodu <b>demo</b>: patron <b>mehmet</b>, garson <b>ali</b> ya da <b>ayse</b>, şifre <b>123456</b>.";
+  var HINT = "Demo · iş yeri kodu <b>demo</b> · patron <b>mehmet</b>, garson <b>ali</b> ya da <b>ayse</b>, şifre <b>123456</b>.";
   var ADMIN_HINT = "Demo yönetici: kullanıcı adı yerine <b>ege@adanalim.app</b>, şifre <b>123456</b>.";
   function route(){
     if (stop) { stop(); stop = null; }
