@@ -40,6 +40,13 @@ Telefonla açın, sipariş verin, üstteki **Mutfak / kasa** düğmesiyle sipari
 - **Sipariş al:** masa seç, porsiyonla ekle, mutfağa gönder
 - Masa hesabı ve "Ödeme alındı · masayı kapat"
 
+## Online sipariş, çalışan uygulaması ve birden çok işletme
+
+- **Online sipariş:** Masasız, gel-al ya da paket servis. Misafir ad, telefon ve (pakette) adres yazar; bu bilgileri yalnızca çalışanlar görür, sipariş teslim edilince silinir. Misafir siparişini "Siparişlerim" ekranından takip eder.
+- **Tek uygulama, roller:** Herkes aynı çalışan uygulamasını kullanır (`garson.html`). Siparişler (QR + online) sesle ve titreşimle gelir. Patron rolündeki kullanıcı ek olarak **Patron** sekmesini görür: toplam gelir, garson başına sipariş ve ciro, garsonların masaları, online sipariş ve paket servis açma-kapama.
+- **Kullanıcı adı ve şifre:** Patron, çalışan hesabını kendisi açar. Girişte işletme kodu + kullanıcı adı + şifre yazılır; herkes kendi işletmesine düşer.
+- **Birden çok işletme:** Her işletme kendi kodu altında ayrı durur. Yönetim ekranından (`yonetim.html`) tüm işletmeler tek listede görülür, yeni işletme ve patron hesabı açılır.
+
 **Kurulum ekranı:** menü editörü (fotoğraf, fiyat, porsiyon, kalori, süre, alerjenler, 3D model, sıralama), masa QR kartları (PNG / yazdır), PIN, kasa hesapları.
 
 ## Teknik yapı

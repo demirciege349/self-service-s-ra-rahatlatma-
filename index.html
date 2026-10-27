@@ -462,6 +462,104 @@ body.g-body{background:var(--cream)}
 .dish.avoid .dish-img{opacity:.6}
 .c-intro{font-size:1.35rem;padding-block:6px 2px}
 
+/* ================= Online sipariş ================= */
+.ol-hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;padding-block:8px 4px}
+.ol-kick{font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--wine)}
+.ol-hero h1{font-family:var(--f-display);font-size:2.4rem;font-weight:700;line-height:1;margin:0}
+.ol-hero p{color:var(--soft);font-size:.9rem;max-width:34ch}
+.ol-track{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:16px;background:var(--ink);color:var(--cream);padding:14px 16px;text-align:left;font:inherit;cursor:pointer}
+.ol-track span{flex:1;display:flex;flex-direction:column;line-height:1.3}
+.ol-track small{color:#C9AE95;font-size:.82rem}
+.ol-track em{font-style:normal;font-size:.85rem;color:var(--sand)}
+.co{display:flex;flex-direction:column;gap:14px;background:var(--white);border:1px solid var(--line);border-radius:20px;padding:20px 18px}
+.co-h{font-family:var(--f-display);font-size:2rem;font-weight:700;margin:4px 0 8px}
+.co-items{margin:0;padding:0;list-style:none}
+.co-items li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.co-mode{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.co-mode button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1.5px solid var(--line-2);background:var(--cream);border-radius:14px;padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer}
+.co-mode button[aria-checked="true"]{border-color:var(--wine);background:var(--warn-soft)}
+.co-mode b{font-family:var(--f-display);font-size:1.2rem}
+.co-mode small{font-size:.76rem;color:var(--soft)}
+.co .fld{display:flex;flex-direction:column;gap:5px;font-size:.86rem;font-weight:500}
+.co .fld input,.co .fld textarea{font:inherit;font-size:16px;padding:12px 14px;border:1px solid var(--line-2);border-radius:10px;background:#fff;color:var(--ink);width:100%}
+.co-pay{font-size:.8rem;color:var(--soft);line-height:1.45}
+.trk{background:var(--white);border:1px solid var(--line);border-left:5px solid #E0A13A;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.trk.ready{border-left-color:var(--ok)}.trk.ok{border-left-color:var(--line-2)}.trk.cancel{border-left-color:var(--red)}
+.trk-top{display:flex;justify-content:space-between;align-items:baseline}
+.trk h3{font-family:var(--f-display);font-size:1.8rem;margin:0}
+.trk.ready h3{color:var(--ok)}.trk.cancel h3{color:var(--red)}
+.trk-sub{color:var(--soft);margin:0}
+.trk-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:4px}
+.trk-steps span{font-size:.72rem;text-align:center;color:var(--soft);padding-top:8px;border-top:4px solid var(--line)}
+.trk-steps span.on{border-top-color:var(--ok);color:var(--ink);font-weight:600}
+.trk-items{font-size:.86rem;color:var(--soft);margin:4px 0 0}
+
+/* ================= Çalışan uygulaması: siparişler, patron, giriş ================= */
+.login-hint{font-size:.8rem;color:var(--soft);background:var(--sand);border-radius:8px;padding:10px 12px;line-height:1.45;margin-top:4px}
+.g-who{border:1px solid rgba(242,227,198,.35);background:transparent;color:var(--cream);border-radius:999px;padding:6px 12px;font:inherit;font-size:.8rem;cursor:pointer;margin-left:auto}
+.g-head .g-pulse,.g-head .g-ok{margin-left:8px}
+.g-role{font-style:normal;font-family:var(--f-body);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;background:#F2B03F;color:var(--ink);border-radius:999px;padding:2px 8px;vertical-align:3px;font-weight:600}
+.g-role.soft{background:var(--sand)}
+.g-h-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.g-filter{border:1px solid var(--line-2);background:var(--white);border-radius:999px;padding:6px 12px;font:inherit;font-size:.8rem;cursor:pointer;color:var(--ink)}
+.g-filter[aria-pressed="true"]{background:var(--wine);color:#fff;border-color:var(--wine)}
+.g-ord{background:var(--white);border:1px solid var(--line);border-left:5px solid #E0A13A;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.g-ord.online{border-left-color:#3A6EA5}
+.g-ord.done{border-left-color:var(--ok)}
+.g-ord .g-r-top b{font-family:var(--f-display);font-size:1.5rem}
+.g-zone{font-size:.76rem;color:var(--soft)}
+.g-contact{font-size:.88rem;background:#EAF1F8;border-radius:8px;padding:8px 10px;line-height:1.5}
+.g-contact a{color:#1F4F80}
+.g-ord-foot{display:flex;justify-content:space-between;align-items:center}
+.g-ord-foot b{font-family:var(--f-display);font-size:1.2rem}
+.g-chip{font-size:.76rem;font-weight:600;border-radius:999px;padding:4px 10px;background:#FBEBC9;color:#8A5A0B}
+.g-chip.ok{background:var(--ok-soft);color:var(--ok)}
+.g-chip.late{background:var(--warn-soft);color:var(--wine)}
+.g-tbl.mine{border-width:3px;border-color:var(--wine)}
+.g-ini{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:.7rem;font-weight:600;display:grid;place-items:center}
+.g-tbl.bill .g-ini{background:#fff;color:var(--red)}
+.g-tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g-tile{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:2px}
+.g-tile.big{grid-column:1/-1;background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.g-tile span{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+.g-tile.big span,.g-tile.big small{color:#C9AE95}
+.g-tile b{font-family:var(--f-display);font-size:1.7rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.g-tile.big b{font-size:2.6rem}
+.g-tile small{font-size:.78rem;color:var(--soft)}
+.g-staff{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.g-st-top{display:flex;gap:12px;align-items:center}
+.g-st-top b{display:block}.g-st-top small{color:var(--soft);font-size:.8rem}
+.g-av{width:40px;height:40px;border-radius:50%;background:var(--wine);color:#fff;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:1.2rem;flex-shrink:0}
+.g-bar{height:8px;background:var(--sand);border-radius:4px;overflow:hidden}
+.g-bar i{display:block;height:100%;background:var(--wine);border-radius:4px}
+.g-st-nums{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;font-size:.84rem;color:var(--soft)}
+.g-st-nums b{color:var(--ink)}
+.g-staff .btn-sm{align-self:flex-start}
+.g-pick.wrap{flex-wrap:wrap;overflow:visible}
+.g-pick.sm button{min-width:auto;min-height:34px;padding:0 12px;font-size:.84rem;font-weight:500}
+.g-pick button.taken{opacity:.5}
+.g-set{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:4px 14px;display:flex;flex-direction:column}
+.g-sw{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.g-sw:last-child{border-bottom:0}
+.g-sw span{display:flex;flex-direction:column;min-width:0}
+.g-sw small{color:var(--soft);font-size:.78rem}
+.g-sw input[type=checkbox]{width:44px;height:26px;accent-color:var(--wine);flex-shrink:0}
+.g-new{display:flex;flex-direction:column;gap:10px;padding:14px 0}
+.g-new label{display:flex;flex-direction:column;gap:5px;font-size:.84rem;font-weight:500}
+.g-new input,.g-new select{font:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--line-2);border-radius:10px;background:#fff;color:var(--ink);width:100%}
+.y-app{min-height:100svh}
+.y-cafe{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.y-cafe .g-r-top b{font-family:var(--f-display);font-size:1.5rem}
+.y-nums{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.84rem;color:var(--soft);align-items:center}
+.y-nums b{color:var(--ink)}
+.y-made{background:var(--ok-soft);border:1px solid var(--ok);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.y-made dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}
+.y-made dt{color:var(--soft)}.y-made dd{margin:0;font-weight:600;user-select:all}
+.ticket.online{border-top-color:#3A6EA5}
+#demoBar{overflow-x:auto}
+#demoBar nav{flex-shrink:0}
+.g-ord ul{margin:0;padding:0;list-style:none}
+
 #demoBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#3A0A0A;color:#C9AE95;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
 #demoBar nav{display:flex;gap:6px;align-items:center}
 #demoBar a,#demoBar button{color:#F2E3C6;text-decoration:none;border:1px solid rgba(242,227,198,.3);border-radius:3px;padding:5px 9px;font:inherit;letter-spacing:.06em;background:transparent;cursor:pointer}
@@ -473,7 +571,7 @@ body.g-body{background:var(--cream)}
 <div id="app"><p style="padding:40px 16px;text-align:center;color:#6E4A42">Yükleniyor…</p></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <script>
-window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": [], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "amount": "300 ml", "allergens": ["sut", "kereviz"], "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "amount": "1 adet, 70 gr kıyma", "allergens": ["gluten"], "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "amount": "180 gr et", "allergens": ["gluten"], "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "amount": "200 gr köfte", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "amount": "200 gr tavuk", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "amount": "180 gr kuzu eti", "allergens": [], "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Fıstıklı baklava", "price": 160, "mins": 6, "desc": "Antep fıstıklı, şerbetli", "p15": 0, "kcal": 480, "amount": "4 dilim", "allergens": ["gluten", "sut", "kuruyemis"], "model": "", "out": false}, {"id": "m07", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "amount": "300 ml", "allergens": ["sut"], "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "amount": "1 fincan", "allergens": [], "model": "", "out": false}]}}, "orders": {}, "tables": {}, "photos": {"demo": {"m00": "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?auto=format&fit=crop&w=480&q=70", "m01": "https://images.unsplash.com/photo-1769254870299-338bfd99aabd?auto=format&fit=crop&w=480&q=70", "m02": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=480&q=70", "m03": "https://images.unsplash.com/photo-1620167790054-de54f34308bb?auto=format&fit=crop&w=480&q=70", "m04": "https://images.unsplash.com/photo-1623253458786-eac05e77be2b?auto=format&fit=crop&w=480&q=70", "m05": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=480&q=70", "m06": "https://images.unsplash.com/photo-1761828122856-8703baac8e86?auto=format&fit=crop&w=480&q=70", "m07": "https://images.unsplash.com/photo-1639151082235-406d8eb262b9?auto=format&fit=crop&w=480&q=70", "m08": "https://images.unsplash.com/photo-1506778020041-0ea35027d019?auto=format&fit=crop&w=480&q=70"}}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
+window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10, "staffEmails": ["mehmet@demo.adanalim.app", "ali@demo.adanalim.app", "ayse@demo.adanalim.app"], "menu": [{"id": "m00", "cat": "Başlangıçlar", "name": "Mercimek çorbası", "price": 95, "mins": 8, "desc": "Limon ve kırmızı biberli tereyağı ile", "p15": 0, "kcal": 230, "amount": "300 ml", "allergens": ["sut", "kereviz"], "model": "", "out": false}, {"id": "m01", "cat": "Başlangıçlar", "name": "Çibörek", "price": 120, "mins": 12, "desc": "İnce hamur, kıymalı iç, kızgın yağda", "p15": 0, "kcal": 380, "amount": "1 adet, 70 gr kıyma", "allergens": ["gluten"], "model": "", "out": false}, {"id": "m02", "cat": "Ana yemekler", "name": "Adana kebap", "price": 360, "mins": 20, "desc": "Zırh kıyması, közlenmiş biber ve domates", "p15": 520, "kcal": 650, "amount": "180 gr et", "allergens": ["gluten"], "model": "models/adana.glb", "out": false}, {"id": "m03", "cat": "Ana yemekler", "name": "Balaban kebap", "price": 340, "mins": 18, "desc": "Közde köfte, tereyağlı ekmek, yoğurt", "p15": 490, "kcal": 700, "amount": "200 gr köfte", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m04", "cat": "Ana yemekler", "name": "Tavuk şiş", "price": 290, "mins": 16, "desc": "Marine edilmiş but, lavaş, sumaklı soğan", "p15": 420, "kcal": 480, "amount": "200 gr tavuk", "allergens": ["gluten", "sut"], "model": "", "out": false}, {"id": "m05", "cat": "Ana yemekler", "name": "Kuzu şiş", "price": 420, "mins": 22, "desc": "Kuzu kuşbaşı, közlenmiş sebze", "p15": 0, "kcal": 620, "amount": "180 gr kuzu eti", "allergens": [], "model": "", "out": false}, {"id": "m06", "cat": "Tatlılar", "name": "Fıstıklı baklava", "price": 160, "mins": 6, "desc": "Antep fıstıklı, şerbetli", "p15": 0, "kcal": 480, "amount": "4 dilim", "allergens": ["gluten", "sut", "kuruyemis"], "model": "", "out": false}, {"id": "m07", "cat": "İçecekler", "name": "Ayran", "price": 45, "mins": 2, "desc": "", "p15": 0, "kcal": 110, "amount": "300 ml", "allergens": ["sut"], "model": "", "out": false}, {"id": "m08", "cat": "İçecekler", "name": "Türk kahvesi", "price": 80, "mins": 7, "desc": "", "p15": 0, "kcal": 10, "amount": "1 fincan", "allergens": [], "model": "", "out": false}], "staff": {"mehmet@demo.adanalim.app": {"name": "Mehmet", "role": "patron"}, "ali@demo.adanalim.app": {"name": "Ali", "role": "garson"}, "ayse@demo.adanalim.app": {"name": "Ayşe", "role": "garson"}}, "zones": {"ali@demo.adanalim.app": ["1", "2", "3", "4", "5"], "ayse@demo.adanalim.app": ["6", "7", "8", "9", "10"]}, "onlineOpen": true, "delivery": true}, "kose-kahve": {"name": "Köşe Kahve", "tables": 6, "menu": [{"id": "k1", "cat": "Kahve", "name": "Türk kahvesi", "price": 80, "mins": 7, "out": false}], "staff": {"zeynep@kose-kahve.adanalim.app": {"name": "Zeynep", "role": "patron"}}, "staffEmails": ["ege@adanalim.app", "zeynep@kose-kahve.adanalim.app"], "zones": {}, "onlineOpen": true, "delivery": false}, "ocakbasi-usta": {"name": "Ocakbaşı Usta", "tables": 14, "menu": [], "staff": {"hasan@ocakbasi-usta.adanalim.app": {"name": "Hasan", "role": "patron"}}, "staffEmails": ["ege@adanalim.app", "hasan@ocakbasi-usta.adanalim.app"], "zones": {}, "onlineOpen": false, "delivery": true}}, "accounts": {"mehmet@demo.adanalim.app": "hywrfq2", "ali@demo.adanalim.app": "hywrfq2", "ayse@demo.adanalim.app": "hywrfq2", "ege@adanalim.app": "hywrfq2", "zeynep@kose-kahve.adanalim.app": "hywrfq2", "hasan@ocakbasi-usta.adanalim.app": "hywrfq2"}, "admins": ["ege@adanalim.app"], "contacts": {}, "orders": {}, "tables": {}, "photos": {"demo": {"m00": "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?auto=format&fit=crop&w=480&q=70", "m01": "https://images.unsplash.com/photo-1769254870299-338bfd99aabd?auto=format&fit=crop&w=480&q=70", "m02": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=480&q=70", "m03": "https://images.unsplash.com/photo-1620167790054-de54f34308bb?auto=format&fit=crop&w=480&q=70", "m04": "https://images.unsplash.com/photo-1623253458786-eac05e77be2b?auto=format&fit=crop&w=480&q=70", "m05": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=480&q=70", "m06": "https://images.unsplash.com/photo-1761828122856-8703baac8e86?auto=format&fit=crop&w=480&q=70", "m07": "https://images.unsplash.com/photo-1639151082235-406d8eb262b9?auto=format&fit=crop&w=480&q=70", "m08": "https://images.unsplash.com/photo-1506778020041-0ea35027d019?auto=format&fit=crop&w=480&q=70"}}, "priv": {"demo": {"pinHash": "88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331", "log": []}}};
 /* Adanalım — ortak yardımcılar (klasik script; window.S altına yazar). */
 (function(){
   "use strict";
@@ -574,7 +672,10 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     var c = (e && (e.code || e.message)) || "";
     if (/permission|invalid_argument/.test(c)) return "Bu işlem için yetkin yok.";
     if (/unavailable|offline/.test(c)) return "İnternet bağlantısı yok. Bağlantı gelince tekrar dene.";
-    if (/invalid-credential|wrong-password|user-not-found/.test(c)) return "E-posta ya da şifre hatalı.";
+    if (/invalid-credential|wrong-password|user-not-found|invalid-email/.test(c)) return "İşletme kodu, kullanıcı adı ya da şifre hatalı.";
+    if (/kod-dolu/.test(c)) return "Bu işletme kodu kullanılıyor, başka bir kod seçin.";
+    if (/email-already-in-use/.test(c)) return "Bu kullanıcı adı bu işletmede zaten var.";
+    if (/weak-password/.test(c)) return "Şifre en az 6 karakter olmalı.";
     if (/too-many-requests/.test(c)) return "Çok fazla deneme yapıldı, biraz bekle.";
     if (/operation-not-allowed|admin-restricted/.test(c)) return "Giriş yöntemi Firebase'de açılmamış (README, Adım 3).";
     if (/quota/.test(c)) return "Depolama doldu. Kurulumdan eski siparişleri temizle.";
@@ -633,6 +734,25 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     return '<svg viewBox="0 0 120 120" aria-hidden="true" class="ph-svg"><rect width="120" height="120" fill="#F2E3C6"/>' +
       '<circle cx="60" cy="60" r="40" fill="#FFF8EC" stroke="#E4D2B0" stroke-width="2"/><circle cx="60" cy="60" r="30" fill="none" stroke="#E4D2B0" stroke-width="1"/>' +
       '<text x="60" y="68" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" font-weight="600" fill="#9D0208">' + S.esc(ini) + '</text></svg>';
+  };
+
+  /* Çalışan bilgisi: cafe.staff = { email: { name, role: "patron" | "garson" } }, cafe.zones = { email: ["1","2"] }.
+     staff listesi hiç yoksa (eski kurulum) herkes patron sayılır. */
+  S.staffInfo = function(cafe, email){
+    var m = (cafe && cafe.staff) || null, e = String(email || "").toLowerCase();
+    if (!m) return { name: e.split("@")[0] || "Çalışan", role: "patron" };
+    var x = m[e] || {}; return { name: x.name || e.split("@")[0] || "Çalışan", role: x.role || "garson" };
+  };
+  S.zoneOf = function(cafe, table){
+    var z = (cafe && cafe.zones) || {}, t = String(table);
+    for (var e in z) if ((z[e] || []).map(String).indexOf(t) >= 0) return e;
+    return null;
+  };
+  S.orderLabel = function(o){ return o.source === "online" ? "Online · " + (o.mode === "paket" ? "Paket" : "Gel-al") : "Masa " + o.table; };
+  /* Online siparişi teslim et: kapat ve müşterinin iletişim bilgisini sil (yalnızca sipariş için tutulur). */
+  S.deliverOnline = function(B, cafeId, o){
+    var now = Date.now();
+    return B.updateOrder(cafeId, o.id, { served: true, servedAt: now, closed: true, closedAt: now }).then(function(){ return B.deleteContact(cafeId, o.id); });
   };
 
   /* Fotoğrafı olmayan yemekler için çizim "tabak fotoğrafı" (üstten görünüm). Ada göre seçilir. */
@@ -762,22 +882,36 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     f.srcdoc = html;
   };
 
-  S.loginView = function(title, error){
+  /* Giriş: işletme kodu + kullanıcı adı + şifre. Kullanıcı adı, işletmeye özel bir hesap adresine çevrilir
+     (ali → ali@isletme-kodu.adanalim.app). "@" içeren giriş doğrudan e-posta sayılır (patronun kendi hesabı). */
+  S.USER_RE = /^[a-z0-9][a-z0-9._-]{2,19}$/;
+  S.userEmail = function(code, username){
+    var u = String(username || "").trim().toLocaleLowerCase("tr-TR");
+    if (u.indexOf("@") > 0) return u;
+    return u + "@" + String(code || "").trim().toLowerCase() + ".adanalim.app";
+  };
+  S.userName = function(email){ var e = String(email || ""); return /\.adanalim\.app$/.test(e) ? e.split("@")[0] : e; };
+  S.loginView = function(title, error, cafeCode, hint){
+    var code = S.lsGet("sirala-cafe-code") || cafeCode || "";
     return '<main class="login"><div class="login-card"><div class="brand-sm">Adanalım</div>' +
-      '<h1>' + S.esc(title) + '</h1><p class="muted">İşletme hesabınla giriş yap.</p>' +
+      '<h1>' + S.esc(title) + '</h1><p class="muted">Patronunuzun verdiği kullanıcı adı ve şifreyle girin.</p>' +
       '<form id="loginForm" class="login-form" novalidate>' +
-      '<label class="fld" for="lg-email"><span>E-posta</span><input id="lg-email" type="email" autocomplete="username" required></label>' +
+      '<label class="fld" for="lg-code"><span>İşletme kodu</span><input id="lg-code" autocapitalize="none" autocomplete="organization" value="' + S.esc(code) + '" placeholder="ör. kuzey-sofrasi"></label>' +
+      '<label class="fld" for="lg-user"><span>Kullanıcı adı</span><input id="lg-user" autocapitalize="none" autocomplete="username" required></label>' +
       '<label class="fld" for="lg-pass"><span>Şifre</span><input id="lg-pass" type="password" autocomplete="current-password" required></label>' +
       (error ? '<p class="form-err" role="alert">' + S.esc(error) + '</p>' : '') +
-      '<button class="btn btn-primary btn-lg wide" type="submit">Giriş yap</button></form></div></main>';
+      '<button class="btn btn-primary btn-lg wide" type="submit">Giriş yap</button>' +
+      (hint ? '<p class="login-hint">' + hint + '</p>' : '') + '</form></div></main>';
   };
   S.bindLogin = function(B, onError){
     var f = S.$("loginForm"); if (!f) return;
     f.addEventListener("submit", function(e){
       e.preventDefault();
-      var email = S.$("lg-email").value.trim(), pass = S.$("lg-pass").value;
-      if (!email || !pass) { onError("E-posta ve şifre gerekli."); return; }
-      B.login(email, pass).catch(function(err){ onError(S.errText(err)); });
+      var code = (S.$("lg-code").value || "").trim().toLowerCase(), user = S.$("lg-user").value.trim(), pass = S.$("lg-pass").value;
+      if (!user || !pass) { onError("Kullanıcı adı ve şifre gerekli."); return; }
+      if (user.indexOf("@") < 0 && !code) { onError("İşletme kodunu yazın."); return; }
+      if (code) S.lsSet("sirala-cafe-code", code);
+      B.login(S.userEmail(code, user), pass).catch(function(err){ onError(S.errText(err)); });
     });
   };
   S.isEditing = function(){
@@ -789,7 +923,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
 /* Adanalım — yerel demo arka ucu: giriş yok, veriler bu telefonun tarayıcısında durur. Aynı arayüz. */
 (function(){
   "use strict";
-  var KEY = "sirala-local-v6", mem = null, subs = [];
+  var KEY = "sirala-local-v7", mem = null, subs = [];
   function load(){
     if (mem) return mem;
     try { mem = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ mem = null; }
@@ -797,26 +931,66 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     return mem;
   }
   function save(){ try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch(e){} subs.slice().forEach(function(f){ try { f(); } catch(e){} }); }
-  window.addEventListener("storage", function(e){ if (e.key === KEY) { mem = null; load(); subs.slice().forEach(function(f){ f(); }); } });
+  window.addEventListener("storage", function(e){ if (e.key === "sirala-demo-session") { USER = demoUser(); authCbs.slice().forEach(function(cb){ cb(USER); }); } if (e.key === KEY) { mem = null; load(); subs.slice().forEach(function(f){ f(); }); } });
   function watch(fn){ subs.push(fn); setTimeout(fn, 0); return function(){ subs = subs.filter(function(x){ return x !== fn; }); }; }
   var clone = function(o){ return o == null ? o : JSON.parse(JSON.stringify(o)); };
-  var USER = { uid: "yerel", email: "demo", staff: true, anon: false };
+  /* Demo: kimin gözünden bakıldığı (patron / garson) bu telefonda seçilir. */
+  var authCbs = [];
+  /* Demo oturumu: ilk açılışta patron girişli gelir; "Çıkış yap" ile kullanıcı adı/şifre ekranı denenir. */
+  var CUST = { uid: "yerel-musteri", email: "", staff: false, anon: true };
+  function session(){ var e = "mehmet@demo.adanalim.app"; try { var v = localStorage.getItem("sirala-demo-session"); if (v !== null) e = v; } catch(x){} return e; }
+  function demoUser(){ var e = session(); return e ? { uid: "yerel-" + e, email: e, staff: true, anon: false } : null; }
+  var USER = demoUser();
+  function setSession(e){ try { localStorage.setItem("sirala-demo-session", e); } catch(x){} USER = demoUser(); authCbs.slice().forEach(function(cb){ cb(USER); }); }
+  var hash = function(t){ var h = 5381; t = String(t); for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return "h" + (h >>> 0).toString(36); };
   function ordersOf(id){ var d = load(); return Object.keys(d.orders).map(function(k){ var o = clone(d.orders[k]); o.id = k; return o; }).filter(function(o){ return o.cafe === id; }); }
 
   window.SiralaBackend = {
     kind: "local",
     ready: Promise.resolve(),
-    onAuth: function(cb){ setTimeout(function(){ cb(USER); }, 0); },
-    currentUser: function(){ return USER; },
+    onAuth: function(cb){ authCbs.push(cb); setTimeout(function(){ cb(USER); }, 0); },
+
+    currentUser: function(){ return USER || CUST; },
     ensureCustomer: function(){ return Promise.resolve(); },
-    login: function(){ return Promise.resolve(); },
-    logout: function(){ return Promise.resolve(); },
+    login: function(email, pass){
+      var a = (load().accounts || {})[String(email).toLowerCase()];
+      if (!a || a !== hash(pass)) return Promise.reject({ code: "auth/invalid-credential" });
+      setSession(String(email).toLowerCase()); return Promise.resolve();
+    },
+    logout: function(){ setSession(""); return Promise.resolve(); },
+    /* Patron çalışan hesabı açar / kaldırır. */
+    createStaff: function(id, p){
+      var d = load(), e = String(p.email).toLowerCase(); d.accounts = d.accounts || {};
+      if (d.accounts[e]) return Promise.reject({ code: "auth/email-already-in-use" });
+      if (String(p.password).length < 6) return Promise.reject({ code: "auth/weak-password" });
+      d.accounts[e] = hash(p.password);
+      var c = d.cafes[id]; c.staff = c.staff || {}; c.staff[e] = { name: p.name, role: p.role }; c.staffEmails = (c.staffEmails || []).concat([e]);
+      save(); return Promise.resolve();
+    },
+    isAdmin: function(email){ return Promise.resolve(((load().admins || [])).indexOf(String(email).toLowerCase()) >= 0); },
+    listAllCafes: function(){ var d = load(); return Promise.resolve(Object.keys(d.cafes).map(function(k){ var c = clone(d.cafes[k]); c.id = k; return c; })); },
+    createBusiness: function(id, data, owner){
+      var d = load(), e = String(owner.email).toLowerCase(); d.accounts = d.accounts || {};
+      if (d.cafes[id]) return Promise.reject({ code: "kod-dolu" });
+      if (d.accounts[e]) return Promise.reject({ code: "auth/email-already-in-use" });
+      if (String(owner.password).length < 6) return Promise.reject({ code: "auth/weak-password" });
+      d.accounts[e] = hash(owner.password);
+      var staff = {}; staff[e] = { name: owner.name, role: "patron" };
+      d.cafes[id] = Object.assign(clone(data), { staff: staff, staffEmails: [USER ? USER.email : "", e] });
+      save(); return Promise.resolve();
+    },
+    removeStaff: function(id, email){
+      var d = load(), e = String(email).toLowerCase(), c = d.cafes[id];
+      if (c.staff) delete c.staff[e]; c.staffEmails = (c.staffEmails || []).filter(function(x){ return x !== e; });
+      if (c.zones) delete c.zones[e]; if (d.accounts) delete d.accounts[e];
+      save(); return Promise.resolve();
+    },
 
     watchCafe: function(id, cb){ return watch(function(){ cb(clone(load().cafes[id]) || null); }); },
     cafeExists: function(id){ return Promise.resolve(!!load().cafes[id]); },
     createCafe: function(id, data){ load().cafes[id] = clone(data); save(); return Promise.resolve(); },
     updateCafe: function(id, patch){ var d = load(); d.cafes[id] = Object.assign(d.cafes[id] || {}, clone(patch)); save(); return Promise.resolve(); },
-    listMyCafes: function(){ return Promise.resolve([]); },
+    listMyCafes: function(email){ var d = load(); return Promise.resolve(Object.keys(d.cafes).filter(function(k){ return (d.cafes[k].staffEmails || []).indexOf(email) >= 0; }).map(function(k){ return { id: k, name: d.cafes[k].name }; })); },
 
     watchOrders: function(id, opts, cb){
       return watch(function(){ cb(ordersOf(id).filter(function(o){ return !o.closed && (!opts || !opts.table || o.table === opts.table); }), false); });
@@ -842,6 +1016,10 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     watchPhotos: function(id, cb){ return watch(function(){ cb(clone(load().photos[id] || {})); }); },
     setPhoto: function(id, itemId, data){ var d = load(); d.photos[id] = d.photos[id] || {}; if (data) d.photos[id][itemId] = data; else delete d.photos[id][itemId]; save(); return Promise.resolve(); },
 
+    addContact: function(id, oid, data){ var d = load(); d.contacts = d.contacts || {}; d.contacts[id + "/" + oid] = clone(data); save(); return Promise.resolve(); },
+    watchContacts: function(id, cb){ return watch(function(){ var d = load(), m = {}; Object.keys(d.contacts || {}).forEach(function(k){ if (k.indexOf(id + "/") === 0) m[k.slice(id.length + 1)] = clone(d.contacts[k]); }); cb(m); }); },
+    deleteContact: function(id, oid){ var d = load(); if (d.contacts) delete d.contacts[id + "/" + oid]; save(); return Promise.resolve(); },
+
     getPrivate: function(id){ return Promise.resolve(clone(load().priv[id] || {})); },
     setPrivate: function(id, patch){ var d = load(); d.priv[id] = Object.assign(d.priv[id] || {}, clone(patch)); save(); return Promise.resolve(); },
 
@@ -860,11 +1038,13 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   var CLOCK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 
   window.SiralaApp.musteri = function(ctx){
-    var B = ctx.B, cafeId = ctx.cafeId, table = ctx.table;
-    var st = { avoid: (function(){ try { return JSON.parse(S.lsGet("sirala-avoid") || "{}") || {}; } catch(e){ return {}; } })(), algOpen: false, cafe: null, cafeLoaded: false, photos: {}, orders: [], all: [], ordLoaded: false, cart: {}, note: "", view: "menu", last: null, busy: false, tbl: {}, err: null, offline: !navigator.onLine };
+    var B = ctx.B, cafeId = ctx.cafeId, online = !!ctx.online, table = online ? "Online" : ctx.table;
+    var myIds = function(){ try { return JSON.parse(S.lsGet("sirala-online-ids") || "[]") || []; } catch(e){ return []; } };
+    var mine = function(o){ var u = B.currentUser(); return o.source === "online" && (myIds().indexOf(o.id) >= 0 || (B.kind === "firebase" && u && o.uid === u.uid)); };
+    var st = { avoid: (function(){ try { return JSON.parse(S.lsGet("sirala-avoid") || "{}") || {}; } catch(e){ return {}; } })(), algOpen: false, cafe: null, cafeLoaded: false, photos: {}, orders: [], all: [], ordLoaded: false, cart: {}, note: "", view: "menu", last: null, co: { mode: "gelal", name: S.lsGet("sirala-co-name") || "", phone: S.lsGet("sirala-co-phone") || "", address: S.lsGet("sirala-co-address") || "" }, busy: false, tbl: {}, err: null, offline: !navigator.onLine };
     var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
     var cartItems = function(){ return S.cartLines(st.cart, menu()); };
-    var tableLabel = "Masa " + table;
+    var tableLabel = online ? "Online sipariş" : "Masa " + table;
     var load = function(){ return S.loadInfo(st.all, st.cafe); };
     var alive = true, unsubs = [];
 
@@ -874,8 +1054,8 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (!alive) return;
       unsubs.push(B.watchCafe(cafeId, function(d){ st.cafe = d; st.cafeLoaded = true; dropSoldOut(); document.title = ((d && d.name) || "Menü") + " · " + tableLabel; render(); }, fail));
       unsubs.push(B.watchPhotos(cafeId, function(m){ st.photos = m; render(); }));
-      unsubs.push(B.watchOrders(cafeId, null, function(list){ st.all = list; st.orders = list.filter(function(o){ return String(o.table) === String(table); }); st.ordLoaded = true; render(); }, fail));
-      unsubs.push(B.watchTables(cafeId, function(m){ st.tbl = m[String(table)] || {}; render(); }));
+      unsubs.push(B.watchOrders(cafeId, null, function(list){ st.all = list; st.orders = list.filter(function(o){ return online ? mine(o) : String(o.table) === String(table) && o.source !== "online"; }); st.ordLoaded = true; render(); }, fail));
+      if (!online) unsubs.push(B.watchTables(cafeId, function(m){ st.tbl = m[String(table)] || {}; render(); }));
     }).catch(fail);
     function dropSoldOut(){
       var gone = [];
@@ -895,7 +1075,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       return '<header class="c-head"><div class="c-wrap"><div class="c-head-in">' +
         (ctx.back ? '<button class="btn btn-sm btn-ghost" data-act="back">‹</button>' : '') +
         '<div class="c-name">' + S.esc((st.cafe && st.cafe.name) || "Menü") + '</div>' +
-        (st.cafeLoaded && st.cafe ? (st.tbl.waiter || st.tbl.billRequested
+        (st.cafeLoaded && st.cafe && !online ? (st.tbl.waiter || st.tbl.billRequested
           ? '<span class="waiter-btn on" role="status">' + BELL + 'Garson geliyor</span>'
           : '<button class="waiter-btn" data-act="waiter">' + BELL + 'Garson çağır</button>') : '') +
         '<div class="c-table">' + S.esc(tableLabel) + '</div></div>' +
@@ -954,18 +1134,59 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
           '</div><p class="alg-small">Bilgiler işletme tarafından girilir. Ciddi alerjiniz varsa siparişten önce garsonumuza da söyleyin.</p></div>' : '') + '</section>' : '';
       var L = load();
       var busy = L.extra > 0 ? '<p class="busy-note">' + CLOCK + '<span>Mutfağımız şu an yoğun · süreler yaklaşık <b>+' + L.extra + ' dk</b> uzun</span></p>' : '';
-      return '<main class="c-wrap c-main has-bar">' + (etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') + busy + filt +
+      return '<main class="c-wrap c-main has-bar">' + (online ? onlineBanner() : etaBanner() || '<p class="c-intro">Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.</p>') + busy + filt +
         cats.map(function(c){ return '<section id="kat-' + S.slugify(c) + '"><h2 class="cat-h">' + S.esc(c) + '</h2>' + '<div class="dish-grid">' + items.filter(function(i){ return (i.cat || "Diğer") === c; }).map(dish).join("") + '</div></section>'; }).join("") +
         '<p class="c-foot">Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.</p></main>' +
         '<div class="c-bar"><div class="c-wrap c-bar-in">' +
         (count
           ? '<div class="c-bar-top"><span>' + count + ' ürün · yaklaşık ' + (S.eta(sel, items) + L.extra) + ' dk</span><b>' + S.fmt(total) + '</b></div>' +
             '<label class="sr" for="note">Sipariş notu</label><input id="note" class="note-in" maxlength="120" placeholder="Not ekleyin (ör. acısız, az pişmiş)" value="' + S.esc(st.note) + '">' +
-            '<button class="btn btn-primary btn-lg wide" data-act="send"' + (st.busy ? " disabled" : "") + '>' + (st.busy ? "Gönderiliyor…" : "Siparişi gönder") + '</button>'
+            (online ? '<button class="btn btn-primary btn-lg wide" data-act="checkout">Devam et · ' + S.fmt(total) + '</button>'
+              : '<button class="btn btn-primary btn-lg wide" data-act="send"' + (st.busy ? " disabled" : "") + '>' + (st.busy ? "Gönderiliyor…" : "Siparişi gönder") + '</button>')
+          : online ? (st.orders.length ? '<button class="btn btn-lg wide" data-act="track">Siparişlerim · ' + st.orders.length + '</button>' : '<p class="c-foot" style="padding-block:10px">Ürünlerin yanındaki + ile seçin. Gel-al ya da paket servis.</p>')
           : (st.orders.length
               ? '<button class="btn btn-lg wide" data-act="bill">Masanın hesabı · ' + S.fmt(tableTotal) + '</button>'
               : '<p class="c-foot" style="padding-block:10px">Ürünlerin yanındaki + ile seçin.</p>')) +
         '</div></div>';
+    }
+    function onlineState(o){
+      if (o.status === "cancelled") return ["İptal edildi", "Sorunuz varsa bizi arayın.", "cancel"];
+      if (o.status === "new") { var left = Math.ceil(((o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000 - Date.now()) / 60000); return ["Hazırlanıyor", left > 0 ? "~" + left + " dk kaldı" : "Az kaldı", "prep"]; }
+      if (o.served) return ["Teslim edildi", "Afiyet olsun!", "ok"];
+      return o.mode === "paket" ? ["Hazır, yola çıkıyor", "Kuryemiz birazdan kapınızda.", "ready"] : ["Hazır!", "Gelip alabilirsiniz.", "ready"];
+    }
+    function onlineBanner(){
+      var head = '<section class="ol-hero"><span class="ol-kick">Online sipariş</span><h1>' + S.esc((st.cafe && st.cafe.name) || "") + '</h1><p>Gel-al' + (st.cafe && st.cafe.delivery === false ? '' : ' ya da paket servis') + '. Ödeme ' + (st.cafe && st.cafe.delivery === false ? 'teslim alırken' : 'teslimatta ya da gel-al\'da') + ', nakit ya da kart.</p></section>';
+      var act = st.orders.filter(function(o){ return o.status !== "cancelled" || Date.now() - (o.cancelledAt || 0) < 3600000; });
+      return head + (act.length ? '<button class="ol-track" data-act="track">' + CLOCK + '<span><b>' + act.length + ' siparişiniz var</b><small>' + S.esc(onlineState(act[act.length - 1]).join(" · ").replace(/ · (prep|ready|ok|cancel)$/, "")) + '</small></span><em>Takip et ›</em></button>' : '');
+    }
+    function checkoutView(){
+      var sel = cartItems(), total = S.sum(sel), co = st.co, delivery = !(st.cafe && st.cafe.delivery === false), L = load();
+      if (!delivery) co.mode = "gelal";
+      return '<main class="c-wrap c-main"><section class="co"><h2 class="co-h">Siparişi tamamla</h2>' +
+        '<ul class="co-items">' + sel.map(function(i){ return '<li><span>' + i.qty + '× ' + S.esc(i.name) + '</span><b class="num">' + S.fmt(i.price * i.qty) + '</b></li>'; }).join("") + '</ul>' +
+        '<div class="bill-total"><span>Toplam</span><b>' + S.fmt(total) + '</b></div>' +
+        '<div class="co-mode" role="radiogroup" aria-label="Teslim şekli">' +
+          '<button role="radio" aria-checked="' + (co.mode === "gelal") + '" data-act="mode" data-v="gelal"><b>Gel-al</b><small>~' + (S.eta(sel, menu()) + L.extra) + ' dk sonra hazır</small></button>' +
+          (delivery ? '<button role="radio" aria-checked="' + (co.mode === "paket") + '" data-act="mode" data-v="paket"><b>Paket servis</b><small>Adresinize getirelim</small></button>' : '') + '</div>' +
+        '<label class="fld" for="co-name"><span>Adınız</span><input id="co-name" maxlength="40" autocomplete="name" value="' + S.esc(co.name) + '"></label>' +
+        '<label class="fld" for="co-phone"><span>Telefon</span><input id="co-phone" type="tel" inputmode="tel" maxlength="16" autocomplete="tel" placeholder="05xx xxx xx xx" value="' + S.esc(co.phone) + '"></label>' +
+        (co.mode === "paket" ? '<label class="fld" for="co-address"><span>Adres</span><textarea id="co-address" maxlength="200" rows="3" autocomplete="street-address" placeholder="Mahalle, sokak, bina ve daire no, tarif">' + S.esc(co.address) + '</textarea></label>' : '') +
+        '<label class="fld" for="note"><span>Not (isteğe bağlı)</span><input id="note" maxlength="120" placeholder="ör. acısız, zil çalışmıyor" value="' + S.esc(st.note) + '"></label>' +
+        '<p class="co-pay">Ödeme ' + (co.mode === "paket" ? 'kapıda' : 'gelip aldığınızda') + ', nakit ya da kartla yapılır. Bilgileriniz yalnızca bu sipariş için kullanılır ve sipariş kapanınca silinir.</p>' +
+        (st.coErr ? '<p class="form-err" role="alert">' + S.esc(st.coErr) + '</p>' : '') +
+        '<button class="btn btn-primary btn-lg wide" data-act="send"' + (st.busy ? " disabled" : "") + '>' + (st.busy ? "Gönderiliyor…" : "Siparişi ver · " + S.fmt(total)) + '</button>' +
+        '<button class="btn btn-ghost wide" data-act="menu">‹ Menüye dön</button></section></main>';
+    }
+    function trackView(){
+      var list = st.orders.slice().sort(function(a, b){ return (b.createdAt || 0) - (a.createdAt || 0); });
+      return '<main class="c-wrap c-main"><h2 class="co-h">Siparişlerim</h2>' + (list.length ? list.map(function(o){
+        var s = onlineState(o), steps = ["prep", "ready", "ok"], idx = steps.indexOf(s[2]);
+        return '<article class="trk ' + s[2] + '"><div class="trk-top"><span class="label">' + (o.mode === "paket" ? "Paket servis" : "Gel-al") + ' · ' + S.clock(o.createdAt) + '</span><b>#' + S.esc(String(o.id).slice(-4).toUpperCase()) + '</b></div>' +
+          '<h3>' + s[0] + '</h3><p class="trk-sub">' + s[1] + '</p>' +
+          (s[2] !== "cancel" ? '<div class="trk-steps">' + ["Alındı", "Hazır", o.mode === "paket" ? "Teslim" : "Alındı"].map(function(t, i){ return '<span class="' + (i <= idx ? "on" : "") + '">' + (i === 2 && o.mode !== "paket" ? "Teslim" : t) + '</span>'; }).join("") + '</div>' : '') +
+          '<p class="trk-items">' + S.esc(S.summary(o.items)) + ' · <b>' + S.fmt(Number(o.total) || S.sum(o.items)) + '</b></p></article>';
+      }).join("") : '<div class="empty-card"><p>Açık siparişiniz yok.</p></div>') + '<button class="btn btn-ghost wide" data-act="menu">‹ Menüye dön</button></main>';
     }
     function doneView(){
       var o = st.last;
@@ -999,10 +1220,29 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (st.err) { app.innerHTML = head() + '<main class="c-wrap c-main"><div class="empty-card"><h2>Bağlantı kurulamadı</h2><p>' + S.esc(st.err) + ' Siparişinizi garsonumuza verebilirsiniz.</p></div></main>'; return; }
       if (!st.cafeLoaded || !st.ordLoaded) { app.innerHTML = head() + '<main class="c-wrap c-main"><p class="muted center">Menü yükleniyor…</p></main>'; return; }
       if (!st.cafe) { app.innerHTML = head() + '<main class="c-wrap c-main"><div class="empty-card"><h2>Restoran bulunamadı</h2><p>Bu QR kod geçerli bir işletmeye bağlı değil.</p></div></main>'; return; }
-      app.innerHTML = head() + (st.view === "done" && st.last ? doneView() : st.view === "bill" ? billView() : menuView());
+      if (online && st.cafe.onlineOpen === false && st.view !== "track") { app.innerHTML = head() + '<main class="c-wrap c-main"><div class="empty-card"><h2>Şu an online sipariş almıyoruz</h2><p>Biraz sonra tekrar deneyin ya da bizi arayın.</p></div>' + (st.orders.length ? '<button class="btn wide" data-act="track">Siparişlerim</button>' : '') + '</main>'; return; }
+      app.innerHTML = head() + (st.view === "checkout" ? checkoutView() : st.view === "track" ? trackView() : st.view === "done" && st.last && !online ? doneView() : st.view === "bill" && !online ? billView() : menuView());
     }
 
+    function sendOnline(){
+      var items = cartItems(), co = st.co; if (!items.length || st.busy) return;
+      co.name = co.name.trim(); co.phone = co.phone.replace(/[^0-9+]/g, ""); co.address = co.address.trim();
+      st.coErr = !co.name ? "Adınızı yazın." : co.phone.replace(/\D/g, "").length < 10 ? "Telefon numaranızı kontrol edin." : co.mode === "paket" && co.address.length < 10 ? "Adresi biraz daha ayrıntılı yazın." : null;
+      if (st.coErr) { render(); return; }
+      S.lsSet("sirala-co-name", co.name); S.lsSet("sirala-co-phone", co.phone); if (co.mode === "paket") S.lsSet("sirala-co-address", co.address);
+      var u = B.currentUser(), now = Date.now(), eta = S.eta(items, menu()) + load().extra + (co.mode === "paket" ? 10 : 0);
+      st.busy = true; render();
+      B.addOrder(cafeId, { table: "Online", items: items, total: S.sum(items), eta: eta, note: st.note.trim().slice(0, 120), uid: u ? u.uid : "", source: "online", mode: co.mode, status: "new", closed: false, createdAt: now })
+        .then(function(oid){
+          var ids = myIds(); ids.push(oid); S.lsSet("sirala-online-ids", JSON.stringify(ids.slice(-20)));
+          return B.addContact(cafeId, oid, { name: co.name.slice(0, 40), phone: co.phone.slice(0, 16), address: co.mode === "paket" ? co.address.slice(0, 200) : "", mode: co.mode, createdAt: now });
+        })
+        .then(function(){ st.cart = {}; st.note = ""; st.view = "track"; window.scrollTo(0, 0); S.toast("Siparişiniz alındı"); })
+        .catch(function(e){ S.toast(S.errText(e)); })
+        .then(function(){ st.busy = false; render(); });
+    }
     function send(){
+      if (online) { sendOnline(); return; }
       var items = cartItems(); if (!items.length || st.busy) return;
       var u = B.currentUser(); st.busy = true; render();
       var now = Date.now(), eta = S.eta(items, menu()) + load().extra;
@@ -1015,7 +1255,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       B.setTable(cafeId, String(table), Object.assign({ updatedAt: Date.now() }, patch)).then(function(){ S.toast(msg); }).catch(function(e){ S.toast(S.errText(e)); });
     }
 
-    S.$("app").oninput = function(e){ if (e.target.id === "note") st.note = e.target.value; };
+    S.$("app").oninput = function(e){ var id = e.target.id; if (id === "note") st.note = e.target.value; else if (id.indexOf("co-") === 0) st.co[id.slice(3)] = e.target.value; };
     S.$("app").onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
     S.$("app").onclick = function(e){
       var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
@@ -1029,7 +1269,10 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "ar": { var it = menu().find(function(x){ return x.id === v; }); if (it) S.openAR(it, "1 porsiyon" + (it.amount ? " · " + it.amount : "") + (Number(it.kcal) > 0 ? " · yaklaşık " + it.kcal + " kcal" : "") + "."); return; }
         case "cat": { var sec = document.getElementById(v), hd = document.querySelector(".c-head");
           if (sec) window.scrollTo({ top: sec.getBoundingClientRect().top + window.pageYOffset - (hd ? hd.offsetHeight : 0) - 8, behavior: "smooth" }); return; }
-        case "menu": st.view = "menu"; window.scrollTo(0, 0); break;
+        case "menu": st.view = "menu"; st.coErr = null; window.scrollTo(0, 0); break;
+        case "checkout": st.view = "checkout"; window.scrollTo(0, 0); break;
+        case "track": st.view = "track"; window.scrollTo(0, 0); break;
+        case "mode": st.co.mode = v; break;
         case "bill": st.view = "bill"; window.scrollTo(0, 0); break;
         case "askBill": flag({ billRequested: true, requestedAt: Date.now() }, "Hesap istendi"); return;
         case "waiter": flag({ waiter: true, waiterAt: Date.now() }, "Garson çağrıldı"); return;
@@ -1051,7 +1294,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     var B = ctx.B, cafeId = ctx.cafeId;
     var st = { user: null, authKnown: false, loginErr: null, myCafes: null, cafe: null, cafeLoaded: false, denied: false,
       orders: [], ordLoaded: false, fromCache: false, tables: {}, tab: "siparis", openTable: null, confirmClose: false,
-      wTable: null, moveFrom: null, repDays: "1", report: null, wCart: {}, wNote: "", busy: false, pinOk: false, log: [], seen: null, seenFlags: null, confirmCancel: null };
+      wTable: null, moveFrom: null, repDays: "1", report: null, wCart: {}, wNote: "", busy: false, pinOk: false, log: [], seen: null, seenFlags: null, confirmCancel: null, contacts: {} };
     var alive = true, unsubs = [];
     var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
     var nTables = function(){ return Math.max(1, Math.min(80, Number(st.cafe && st.cafe.tables) || 10)); };
@@ -1078,6 +1321,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         if (st.seen) { for (var k in keys) if (!st.seen[k]) { S.beep(2, 660); break; } }
         st.seen = keys; render();
       }));
+      unsubs.push(B.watchContacts(cafeId, function(m){ st.contacts = m || {}; render(); }));
       unsubs.push(B.watchTables(cafeId, function(m){
         var flags = {}; Object.keys(m).forEach(function(t){ if (m[t].billRequested) flags["b" + t] = 1; if (m[t].waiter) flags["w" + t] = 1; });
         if (st.seenFlags) { for (var f in flags) if (!st.seenFlags[f]) { S.beep(3, 880); break; } }
@@ -1153,9 +1397,9 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       return busyBar + '<div class="k-cols"><section><h2 class="k-h">Hazırlanacak <span class="label">' + nw.length + ' sipariş</span></h2>' +
         (nw.length ? '<div class="tickets">' + nw.map(function(o){
           var late = Date.now() > (o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000;
-          return '<article class="ticket' + (late ? " late" : "") + '"><div class="t-top"><span class="t-table">Masa ' + S.esc(o.table) + '</span><span class="t-time">' + S.clock(o.createdAt) + '<br>' + (o.source === "garson" ? "garson" : "QR") + '</span></div>' +
+          return '<article class="ticket' + (late ? " late" : "") + (o.source === "online" ? " online" : "") + '"><div class="t-top"><span class="t-table">' + S.esc(S.orderLabel(o)) + '</span><span class="t-time">' + S.clock(o.createdAt) + '<br>' + (o.source === "garson" ? S.esc(o.byName || "garson") : o.source === "online" ? "online" : "QR") + '</span></div>' +
             '<ul class="t-items">' + (o.items || []).map(function(i){ return '<li><b>' + i.qty + '×</b>' + S.esc(i.name) + '</li>'; }).join("") + '</ul>' +
-            (o.note ? '<div class="t-note">Not: ' + S.esc(o.note) + '</div>' : '') + etaHtml(o) +
+            (o.note ? '<div class="t-note">Not: ' + S.esc(o.note) + '</div>' : '') + (o.source === "online" && st.contacts[o.id] ? '<div class="t-note">' + S.esc(st.contacts[o.id].name) + ' · ' + S.esc(st.contacts[o.id].phone) + (st.contacts[o.id].address ? '<br>' + S.esc(st.contacts[o.id].address) : '') + '</div>' : '') + etaHtml(o) +
             '<div class="t-left"><span class="small muted">Kaç dk sonra çıkar?</span>' + [5, 10, 15, 20].map(function(x){ return '<button data-act="leftSet" data-v="' + S.esc(o.id) + '" data-m="' + x + '">' + x + '</button>'; }).join("") + '</div>' +
             '<button class="btn btn-primary" data-act="done" data-v="' + S.esc(o.id) + '">Hazırlandı</button>' +
             (st.confirmCancel === o.id
@@ -1163,11 +1407,11 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
               : '<button class="t-cancel-link" data-act="cancelAsk" data-v="' + S.esc(o.id) + '">Siparişi iptal et</button>') + '</article>';
         }).join("") + '</div>' : '<div class="empty-card"><p>Bekleyen sipariş yok. Masalardan gelen siparişler burada belirir ve ses çıkarır.</p></div>') +
         '</section><section><h2 class="k-h">Hazırlananlar</h2>' +
-        (dn.length ? '<div class="done-list">' + dn.map(function(o){ return '<div class="done-row"><b>M' + S.esc(o.table) + '</b><span class="d">' + S.esc(S.summary(o.items)) + '</span><span class="small muted">' + S.clock(o.doneAt) + '</span><button class="btn btn-sm btn-ghost" data-act="undo" data-v="' + S.esc(o.id) + '" aria-label="Geri al">Geri al</button></div>'; }).join("") + '</div>' : '<p class="muted small">Henüz yok.</p>') +
+        (dn.length ? '<div class="done-list">' + dn.map(function(o){ return '<div class="done-row"><b>' + (o.source === "online" ? (o.mode === "paket" ? "Paket" : "Gel-al") : "M" + S.esc(o.table)) + '</b><span class="d">' + S.esc(S.summary(o.items)) + '</span><span class="small muted">' + S.clock(o.doneAt) + '</span>' + (o.source === "online" ? '<button class="btn btn-sm" data-act="deliver" data-v="' + S.esc(o.id) + '">Teslim edildi</button>' : '') + '<button class="btn btn-sm btn-ghost" data-act="undo" data-v="' + S.esc(o.id) + '" aria-label="Geri al">Geri al</button></div>'; }).join("") + '</div>' : '<p class="muted small">Henüz yok.</p>') +
         '</section></div>';
     }
     function tableAgg(t){
-      var list = st.orders.filter(function(o){ return String(o.table) === String(t) && o.status !== "cancelled"; });
+      var list = st.orders.filter(function(o){ return String(o.table) === String(t) && o.status !== "cancelled" && o.source !== "online"; });
       return { list: list, total: list.reduce(function(s, o){ return s + (Number(o.total) || S.sum(o.items)); }, 0) };
     }
     function tablesTab(){
@@ -1339,6 +1583,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "printBill": { var bl = billLines(v); S.printHtml(S.billHtml(st.cafe, v, bl.lines, bl.total)); return; }
         case "csv": exportCsv(); return;
         case "undo": if (o) upd(o, { status: "new" }); return;
+        case "deliver": if (o) S.deliverOnline(B, cafeId, o).then(function(){ S.toast("Online sipariş teslim edildi"); }).catch(function(e){ S.toast(S.errText(e)); }); return;
         case "openTable": st.tab = "masalar"; st.openTable = v; st.confirmClose = false; render(true); var d = S.$("detail"); if (d) d.scrollIntoView({ block: "nearest" }); return;
         case "closeDetail": st.openTable = null; st.confirmClose = false; break;
         case "closeAsk": st.confirmClose = true; break;
@@ -1367,7 +1612,8 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   };
 })();
 
-/* Adanalım — garson uygulaması (telefon): masalar ve çağrılar, mutfaktan hazır gelenler, sipariş alma, masa hesabı. */
+/* Adanalım — çalışan uygulaması (telefon): gelen siparişler (QR + online), masalar ve çağrılar, mutfaktan hazır,
+   sipariş alma, masa hesabı. Patron rolündeki kullanıcı aynı uygulamada ek olarak "Patron" sekmesini görür. */
 (function(){
   "use strict";
   window.SiralaApp = window.SiralaApp || {};
@@ -1376,34 +1622,53 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     ready: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18M5 17a7 7 0 0 1 14 0M12 8V6M10 6h4"/></svg>',
     order: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M12 17h3"/></svg>',
     bell: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+    inbox: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/></svg>',
+    boss: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     bill: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>'
   };
 
   window.SiralaApp.garson = function(ctx){
-    var B = ctx.B, cafeId = ctx.cafeId;
+    var B = ctx.B, cafeId = ctx.cafeId || "";
     var st = { user: null, authKnown: false, loginErr: null, cafe: null, cafeLoaded: false, denied: false,
-      orders: [], tables: {}, photos: {}, tab: "masalar", sheet: null, confirmClose: false, wTable: null, wCart: {}, wNote: "", busy: false,
-      seenFlags: null, seenReady: null, fromCache: false };
+      orders: [], tables: {}, photos: {}, tab: "gelen", sheet: null, confirmClose: false, wTable: null, wCart: {}, wNote: "", busy: false,
+      seenFlags: null, seenReady: null, seenNew: null, fromCache: false, contacts: {}, mineOnly: false,
+      rep: null, repDays: 1, zoneFor: null, nsErr: null, nsBusy: false };
     var alive = true, unsubs = [];
     var menu = function(){ return (st.cafe && Array.isArray(st.cafe.menu)) ? st.cafe.menu : []; };
     var nTables = function(){ return Math.max(1, Math.min(80, Number(st.cafe && st.cafe.tables) || 10)); };
+    var me = function(){ return S.staffInfo(st.cafe, st.user && st.user.email); };
+    var isBoss = function(){ return me().role === "patron"; };
+    var myTables = function(){ return (((st.cafe && st.cafe.zones) || {})[(st.user && st.user.email) || ""] || []).map(String); };
     var tick = setInterval(function(){ if (!S.isEditing()) render(); }, 30000);
 
     B.onAuth(function(u){
       if (!alive) return;
       st.user = u && u.staff ? u : null; st.authKnown = true;
       unsubs.forEach(function(x){ try { x(); } catch(e){} }); unsubs = [];
-      if (!st.user || !cafeId) { render(true); return; }
+      if (!st.user) { render(true); return; }
+      if (!cafeId || (ctx.followLogin && st.user.email && /\.adanalim\.app$/.test(st.user.email) && st.user.email.split("@")[1].replace(/\.adanalim\.app$/, "") !== cafeId)) {
+        var guess = /\.adanalim\.app$/.test(st.user.email) ? st.user.email.split("@")[1].replace(/\.adanalim\.app$/, "") : "";
+        if (guess && ctx.followLogin) { cafeId = guess; }
+        else if (!cafeId) { B.listMyCafes(st.user.email).then(function(l){ if (l.length) { cafeId = l[0].id; subscribe(); } else { st.denied = "Bu hesap hiçbir işletmeye bağlı değil."; render(true); } }); return; }
+      }
+      subscribe();
+    });
+    function subscribe(){
       unsubs.push(B.watchCafe(cafeId, function(d){
         st.cafe = d; st.cafeLoaded = true;
         st.denied = !!(d && B.kind === "firebase" && (d.staffEmails || []).indexOf(st.user.email) < 0) && "Bu hesap bu işletmenin çalışanları arasında değil.";
-        document.title = "Garson · " + ((d && d.name) || cafeId); render();
+        document.title = "Adanalım · " + ((d && d.name) || cafeId); render();
       }, function(){ st.denied = "Bu işletmeye erişim yok."; render(true); }));
       unsubs.push(B.watchPhotos(cafeId, function(m){ st.photos = m || {}; render(); }));
+      unsubs.push(B.watchContacts(cafeId, function(m){ st.contacts = m || {}; render(); }));
       unsubs.push(B.watchOrders(cafeId, null, function(list, cache){
         st.orders = list; st.fromCache = cache;
+        var fresh = {}; list.forEach(function(o){ if (o.status === "new" && o.source !== "garson") fresh[o.id] = o; });
+        if (st.seenNew) { for (var n in fresh) if (!st.seenNew[n]) { var fo = fresh[n], mine = fo.source === "online" || !myTables().length || myTables().indexOf(String(fo.table)) >= 0;
+          if (mine) alertMe("Yeni sipariş · " + S.orderLabel(fo), 2, 620); break; } }
+        st.seenNew = fresh;
         var ready = {}; readyList().forEach(function(o){ ready[o.id] = 1; });
-        if (st.seenReady) { for (var k in ready) if (!st.seenReady[k]) { alertMe("Mutfaktan hazır: Masa " + (st.orders.find(function(o){ return o.id === k; }) || {}).table, 2, 740); break; } }
+        if (st.seenReady) { for (var k in ready) if (!st.seenReady[k]) { alertMe("Mutfaktan hazır · " + S.orderLabel(st.orders.find(function(o){ return o.id === k; }) || {}), 2, 740); break; } }
         st.seenReady = ready; render();
       }));
       unsubs.push(B.watchTables(cafeId, function(m){
@@ -1414,7 +1679,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         if (msg) alertMe(msg, 3, 880);
         render();
       }));
-    });
+    }
     B.ready.catch(function(){ st.authKnown = true; st.denied = "Sisteme bağlanılamadı."; render(true); });
 
     function alertMe(msg, n, freq){
@@ -1443,7 +1708,9 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
 
     /* ---------- işlemler ---------- */
     function clearFlags(t){ return B.setTable(cafeId, String(t), { billRequested: false, waiter: false, updatedAt: Date.now() }).catch(function(e){ S.toast(S.errText(e)); }); }
-    function served(o){ B.updateOrder(cafeId, o.id, { served: true, servedAt: Date.now() }).then(function(){ S.toast("Masa " + o.table + " servis edildi"); }).catch(function(e){ S.toast(S.errText(e)); }); }
+    function served(o){
+      if (o.source === "online") { S.deliverOnline(B, cafeId, o).then(function(){ S.toast("Online sipariş teslim edildi"); }).catch(function(e){ S.toast(S.errText(e)); }); return; }
+      B.updateOrder(cafeId, o.id, { served: true, servedAt: Date.now() }).then(function(){ S.toast("Masa " + o.table + " servis edildi"); }).catch(function(e){ S.toast(S.errText(e)); }); }
     function closeTable(t){
       B.closeTable(cafeId, String(t)).then(function(){ S.toast("Masa " + t + " kapatıldı"); st.sheet = null; st.confirmClose = false; render(true); }).catch(function(e){ S.toast(S.errText(e)); });
     }
@@ -1452,7 +1719,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       if (!st.wTable || !items.length || st.busy) return;
       st.busy = true; render(true);
       B.addOrder(cafeId, { table: String(st.wTable), items: items, total: S.sum(items), eta: S.eta(items, menu()) + S.loadInfo(st.orders, st.cafe).extra,
-        note: st.wNote.trim().slice(0, 120), uid: st.user.uid, source: "garson", status: "new", closed: false, createdAt: Date.now() })
+        note: st.wNote.trim().slice(0, 120), uid: st.user.uid, by: st.user.email, byName: me().name, source: "garson", status: "new", closed: false, createdAt: Date.now() })
         .then(function(){ S.toast("Masa " + st.wTable + " siparişi mutfakta"); st.wCart = {}; st.wNote = ""; })
         .catch(function(e){ S.toast(S.errText(e)); })
         .then(function(){ st.busy = false; render(true); });
@@ -1466,10 +1733,40 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     var byName = function(nm){ return menu().find(function(m){ return m.name === nm; }) || {}; };
     function head(){
       var nCalls = calls().length;
-      return '<header class="g-head"><div><span class="g-kick">Garson</span><b>' + S.esc((st.cafe && st.cafe.name) || "") + '</b></div>' +
+      var m = me();
+      return '<header class="g-head"><div><span class="g-kick">' + S.esc((st.cafe && st.cafe.name) || "") + '</span><b>' + S.esc(m.name) + (m.role === "patron" ? ' <em class="g-role">Patron</em>' : '') + '</b></div>' +
+        '<button class="g-who" data-act="logout">Çıkış</button>' +
         (nCalls ? '<span class="g-pulse">' + nCalls + ' çağrı</span>' : '<span class="g-ok">Sakin</span>') + '</header>' +
         (S.audioReady ? '' : '<button class="g-sound" data-act="sound">' + IC.bell + 'Bildirim sesini ve titreşimi açmak için dokunun</button>') +
         (!navigator.onLine || st.fromCache ? '<div class="offline">İnternet yok. Liste son hâliyle duruyor.</div>' : '');
+    }
+    function contactHtml(o){
+      if (o.source !== "online") return "";
+      var c = st.contacts[o.id];
+      if (!c) return '<p class="g-contact muted">İletişim bilgisi yükleniyor…</p>';
+      return '<div class="g-contact"><b>' + S.esc(c.name) + '</b> · <a href="tel:' + S.esc(c.phone) + '">' + S.esc(c.phone) + '</a>' +
+        (c.address ? '<br><a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(c.address) + '" target="_blank" rel="noopener">' + S.esc(c.address) + '</a>' : '') + '</div>';
+    }
+    function orderCard(o){
+      var done = o.status === "done", left = Math.ceil(((o.createdAt || 0) + (o.eta || S.DEFAULT_MINS) * 60000 - Date.now()) / 60000);
+      var who = o.source === "garson" ? (o.byName || "garson") : o.source === "online" ? "online" : "QR";
+      var zone = o.source === "online" ? null : S.zoneOf(st.cafe, o.table);
+      return '<article class="g-ord ' + (o.source === "online" ? "online " : "") + (done ? "done" : "") + '"><div class="g-r-top"><b>' + S.esc(S.orderLabel(o)) + '</b><small>' + S.clock(o.createdAt) + ' · ' + S.esc(who) + '</small></div>' +
+        (zone ? '<span class="g-zone">Sorumlu: ' + S.esc(S.staffInfo(st.cafe, zone).name) + '</span>' : '') +
+        '<ul class="g-r-items">' + (o.items || []).map(function(i){ var base = String(i.name).replace(/ \(1,5 porsiyon\)$/, ""); return '<li>' + thumb(byName(base).id || i.id, base, "sm") + '<span><b>' + i.qty + '×</b> ' + S.esc(i.name) + '</span></li>'; }).join("") + '</ul>' +
+        (o.note ? '<p class="g-note">Not: ' + S.esc(o.note) + '</p>' : '') + contactHtml(o) +
+        '<div class="g-ord-foot"><span class="g-chip ' + (done ? "ok" : left < 0 ? "late" : "") + '">' + (done ? "Hazır" : left >= 0 ? "Mutfakta · ~" + left + " dk" : (-left) + " dk gecikti") + '</span><b class="num">' + S.fmt(Number(o.total) || S.sum(o.items)) + '</b></div>' +
+        (done ? '<button class="g-btn wide" data-act="served" data-v="' + S.esc(o.id) + '">' + (o.source === "online" ? "Teslim edildi · kapat" : "Servis edildi") + '</button>' : '') + '</article>';
+    }
+    function inboxTab(){
+      var list = st.orders.filter(function(o){ return o.status === "new" || (o.status === "done" && !o.served); });
+      if (st.mineOnly && myTables().length) list = list.filter(function(o){ return o.source === "online" || myTables().indexOf(String(o.table)) >= 0; });
+      list.sort(function(a, b){ return (b.createdAt || 0) - (a.createdAt || 0); });
+      var onl = list.filter(function(o){ return o.source === "online"; }), tbl = list.filter(function(o){ return o.source !== "online"; });
+      return '<div class="g-h-row"><h2 class="g-h">Siparişler</h2>' + (myTables().length ? '<button class="g-filter" aria-pressed="' + st.mineOnly + '" data-act="mine">Sadece benim masalarım</button>' : '') + '</div>' +
+        (list.length ? (onl.length ? '<h3 class="g-cat">Online · ' + onl.length + '</h3>' + onl.map(orderCard).join("") : '') +
+          (tbl.length ? '<h3 class="g-cat">Masalar · ' + tbl.length + '</h3>' + tbl.map(orderCard).join("") : '')
+          : '<div class="g-empty">' + IC.inbox + '<p>Açık sipariş yok. QR\'dan ya da online sipariş gelince burada belirir, telefon titrer.</p></div>');
     }
     function tablesTab(){
       var cs = calls();
@@ -1483,20 +1780,22 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         var a = tableAgg(t), f = st.tables[String(t)] || {};
         var cls = f.billRequested ? "bill" : f.waiter ? "wait" : a.ready ? "ready" : a.list.length ? "busy" : "";
         var sub = f.billRequested ? "Hesap" : f.waiter ? "Çağırıyor" : a.ready ? a.ready + " hazır" : a.waiting ? a.waiting + " mutfakta" : a.list.length ? "Yemekte" : "Boş";
-        cells.push('<button class="g-tbl ' + cls + '" data-act="sheet" data-v="' + t + '"><span class="n">' + t + '</span><span class="s">' + sub + '</span>' + (a.list.length ? '<span class="t">' + S.fmt(a.total) + '</span>' : '') + '</button>');
+        var zn = S.zoneOf(st.cafe, t), mineT = zn && st.user && zn === st.user.email;
+        cells.push('<button class="g-tbl ' + cls + (mineT ? " mine" : "") + '" data-act="sheet" data-v="' + t + '"><span class="n">' + t + '</span><span class="s">' + sub + '</span>' + (a.list.length ? '<span class="t">' + S.fmt(a.total) + '</span>' : '') +
+          (zn ? '<span class="g-ini" title="' + S.esc(S.staffInfo(st.cafe, zn).name) + '">' + S.esc(S.staffInfo(st.cafe, zn).name.slice(0, 1).toLocaleUpperCase("tr-TR")) + '</span>' : '') + '</button>');
       }
       return out + '<h2 class="g-h">Masalar</h2><div class="g-grid">' + cells.join("") + '</div>' +
-        '<div class="g-legend"><span class="busy">Dolu</span><span class="ready">Hazır yemek</span><span class="wait">Çağırıyor</span><span class="bill">Hesap</span></div>';
+        (myTables().length ? '<p class="g-info">Sizin masalarınız: <b>' + myTables().join(", ") + '</b> (kalın çerçeveli)</p>' : '') + '<div class="g-legend"><span class="busy">Dolu</span><span class="ready">Hazır yemek</span><span class="wait">Çağırıyor</span><span class="bill">Hesap</span></div>';
     }
     function readyTab(){
       var r = readyList();
       if (!r.length) return '<h2 class="g-h">Mutfaktan hazır</h2><div class="g-empty">' + IC.ready + '<p>Şu an bekleyen yemek yok. Mutfak "Hazırlandı"ya bastığında burada belirir, telefon titrer.</p></div>';
       return '<h2 class="g-h">Mutfaktan hazır <span>' + r.length + '</span></h2>' + r.map(function(o){
         var wait = Math.max(0, Math.round((Date.now() - (o.doneAt || 0)) / 60000));
-        return '<article class="g-ready' + (wait >= 5 ? " late" : "") + '"><div class="g-r-top"><b>Masa ' + S.esc(o.table) + '</b><small>' + (wait < 1 ? "şimdi hazırlandı" : wait + " dk önce hazırlandı") + '</small></div>' +
+        return '<article class="g-ready' + (wait >= 5 ? " late" : "") + '"><div class="g-r-top"><b>' + S.esc(S.orderLabel(o)) + '</b><small>' + (wait < 1 ? "şimdi hazırlandı" : wait + " dk önce hazırlandı") + '</small></div>' +
           '<ul class="g-r-items">' + (o.items || []).map(function(i){ var base = String(i.name).replace(/ \(1,5 porsiyon\)$/, ""); return '<li>' + thumb(byName(base).id || i.id, base, "sm") + '<span><b>' + i.qty + '×</b> ' + S.esc(i.name) + '</span></li>'; }).join("") + '</ul>' +
           (o.note ? '<p class="g-note">Not: ' + S.esc(o.note) + '</p>' : '') +
-          '<button class="g-btn wide" data-act="served" data-v="' + S.esc(o.id) + '">Servis edildi</button></article>';
+          contactHtml(o) + '<button class="g-btn wide" data-act="served" data-v="' + S.esc(o.id) + '">' + (o.source === "online" ? "Teslim edildi · kapat" : "Servis edildi") + '</button></article>';
       }).join("");
     }
     function orderTab(){
@@ -1531,10 +1830,73 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         (f.billRequested || f.waiter ? '<button class="btn btn-ghost wide" data-act="going" data-v="' + S.esc(t) + '">Uyarıyı kapat</button>' : '') +
         '</div></section>';
     }
+    function loadRep(){
+      var d0 = new Date(); d0.setHours(0, 0, 0, 0); var since = d0.getTime() - (st.repDays - 1) * 86400000;
+      B.listOrders(cafeId, since).then(function(list){ st.rep = list.filter(function(o){ return o.status !== "cancelled"; }); render(); }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+    function bossTab(){
+      var R = st.rep, cafe = st.cafe || {}, staff = cafe.staff || {}, zones = cafe.zones || {};
+      var emails = Object.keys(staff).filter(function(e){ return staff[e].role !== "patron"; });
+      var head = '<div class="g-h-row"><h2 class="g-h">Patron</h2><div class="g-pick sm">' + [[1, "Bugün"], [7, "7 gün"], [30, "30 gün"]].map(function(x){ return '<button aria-pressed="' + (st.repDays === x[0]) + '" data-act="repDays" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join("") + '</div></div>';
+      if (!R) return head + '<p class="muted">Yükleniyor…</p>';
+      var sum = function(l){ return l.reduce(function(s, o){ return s + (Number(o.total) || S.sum(o.items)); }, 0); };
+      var total = sum(R), onl = R.filter(function(o){ return o.source === "online"; }), qr = R.filter(function(o){ return o.source === "qr"; });
+      var openT = {}; st.orders.forEach(function(o){ if (o.source !== "online" && o.status !== "cancelled") openT[o.table] = 1; });
+      var tiles = '<div class="g-tiles">' +
+        '<div class="g-tile big"><span>Toplam gelir</span><b>' + S.fmt(total) + '</b><small>' + R.length + ' sipariş · iptaller hariç</small></div>' +
+        '<div class="g-tile"><span>Online</span><b>' + S.fmt(sum(onl)) + '</b><small>' + onl.length + ' sipariş</small></div>' +
+        '<div class="g-tile"><span>QR</span><b>' + S.fmt(sum(qr)) + '</b><small>' + qr.length + ' sipariş</small></div>' +
+        '<div class="g-tile"><span>Şu an açık masa</span><b>' + Object.keys(openT).length + '</b><small>mutfakta ' + st.orders.filter(function(o){ return o.status === "new"; }).length + ' sipariş</small></div></div>';
+      var rows = emails.map(function(e){
+        var name = staff[e].name || e, z = (zones[e] || []).map(String);
+        var took = R.filter(function(o){ return o.by === e; }), area = R.filter(function(o){ return o.source !== "online" && z.indexOf(String(o.table)) >= 0; });
+        return { e: e, name: name, z: z, took: took.length, tookSum: sum(took), area: sum(area), open: z.filter(function(t){ return openT[t]; }).length };
+      }).sort(function(a, b){ return b.took - a.took; });
+      var max = Math.max(1, Math.max.apply(null, rows.map(function(r){ return r.took; }).concat([0])));
+      var team = '<h3 class="g-cat">Garsonlar</h3>' + (rows.length ? rows.map(function(r, i){
+        return '<article class="g-staff"><div class="g-st-top"><span class="g-av">' + S.esc(r.name.slice(0, 1).toLocaleUpperCase("tr-TR")) + '</span><div><b>' + S.esc(r.name) + (i === 0 && r.took ? ' <em class="g-role">En çok sipariş</em>' : '') + '</b><small>Masaları: ' + (r.z.length ? r.z.join(", ") : "atanmadı") + ' · şu an ' + r.open + ' açık</small></div></div>' +
+          '<div class="g-bar"><i style="width:' + Math.round(r.took / max * 100) + '%"></i></div>' +
+          '<div class="g-st-nums"><span><b>' + r.took + '</b> sipariş aldı · ' + S.fmt(r.tookSum) + '</span><span>Masalarının cirosu <b>' + S.fmt(r.area) + '</b></span></div>' +
+          '<button class="btn btn-sm" data-act="zoneFor" data-v="' + S.esc(r.e) + '">' + (st.zoneFor === r.e ? "Bitti" : "Masalarını düzenle") + '</button>' +
+          (st.zoneFor === r.e ? '<div class="g-pick wrap">' + (function(){ var b = []; for (var t = 1; t <= nTables(); t++) { var owner = S.zoneOf(st.cafe, t); b.push('<button aria-pressed="' + (r.z.indexOf(String(t)) >= 0) + '" data-act="zoneT" data-v="' + t + '"' + (owner && owner !== r.e ? ' class="taken" title="' + S.esc(S.staffInfo(st.cafe, owner).name) + '"' : '') + '>' + t + '</button>'); } return b.join(""); })() + '</div><p class="g-info">Başka garsonun masasını seçerseniz o masa bu garsona geçer.</p>' : '') +
+          '</article>';
+      }).join("") : '<p class="muted">Henüz garson eklenmedi. Aşağıdan çalışan ekleyin.</p>');
+      var people = '<h3 class="g-cat">Çalışan hesapları</h3><div class="g-set">' + Object.keys(staff).map(function(e){
+          var x = staff[e];
+          return '<div class="g-sw"><span><b>' + S.esc(x.name || e) + ' <em class="g-role ' + (x.role === "patron" ? "" : "soft") + '">' + (x.role === "patron" ? "Patron" : "Garson") + '</em></b><small>Kullanıcı adı: ' + S.esc(S.userName(e)) + '</small></span>' +
+            (e === st.user.email ? '<small class="muted">siz</small>' : st.confirmRm === e ? '<span class="row-btns"><button class="btn btn-sm btn-bad" data-act="rmYes" data-v="' + S.esc(e) + '">Evet, kaldır</button><button class="btn btn-sm" data-act="rmNo">Vazgeç</button></span>' : '<button class="btn btn-sm btn-ghost" data-act="rmAsk" data-v="' + S.esc(e) + '">Kaldır</button>') + '</div>';
+        }).join("") +
+        '<form class="g-new" id="newStaff" novalidate><b>Yeni çalışan</b>' +
+        '<label for="ns-name">Adı<input id="ns-name" maxlength="30" placeholder="ör. Ali"></label>' +
+        '<label for="ns-user">Kullanıcı adı<input id="ns-user" autocapitalize="none" maxlength="20" placeholder="ör. ali"></label>' +
+        '<label for="ns-pass">Şifre (en az 6)<input id="ns-pass" type="text" autocomplete="new-password" maxlength="40"></label>' +
+        '<label for="ns-role">Rol<select id="ns-role"><option value="garson">Garson</option><option value="patron">Patron (her şeyi görür)</option></select></label>' +
+        (st.nsErr ? '<p class="form-err" role="alert">' + S.esc(st.nsErr) + '</p>' : '') +
+        '<button class="btn btn-primary wide" type="submit"' + (st.nsBusy ? " disabled" : "") + '>' + (st.nsBusy ? "Açılıyor…" : "Hesabı aç") + '</button>' +
+        '<p class="g-info">Çalışan girişte işletme kodu <b>' + S.esc(cafeId) + '</b>, kendi kullanıcı adı ve şifresini yazar. Kaldırılan çalışanın erişimi hemen kapanır.</p></form></div>';
+      var L = S.loadInfo(st.orders, cafe);
+      var settings = '<h3 class="g-cat">Ayarlar</h3><div class="g-set">' +
+        '<label class="g-sw"><span><b>Online sipariş</b><small>Kapalıyken müşteri "şu an sipariş almıyoruz" görür.</small></span><input type="checkbox" data-act="setOnline"' + (cafe.onlineOpen === false ? "" : " checked") + '></label>' +
+        '<label class="g-sw"><span><b>Paket servis</b><small>Kapalıyken online sipariş sadece gel-al olur.</small></span><input type="checkbox" data-act="setDelivery"' + (cafe.delivery === false ? "" : " checked") + '></label>' +
+        '<div class="g-sw"><span><b>Mutfak ek süresi</b><small>' + L.queue + ' bekleyen · otomatik +' + L.auto + ' dk</small></span><div class="g-pick sm">' + [0, 10, 20].map(function(x){ return '<button aria-pressed="' + (L.manual === x) + '" data-act="busy" data-v="' + x + '">' + (x ? "+" + x : "Yok") + '</button>'; }).join("") + '</div></div></div>';
+      return head + tiles + team + people + settings;
+    }
+    function newStaff(){
+      var name = (S.$("ns-name").value || "").trim(), user = (S.$("ns-user").value || "").trim().toLocaleLowerCase("tr-TR"), pass = S.$("ns-pass").value || "", role = S.$("ns-role").value;
+      st.nsErr = !name ? "Adını yazın." : !S.USER_RE.test(user) ? "Kullanıcı adı 3–20 karakter olmalı; harf, rakam, nokta, tire (Türkçe karakter yok)." : pass.length < 6 ? "Şifre en az 6 karakter olmalı." : null;
+      if (st.nsErr) { render(true); return; }
+      st.nsBusy = true; render(true);
+      B.createStaff(cafeId, { email: S.userEmail(cafeId, user), password: pass, name: name, role: role })
+        .then(function(){ S.toast(name + " eklendi · kullanıcı adı: " + user); st.nsErr = null; })
+        .catch(function(e){ st.nsErr = S.errText(e); })
+        .then(function(){ st.nsBusy = false; render(true); });
+    }
     function nav(){
       var nCalls = calls().length, nReady = readyList().length;
-      var tabs = [["masalar", "Masalar", IC.tables, nCalls], ["hazir", "Hazır", IC.ready, nReady], ["siparis", "Sipariş al", IC.order, 0]];
-      return '<nav class="g-nav" aria-label="Bölümler">' + tabs.map(function(x){
+      var nNew = st.orders.filter(function(o){ return o.status === "new" && o.source !== "garson"; }).length;
+      var tabs = [["gelen", "Siparişler", IC.inbox, nNew], ["masalar", "Masalar", IC.tables, nCalls], ["hazir", "Hazır", IC.ready, nReady], ["siparis", "Sipariş al", IC.order, 0]];
+      if (isBoss()) tabs.push(["patron", "Patron", IC.boss, 0]);
+      return '<nav class="g-nav" style="grid-template-columns:repeat(' + tabs.length + ',1fr)" aria-label="Bölümler">' + tabs.map(function(x){
         return '<button data-act="tab" data-v="' + x[0] + '" aria-current="' + (st.tab === x[0] ? "page" : "false") + '">' + x[2] + '<span>' + x[1] + '</span>' + (x[3] ? '<i class="g-badge">' + x[3] + '</i>' : '') + '</button>';
       }).join("") + '</nav>';
     }
@@ -1543,22 +1905,41 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
       var app = S.$("app"), y = window.pageYOffset;
       document.body.classList.add("g-body");
       if (!st.authKnown) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
-      if (!st.user) { app.innerHTML = S.loginView("Garson girişi", st.loginErr); S.bindLogin(B, function(m){ st.loginErr = m; render(true); }); return; }
-      if (!cafeId) { app.innerHTML = '<main class="login"><div class="login-card"><h1>İşletme seçilmedi</h1><p class="muted">Garson uygulamasını işletmenin verdiği bağlantıdan açın.</p></div></main>'; return; }
+      if (!st.user) { app.innerHTML = S.loginView("Çalışan girişi", st.loginErr, cafeId, ctx.loginHint || ""); S.bindLogin(B, function(m){ st.loginErr = m; render(true); }); return; }
+      if (!cafeId) { app.innerHTML = '<p class="muted center" style="padding:40px">İşletmeniz bulunuyor…</p>'; return; }
       if (st.denied) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Erişim yok</h1><p class="muted">' + S.esc(st.denied) + '</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
       if (!st.cafeLoaded) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
-      app.innerHTML = '<div class="g-app">' + head() + '<main class="g-main">' + (st.tab === "hazir" ? readyTab() : st.tab === "siparis" ? orderTab() : tablesTab()) + '</main>' + nav() + sheet() + '</div>';
+      app.innerHTML = '<div class="g-app">' + head() + '<main class="g-main">' + (st.tab === "hazir" ? readyTab() : st.tab === "siparis" ? orderTab() : st.tab === "gelen" ? inboxTab() : st.tab === "patron" && isBoss() ? bossTab() : tablesTab()) + '</main>' + nav() + sheet() + '</div>';
       window.scrollTo(0, y);
     }
 
     var app = S.$("app");
     app.oninput = function(e){ if (e.target.id === "gnote") st.wNote = e.target.value; };
+    app.onsubmit = function(e){ if (e.target.id === "newStaff") { e.preventDefault(); newStaff(); } };
+    app.onchange = function(e){
+      var a = e.target.dataset && e.target.dataset.act;
+      if (a === "setOnline") B.updateCafe(cafeId, { onlineOpen: e.target.checked }).then(function(){ S.toast(e.target.checked ? "Online sipariş açık" : "Online sipariş kapalı"); });
+      if (a === "setDelivery") B.updateCafe(cafeId, { delivery: e.target.checked }).then(function(){ S.toast(e.target.checked ? "Paket servis açık" : "Sadece gel-al"); });
+    };
     app.onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
     app.onclick = function(e){
       var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
       var v = b.dataset.v;
       switch (b.dataset.act) {
-        case "tab": st.tab = v; st.sheet = null; window.scrollTo(0, 0); break;
+        case "tab": st.tab = v; st.sheet = null; window.scrollTo(0, 0); if (v === "patron") { st.rep = null; loadRep(); } break;
+        case "mine": st.mineOnly = !st.mineOnly; break;
+        case "repDays": st.repDays = Number(v); st.rep = null; loadRep(); break;
+        case "zoneFor": st.zoneFor = st.zoneFor === v ? null : v; break;
+        case "rmAsk": st.confirmRm = v; break;
+        case "rmNo": st.confirmRm = null; break;
+        case "rmYes": st.confirmRm = null; B.removeStaff(cafeId, v).then(function(){ S.toast("Çalışan kaldırıldı, erişimi kapandı"); }).catch(function(x){ S.toast(S.errText(x)); }); return;
+        case "zoneT": { var z = JSON.parse(JSON.stringify((st.cafe && st.cafe.zones) || {})), e = st.zoneFor; if (!e) break;
+          Object.keys(z).forEach(function(k){ if (k !== e) z[k] = (z[k] || []).map(String).filter(function(x){ return x !== v; }); });
+          var arr = (z[e] || []).map(String), ix = arr.indexOf(v); if (ix >= 0) arr.splice(ix, 1); else arr.push(v);
+          z[e] = arr.sort(function(a, b){ return a - b; }); B.updateCafe(cafeId, { zones: z }).catch(function(x){ S.toast(S.errText(x)); }); return; }
+        case "busy": { var cur = S.loadInfo(st.orders, st.cafe).manual, dl = Number(v) - cur;
+          st.orders.filter(function(o){ return o.status === "new"; }).forEach(function(o){ B.updateOrder(cafeId, o.id, { eta: Math.max(1, (Number(o.eta) || S.DEFAULT_MINS) + dl) }); });
+          B.updateCafe(cafeId, { busyExtra: Number(v) }).catch(function(x){ S.toast(S.errText(x)); }); return; }
         case "sheet": st.sheet = v; st.confirmClose = false; break;
         case "sheetClose": st.sheet = null; st.confirmClose = false; break;
         case "going": clearFlags(v).then(function(){ S.toast("Masa " + v + ": gidiyorsunuz"); }); if (st.sheet) st.sheet = null; break;
@@ -1572,7 +1953,7 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
         case "dec": if (st.wCart[v]) { st.wCart[v]--; if (!st.wCart[v]) delete st.wCart[v]; } break;
         case "send": send(); return;
         case "sound": S.beep(1, 660); try { if (navigator.vibrate) navigator.vibrate(80); } catch(x){} break;
-        case "logout": B.logout(); return;
+        case "logout": unsubs.forEach(function(u){ try { u(); } catch(x){} }); unsubs = []; st.cafe = null; st.cafeLoaded = false; st.tab = "gelen"; B.logout(); return;
       }
       render(true);
     };
@@ -1583,25 +1964,119 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   };
 })();
 
-/* Adanalım — telefon demosu: QR doğrudan Masa 7 menüsünü açar; üst şeritten mutfak ekranına geçilir. */
+/* Adanalım — yönetim ekranı (sistemi kuran kişi için): tüm işletmeler tek listede, yeni işletme + patron hesabı açma.
+   Her işletmenin verisi kendi kodu altında ayrı durur (cafes/{kod}); bir işletmenin çalışanı diğerini göremez. */
+(function(){
+  "use strict";
+  window.SiralaApp = window.SiralaApp || {};
+
+  window.SiralaApp.yonetim = function(ctx){
+    var B = ctx.B;
+    var st = { user: null, authKnown: false, admin: null, loginErr: null, cafes: null, stats: {}, form: { name: "", code: "", tables: "12", owner: "", user: "", pass: "" }, err: null, busy: false, made: null };
+    var alive = true;
+
+    B.onAuth(function(u){
+      if (!alive) return;
+      st.user = u && u.staff ? u : null; st.authKnown = true; st.admin = null; st.cafes = null;
+      if (!st.user) { render(); return; }
+      B.isAdmin(st.user.email).then(function(ok){ st.admin = ok; render(); if (ok) refresh(); });
+    });
+
+    function refresh(){
+      B.listAllCafes().then(function(l){
+        st.cafes = l.sort(function(a, b){ return String(a.name).localeCompare(String(b.name), "tr"); }); render();
+        var d0 = new Date(); d0.setHours(0, 0, 0, 0);
+        l.forEach(function(c){
+          B.listOrders(c.id, d0.getTime()).then(function(os){
+            var ok = os.filter(function(o){ return o.status !== "cancelled"; });
+            st.stats[c.id] = { n: ok.length, sum: ok.reduce(function(s, o){ return s + (Number(o.total) || S.sum(o.items)); }, 0), online: ok.filter(function(o){ return o.source === "online"; }).length };
+            render();
+          }).catch(function(){});
+        });
+      }).catch(function(e){ S.toast(S.errText(e)); });
+    }
+
+    function create(){
+      var f = st.form, code = S.slugify(f.code || f.name), user = f.user.trim().toLocaleLowerCase("tr-TR");
+      st.err = !f.name.trim() ? "İşletme adını yazın." : code.length < 3 ? "İşletme kodu en az 3 karakter olmalı." : !(Number(f.tables) >= 1 && Number(f.tables) <= 80) ? "Masa sayısı 1–80 arası olmalı." :
+        !f.owner.trim() ? "Patronun adını yazın." : !S.USER_RE.test(user) ? "Kullanıcı adı 3–20 karakter; harf, rakam, nokta, tire." : f.pass.length < 6 ? "Şifre en az 6 karakter olmalı." : null;
+      if (st.err) { render(); return; }
+      st.busy = true; render();
+      B.createBusiness(code, { name: f.name.trim(), tables: Number(f.tables), menu: [], onlineOpen: true, delivery: true, zones: {}, createdAt: Date.now() },
+        { email: S.userEmail(code, user), password: f.pass, name: f.owner.trim() })
+        .then(function(){ st.made = { name: f.name.trim(), code: code, user: user, pass: f.pass }; st.form = { name: "", code: "", tables: "12", owner: "", user: "", pass: "" }; refresh(); })
+        .catch(function(e){ st.err = S.errText(e); })
+        .then(function(){ st.busy = false; render(); });
+    }
+
+    function link(label, href){ return href ? '<a class="btn btn-sm" href="' + S.esc(href) + '" target="_blank" rel="noopener">' + label + '</a>' : ''; }
+    function render(){
+      if (!alive || S.isEditing()) return;
+      var app = S.$("app"), L = ctx.links || function(){ return {}; };
+      if (!st.authKnown) { app.innerHTML = '<p class="muted center" style="padding:40px">Yükleniyor…</p>'; return; }
+      if (!st.user) { app.innerHTML = S.loginView("Yönetim girişi", st.loginErr, "", ctx.loginHint || ""); S.bindLogin(B, function(m){ st.loginErr = m; render(); }); return; }
+      if (st.admin === null) { app.innerHTML = '<p class="muted center" style="padding:40px">Kontrol ediliyor…</p>'; return; }
+      if (!st.admin) { app.innerHTML = '<main class="login"><div class="login-card"><h1>Yönetici değil</h1><p class="muted">' + S.esc(S.userName(st.user.email)) + ' hesabı yönetim ekranını açamaz.</p><button class="btn wide" data-act="logout">Başka hesapla giriş yap</button></div></main>'; return; }
+      var cafes = st.cafes || [], tot = { n: 0, sum: 0 };
+      cafes.forEach(function(c){ var x = st.stats[c.id]; if (x) { tot.n += x.n; tot.sum += x.sum; } });
+      var f = st.form;
+      app.innerHTML = '<div class="y-app"><header class="g-head"><div><span class="g-kick">Adanalım</span><b>Yönetim</b></div><button class="g-who" data-act="logout">Çıkış</button></header><main class="g-main">' +
+        '<div class="g-tiles"><div class="g-tile big"><span>Bugün · tüm işletmeler</span><b>' + S.fmt(tot.sum) + '</b><small>' + tot.n + ' sipariş · ' + cafes.length + ' işletme</small></div></div>' +
+        (st.made ? '<section class="y-made"><b>' + S.esc(st.made.name) + ' açıldı</b><p>Patrona bu bilgileri verin:</p><dl><dt>İşletme kodu</dt><dd>' + S.esc(st.made.code) + '</dd><dt>Kullanıcı adı</dt><dd>' + S.esc(st.made.user) + '</dd><dt>Şifre</dt><dd>' + S.esc(st.made.pass) + '</dd></dl>' +
+          '<div class="row-btns">' + link("Menüyü kur", L(st.made.code).kurulum) + link("Çalışan uygulaması", L(st.made.code).garson) + '</div><button class="btn btn-sm btn-ghost" data-act="madeOk">Tamam</button></section>' : '') +
+        '<h3 class="g-cat">İşletmeler</h3>' + (st.cafes === null ? '<p class="muted">Yükleniyor…</p>' : cafes.length ? cafes.map(function(c){
+          var x = st.stats[c.id], lk = L(c.id), staffN = Object.keys(c.staff || {}).length;
+          return '<article class="y-cafe"><div class="g-r-top"><b>' + S.esc(c.name) + '</b><small>kod: ' + S.esc(c.id) + '</small></div>' +
+            '<div class="y-nums"><span><b>' + (x ? S.fmt(x.sum) : "…") + '</b> bugün</span><span><b>' + (x ? x.n : "…") + '</b> sipariş' + (x && x.online ? ' · ' + x.online + ' online' : '') + '</span><span><b>' + (c.tables || 0) + '</b> masa · ' + staffN + ' çalışan</span>' +
+            '<span class="g-chip ' + (c.onlineOpen === false ? "late" : "ok") + '">Online ' + (c.onlineOpen === false ? "kapalı" : "açık") + '</span>' + ((c.menu || []).length ? '' : '<span class="g-chip late">Menü boş</span>') + '</div>' +
+            '<div class="row-btns">' + link("Çalışan uygulaması", lk.garson) + link("Menü / QR", lk.kurulum) + link("Misafir menüsü", lk.menu) + link("Online sipariş", lk.online) + '</div></article>';
+        }).join("") : '<p class="muted">Henüz işletme yok.</p>') +
+        '<h3 class="g-cat">Yeni işletme aç</h3><form class="g-new" id="newCafe" novalidate>' +
+        '<label for="y-name">İşletme adı<input id="y-name" maxlength="40" value="' + S.esc(f.name) + '" placeholder="ör. Köşe Kahve"></label>' +
+        '<label for="y-code">İşletme kodu<input id="y-code" maxlength="30" autocapitalize="none" value="' + S.esc(f.code) + '" placeholder="' + S.esc(S.slugify(f.name) || "kose-kahve") + '"></label>' +
+        '<label for="y-tables">Masa sayısı<input id="y-tables" type="number" inputmode="numeric" min="1" max="80" value="' + S.esc(f.tables) + '"></label>' +
+        '<label for="y-owner">Patronun adı<input id="y-owner" maxlength="30" value="' + S.esc(f.owner) + '"></label>' +
+        '<label for="y-user">Patronun kullanıcı adı<input id="y-user" autocapitalize="none" maxlength="20" value="' + S.esc(f.user) + '" placeholder="ör. mehmet"></label>' +
+        '<label for="y-pass">Patronun şifresi (en az 6)<input id="y-pass" autocomplete="new-password" maxlength="40" value="' + S.esc(f.pass) + '"></label>' +
+        (st.err ? '<p class="form-err" role="alert">' + S.esc(st.err) + '</p>' : '') +
+        '<button class="btn btn-primary wide" type="submit"' + (st.busy ? " disabled" : "") + '>' + (st.busy ? "Açılıyor…" : "İşletmeyi aç") + '</button>' +
+        '<p class="g-info">Kod sonradan değişmez; QR kodları ve girişler bu koda bağlıdır. Patron girince kendi çalışanlarını kendisi ekler.</p></form></main></div>';
+    }
+
+    var app = S.$("app");
+    app.oninput = function(e){ var m = { "y-name": "name", "y-code": "code", "y-tables": "tables", "y-owner": "owner", "y-user": "user", "y-pass": "pass" }[e.target.id]; if (m) st.form[m] = e.target.value; };
+    app.onfocusout = function(){ setTimeout(function(){ if (!S.isEditing()) render(); }, 0); };
+    app.onsubmit = function(e){ if (e.target.id === "newCafe") { e.preventDefault(); create(); } };
+    app.onclick = function(e){
+      var b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+      if (b.dataset.act === "logout") { B.logout(); return; }
+      if (b.dataset.act === "madeOk") { st.made = null; render(); }
+    };
+    return function(){ alive = false; };
+  };
+})();
+
+/* Adanalım — telefon demosu (tek cihaz): misafir, online sipariş, mutfak, çalışan uygulaması ve yönetim aynı telefonda sekmeler. */
 (function(){
   "use strict";
   var CAFE = "demo", stop = null, B = window.SiralaBackend;
   var bar = document.getElementById("demoBar");
+  var HINT = "Demo girişleri · işletme kodu <b>demo</b>: patron <b>mehmet</b>, garson <b>ali</b> ya da <b>ayse</b>, şifre <b>123456</b>.";
+  var ADMIN_HINT = "Demo yönetici: kullanıcı adı yerine <b>ege@adanalim.app</b>, şifre <b>123456</b>.";
   function route(){
     if (stop) { stop(); stop = null; }
-    var h = (location.hash || "").replace(/^#/, ""), m = h.match(/^masa-(\d{1,3})$/);
-    window.scrollTo(0, 0);
+    var h = (location.hash || "").replace(/^#/, "");
     if (!h && document.body.getAttribute("data-default")) h = document.body.getAttribute("data-default");
-    var kitchen = h === "mutfak", waiter = h === "garson";
-    bar.innerHTML = '<span>Demo</span><nav>' +
-      '<a href="#masa-7"' + (!kitchen && !waiter ? ' aria-current="page"' : '') + '>Misafir</a>' +
-      '<a href="#mutfak"' + (kitchen ? ' aria-current="page"' : '') + '>Mutfak</a>' +
-      '<a href="#garson"' + (waiter ? ' aria-current="page"' : '') + '>Garson</a>' +
+    var m = h.match(/^masa-(\d{1,3})$/), view = m || !h ? "masa" : h;
+    window.scrollTo(0, 0);
+    var tabs = [["masa-7", "Misafir", "masa"], ["online", "Online", "online"], ["mutfak", "Mutfak", "mutfak"], ["garson", "Çalışan", "garson"], ["yonetim", "Yönetim", "yonetim"]];
+    bar.innerHTML = '<span>Demo</span><nav>' + tabs.map(function(t){ return '<a href="#' + t[0] + '"' + (view === t[2] ? ' aria-current="page"' : '') + '>' + t[1] + '</a>'; }).join("") +
       '<button type="button" id="demoReset">Sıfırla</button></nav>';
-    S.$("demoReset").onclick = function(){ B.reset(); S.toast("Demo sıfırlandı"); route(); };
-    if (kitchen) stop = SiralaApp.kasa({ B: B, cafeId: CAFE });
-    else if (waiter) stop = SiralaApp.garson({ B: B, cafeId: CAFE });
+    S.$("demoReset").onclick = function(){ B.reset(); try { localStorage.removeItem("sirala-demo-session"); localStorage.removeItem("sirala-online-ids"); } catch(e){} S.toast("Demo sıfırlandı"); location.reload(); };
+    if (view === "mutfak") stop = SiralaApp.kasa({ B: B, cafeId: CAFE });
+    else if (view === "garson") stop = SiralaApp.garson({ B: B, cafeId: CAFE, followLogin: true, loginHint: HINT });
+    else if (view === "yonetim") stop = SiralaApp.yonetim({ B: B, loginHint: ADMIN_HINT, links: function(code){ return code === CAFE ? { garson: "#garson", menu: "#masa-1", online: "#online" } : {}; } });
+    else if (view === "online") stop = SiralaApp.musteri({ B: B, cafeId: CAFE, online: true });
     else stop = SiralaApp.musteri({ B: B, cafeId: CAFE, table: m ? String(Number(m[1])) : "7" });
   }
   window.addEventListener("hashchange", route);
