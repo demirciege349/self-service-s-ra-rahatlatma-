@@ -2088,8 +2088,11 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   function route(){
     if (stop) { stop(); stop = null; }
     var h = (location.hash || "").replace(/^#/, "");
-    if (!h && document.body.getAttribute("data-default")) h = document.body.getAttribute("data-default");
-    var m = h.match(/^masa-(\d{1,3})$/), view = m || !h ? "masa" : h;
+    var m = h.match(/^masa-(\d{1,3})$/), view = m ? "masa" : h === "online" ? "online" : h;
+    // Uygulama girişi: QR (masa / online) dışındaki her şey önce kullanıcı adı + şifre ister.
+    if (!m && view !== "online" && !USER) view = view === "yonetim" ? "yonetim" : "garson";
+    if (!view) view = "garson";
+    bar.hidden = !USER;
     window.scrollTo(0, 0);
     var tabs = [["masa-7", "Misafir", "masa"], ["online", "Online", "online"], ["mutfak", "Mutfak", "mutfak"], ["garson", "Çalışan", "garson"], ["yonetim", "Yönetim", "yonetim"]];
     bar.innerHTML = '<span>Demo</span><nav>' + tabs.map(function(t){ return '<a href="#' + t[0] + '"' + (view === t[2] ? ' aria-current="page"' : '') + '>' + t[1] + '</a>'; }).join("") +
@@ -2101,10 +2104,9 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
     else if (view === "online") stop = SiralaApp.musteri({ B: B, cafeId: CAFE, online: true });
     else stop = SiralaApp.musteri({ B: B, cafeId: CAFE, table: m ? String(Number(m[1])) : "7" });
   }
-  window.addEventListener("hashchange", route);
-  route();
+  var USER = null, known = false;
+  B.onAuth(function(u){ var was = !!USER; USER = u && u.staff ? u : null; if (!known) { known = true; route(); } else if (was !== !!USER) route(); });
+  window.addEventListener("hashchange", function(){ if (known) route(); });
 })();
 
 </script>
-</body>
-</html>
