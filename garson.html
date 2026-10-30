@@ -562,6 +562,26 @@ body.g-body{background:var(--cream)}
 .login-place{display:flex;align-items:center;gap:10px;background:var(--sand);border-radius:10px;padding:10px 12px;margin:6px 0 4px}
 .login-place span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
 .login-place b{flex:1;font-size:1.05rem}
+/* Dil düğmesi (i18n.js yerleştirir) */
+.lang-btn{display:inline-flex;align-items:center;flex:none;padding:3px;gap:0;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:600 .72rem/1 var(--f-body);letter-spacing:.06em;cursor:pointer;opacity:.9;-webkit-tap-highlight-color:transparent;min-height:32px}
+.lang-btn span{padding:6px 8px;border-radius:999px}
+.lang-btn .lg-on{background:var(--ink);color:var(--cream)}
+.g-head .lang-btn .lg-on,.k-head .lang-btn .lg-on{background:var(--sand);color:var(--ink)}
+.lang-btn:active{transform:scale(.96)}
+.login-card{position:relative}
+.lang-btn.lang-abs{position:absolute;top:14px;right:14px;color:var(--ink)}
+.lang-slot{display:flex;align-items:center;gap:8px;justify-self:end}
+.c-head-in .lang-btn{color:var(--ink)}
+.g-head .lang-btn{margin-left:auto}
+.g-head .lang-btn + .g-who{margin-left:0}
+.c-head-in .lang-btn{margin-left:auto}
+.c-head-in .lang-btn + .c-table{margin-left:0}
+/* başlıklarda kompakt tek etiket */
+.lang-btn.lang-mini{padding:0;width:34px;height:34px;min-height:34px;justify-content:center;font-size:.7rem}
+.lang-btn.lang-mini .lg-on{display:none}
+.lang-btn.lang-mini .lg-off{padding:0}
+.g-who{white-space:nowrap}
+.c-name{min-width:auto;overflow-wrap:normal;word-break:normal;hyphens:none;line-height:1.05}
 
 #demoBar{background:#3A0A0A;padding:10px 10px 12px;position:sticky;top:0;z-index:40;box-shadow:0 2px 10px rgba(58,10,10,.25)}
 #demoBar[hidden]{display:none}
@@ -2114,6 +2134,240 @@ window.SIRALA_SEED = {"cafes": {"demo": {"name": "Kuzey Sofrası", "tables": 10,
   var USER = null, known = false;
   B.onAuth(function(u){ var was = !!USER; USER = u && u.staff ? u : null; if (!known) { known = true; route(); } else if (was !== !!USER) route(); });
   window.addEventListener("hashchange", function(){ if (known) route(); });
+})();
+
+/* Adanalım — tek tuşla Türkçe / İngilizce.
+   Uygulama metinleri Türkçe yazılır; bu dosya ekrana çıkan metni anında çevirir (MutationObserver).
+   Seçim telefonda hatırlanır (sirala-lang). Yeni metin eklerseniz aşağıdaki sözlüğe İngilizcesini ekleyin. */
+(function(){
+  "use strict";
+  var D = {
+    /* — genel — */
+    "Adanalım": "Adanalım", "Demo": "Demo", "Yükleniyor…": "Loading…", "Tamam": "OK", "Kapat": "Close", "Vazgeç": "Cancel", "Kaydet": "Save", "Kaydedildi": "Saved", "Sil": "Delete",
+    "Devam": "Continue", "Değiştir": "Change", "Aç": "Unlock", "Yok": "None", "yok": "none", "Diğer": "Other", "Bugün": "Today", "bugün": "today", "şimdi": "just now", "dk önce": "min ago",
+    "dk": "min", "gr": "g", "adet": "pcs", "fincan": "cup", "dilim": "slices", "ya da": "or", "Masa": "Table", "masa": "tables", "Toplam": "Total", "TOPLAM": "TOTAL", "Menü": "Menu", "Online": "Online",
+    "QR": "QR", "Paket": "Delivery", "Gel-al": "Pick-up", "Not:": "Note:", "Not": "Note", "Sipariş": "Orders", "sipariş": "orders", "ürün": "items", "Ürün": "Item", "Adet": "Qty", "Birim fiyat": "Unit price",
+    "Tutar": "Amount", "Fiyat": "Price", "Süre": "Time", "Hazır": "Ready", "hazır": "ready", "Hazır!": "Ready!", "Teslim": "Delivered", "Alındı": "Received", "Hesap": "Bill", "Patron": "Owner", "patron": "owner",
+    "Garson": "Waiter", "garson": "waiter", "Çalışan": "Staff", "çalışan": "staff", "Misafir": "Guest", "Mutfak": "Kitchen", "Yönetim": "Admin", "Sıfırla": "Reset", "Ekranlar": "Screens", "Rapor": "Report",
+    "Kurulum": "Setup", "Bölümler": "Sections", "Çıkış": "Log out", "Çıkış yap": "Log out", "Kilitle": "Lock", "Yazdır": "Print", "Tükendi": "Sold out", "Geri aç": "Back on menu", "Geri al": "Undo",
+    "kapalı": "closed", "açık": "open", "işletme": "businesses", "İşletme": "Business", "Kategori": "Category", "Sakin": "Calm", "Boş": "Free", "Dolu": "Busy", "Bitti": "Done", "Kaldır": "Remove", "Rol": "Role", "Adı": "Name",
+    "1 porsiyon": "1 portion", "1,5 porsiyon": "1.5 portions", "(1,5 porsiyon)": "(1.5 portions)", "1,5 pors. ₺": "1.5 portions ₺", "Demo sıfırlandı": "Demo reset",
+    /* — alerjenler — */
+    "Gluten": "Gluten", "Süt": "Milk", "Yumurta": "Egg", "Kabuklu yemiş": "Tree nuts", "Yer fıstığı": "Peanuts", "Susam": "Sesame", "Soya": "Soy", "Balık": "Fish", "Kabuklu deniz ürünü": "Shellfish", "Hardal": "Mustard", "Kereviz": "Celery",
+    /* — giriş — */
+    "Çalışan girişi": "Staff login", "Yönetim girişi": "Admin login", "İş yeri kodu": "Business code", "iş yeri kodu": "business code", "İş yeri": "Business", "Kullanıcı adı": "Username", "Şifre": "Password", "şifre": "password",
+    "E-posta": "E-mail", "Giriş yap": "Log in", "ör. kuzey-sofrasi": "e.g. kuzey-sofrasi", "İş yerinizin kodunu yazın. Bu telefon kodu hatırlar, bir daha sorulmaz.": "Enter your business code. This phone will remember it.",
+    "Yönetici e-postanız ve şifrenizle girin.": "Log in with your admin e-mail and password.", "İş yeri kodunu yazın.": "Enter the business code.", "Bu kodla bir iş yeri bulunamadı. Patronunuza sorun.": "No business found with this code. Ask your manager.",
+    "Kullanıcı adı ve şifre gerekli.": "Username and password are required.", "Demo yönetici: kullanıcı adı yerine": "Demo admin: instead of a username use", "Başka hesapla giriş yap": "Log in with another account",
+    "Bu işlem için yetkin yok.": "You don't have permission for this.", "İnternet bağlantısı yok. Bağlantı gelince tekrar dene.": "No internet connection. Try again when you're back online.",
+    "İşletme kodu, kullanıcı adı ya da şifre hatalı.": "Business code, username or password is wrong.", "Bu işletme kodu kullanılıyor, başka bir kod seçin.": "This business code is taken, choose another.",
+    "Bu kullanıcı adı bu işletmede zaten var.": "This username already exists in this business.", "Şifre en az 6 karakter olmalı.": "Password must be at least 6 characters.", "Çok fazla deneme yapıldı, biraz bekle.": "Too many attempts, wait a moment.",
+    "Depolama doldu. Kurulumdan eski siparişleri temizle.": "Storage is full. Clear old orders from Setup.", "İşlem yapılamadı, tekrar dene.": "Something went wrong, try again.", "Dosya indirilemedi": "Couldn't download the file",
+    "Bu hesap hiçbir işletmeye bağlı değil.": "This account isn't linked to any business.", "Bu hesap bu işletmenin çalışanları arasında değil.": "This account isn't on this business's staff.", "Bu işletmeye erişim yok.": "No access to this business.",
+    "Erişim yok": "No access", "İşletmeniz bulunuyor…": "Finding your business…", "Sisteme bağlanılamadı.": "Couldn't connect.", "Bağlantı kurulamadı": "Couldn't connect",
+    /* — misafir menüsü — */
+    "Online sipariş": "Online order", "Masadaki QR kodu okutun": "Scan the QR code on your table", "Sipariş vermek için oturduğunuz masadaki QR kodu telefonunuzun kamerasıyla okutun.": "To order, scan the QR code on your table with your phone camera.",
+    "az önce tükendi, sepetinizden çıkarıldı": "just sold out and was removed from your cart", "Garson geliyor": "Waiter is coming", "Garson çağır": "Call waiter", "Kategoriler": "Categories",
+    "İnternet bağlantısı yok. Bağlantı gelince siparişinizi gönderebilirsiniz.": "No internet connection. You can send your order once you're back online.", "Bugün tükendi": "Sold out today", "içerir": "contains", "İçerir:": "Contains:",
+    "Masada gör · 3D": "View on table · 3D", "Bir siparişiniz iptal edildi": "One of your orders was cancelled", "hesabınıza yazılmadı. Sorunuz varsa garsonumuza danışın.": "it wasn't added to your bill. Ask our waiter if you have questions.",
+    "Mutfak süreyi güncelledi": "The kitchen updated the time", "Siparişiniz hazırlanıyor": "Your order is being prepared", "dk kaldı": "min left", "Az kaldı": "Almost ready", "Menü hazırlanıyor": "The menu is being prepared",
+    "Siparişinizi garsonumuza verebilirsiniz.": "You can give your order to our waiter.", "Alerjen filtresi": "Allergen filter", "seçili": "selected", "Alerjiniz mi var?": "Any allergies?",
+    "Bilgiler işletme tarafından girilir. Ciddi alerjiniz varsa siparişten önce garsonumuza da söyleyin.": "This information is entered by the restaurant. If you have a serious allergy, please also tell our waiter before ordering.",
+    "Mutfağımız şu an yoğun · süreler yaklaşık": "Our kitchen is busy right now · times about", "Fiyatlara KDV dahildir. Kalori değerleri yaklaşıktır. Alerjiniz varsa sipariş notuna yazın.": "Prices include VAT. Calories are approximate. If you have an allergy, add it to the order note.",
+    "yaklaşık": "about", "Not ekleyin (ör. acısız, az pişmiş)": "Add a note (e.g. not spicy, rare)", "Sipariş notu": "Order note", "Devam et": "Continue", "Gönderiliyor…": "Sending…", "Siparişi gönder": "Send order",
+    "Siparişlerim": "My orders", "Ürünlerin yanındaki + ile seçin. Gel-al ya da paket servis.": "Tap + next to items to choose. Pick-up or delivery.", "Masanın hesabı": "Table bill", "Ürünlerin yanındaki + ile seçin.": "Tap + next to items to choose.",
+    "İptal edildi": "Cancelled", "Sorunuz varsa bizi arayın.": "Call us if you have questions.", "Hazırlanıyor": "Preparing", "Teslim edildi": "Delivered", "Afiyet olsun!": "Enjoy your meal!", "Hazır, yola çıkıyor": "Ready, on the way",
+    "Kuryemiz birazdan kapınızda.": "Our courier will be at your door shortly.", "Gelip alabilirsiniz.": "You can pick it up.", "ya da paket servis": "or delivery", "Ödeme": "Payment", "teslim alırken": "on pick-up",
+    "teslimatta ya da gel-al'da": "on delivery or pick-up", "nakit ya da kart.": "cash or card.", "siparişiniz var": "orders in progress", "Takip et ›": "Track ›", "Siparişi tamamla": "Complete order", "Teslim şekli": "Delivery method",
+    "dk sonra hazır": "min until ready", "Paket servis": "Delivery", "Adresinize getirelim": "We bring it to you", "Gelip alın": "Pick it up", "Adınız": "Your name", "Telefon": "Phone", "Adres": "Address",
+    "Mahalle, sokak, bina ve daire no, tarif": "Neighbourhood, street, building and flat no., directions", "ör. acısız, zil çalışmıyor": "e.g. not spicy, doorbell broken", "Not (isteğe bağlı)": "Note (optional)", "kapıda": "at the door",
+    "gelip aldığınızda": "when you pick up", "nakit ya da kartla yapılır. Bilgileriniz yalnızca bu sipariş için kullanılır ve sipariş kapanınca silinir.": "by cash or card. Your details are used only for this order and deleted when it closes.",
+    "Siparişi ver": "Place order", "‹ Menüye dön": "‹ Back to menu", "Menüye dön": "Back to menu", "Açık siparişiniz yok.": "You have no open orders.", "Siparişiniz alındı": "Your order was received", "Tahmini süre": "Estimated time",
+    "Bu masadan henüz sipariş verilmedi.": "No orders from this table yet.", "Hesap istendi. Garsonumuz masanıza geliyor.": "Bill requested. Our waiter is coming to your table.", "Garsonumuz masanıza geliyor.": "Our waiter is coming to your table.",
+    "Hesap iste": "Request bill", "Ödemenizi garsonumuza ya da kasaya yapabilirsiniz.": "You can pay our waiter or at the counter.", "Menü yükleniyor…": "Loading menu…", "Restoran bulunamadı": "Restaurant not found",
+    "Bu QR kod geçerli bir işletmeye bağlı değil.": "This QR code isn't linked to a valid restaurant.", "Şu an online sipariş almıyoruz": "We're not taking online orders right now", "Biraz sonra tekrar deneyin ya da bizi arayın.": "Try again later or give us a call.",
+    "Adınızı yazın.": "Enter your name.", "Telefon numaranızı kontrol edin.": "Check your phone number.", "Adresi biraz daha ayrıntılı yazın.": "Please write the address in more detail.", "Hesap istendi": "Bill requested", "Garson çağrıldı": "Waiter called",
+    "Gerçek porsiyon": "Real portion", "3D model yükleniyor…": "Loading 3D model…", "Parmağınızla çevirin. Telefonda": "Rotate with your finger. On a phone", "Masaya yerleştir": "Place on table",
+    "3D görüntüleyici yüklenemedi. İnternet bağlantınızı kontrol edin.": "The 3D viewer couldn't load. Check your connection.", "Fiyat listesi": "Price list", "Güncelleme:": "Updated:", "Fiyatlarımıza KDV dahildir.": "Our prices include VAT.",
+    "Menümüzü masanızdaki QR kodu okutarak da görebilir, siparişinizi oradan verebilirsiniz.": "You can also scan the QR code on your table to see the menu and order.", "Bu ekranda yazdırma açılamadı": "Printing isn't available on this screen",
+    "Bilgi fişidir, mali değeri yoktur.": "Information slip, not a fiscal receipt.", "KDV dahildir.": "VAT included.", "ürün · yaklaşık": "items · about", "Garsonumuz da her zaman yanınızda": "Our waiters are always here to help",
+    /* — çalışan uygulaması — */
+    "Yeni sipariş": "New order", "Mutfaktan hazır": "Ready from kitchen", "hesap istiyor": "wants the bill", "garson çağırıyor": "is calling a waiter", "Online sipariş teslim edildi": "Online order delivered", "servis edildi": "served",
+    "kapatıldı": "closed", "siparişi mutfakta": "order in the kitchen", "çağrı": "calls", "Bildirim sesini ve titreşimi açmak için dokunun": "Tap to turn on alert sound and vibration", "İnternet yok. Liste son hâliyle duruyor.": "No internet. Showing the last list.",
+    "İletişim bilgisi yükleniyor…": "Loading contact details…", "Sorumlu:": "Assigned:", "Mutfakta": "In kitchen", "dk gecikti": "min late", "Teslim edildi · kapat": "Delivered · close", "Servis edildi": "Served", "Siparişler": "Orders",
+    "Sadece benim masalarım": "Only my tables", "Masalar": "Tables", "Açık sipariş yok. QR'dan ya da online sipariş gelince burada belirir, telefon titrer.": "No open orders. QR and online orders appear here and the phone vibrates.",
+    "Hesap istiyor": "Wants the bill", "Garson çağırıyor": "Calling waiter", "Hesabı aç": "Open bill", "Gidiyorum": "On my way", "Çağırıyor": "Calling", "Yemekte": "Eating", "Sizin masalarınız:": "Your tables:", "(kalın çerçeveli)": "(bold border)",
+    "Hazır yemek": "Ready", "Şu an bekleyen yemek yok. Mutfak \"Hazırlandı\"ya bastığında burada belirir, telefon titrer.": "No dishes waiting. When the kitchen taps \"Ready\" they appear here and the phone vibrates.",
+    "şimdi hazırlandı": "ready just now", "dk önce hazırlandı": "min ago ready", "Sipariş al": "Take order", "azalt": "decrease", "Masa seçin": "Choose table", "Not (ör. acısız)": "Note (e.g. not spicy)", "Önce masa seçin": "Choose a table first",
+    "Ürün ekleyin": "Add items", "Mutfağa gönder": "Send to kitchen", "Hesap istedi": "Bill requested", "sipariş hâlâ mutfakta.": "order(s) still in the kitchen.", "Bu masada açık sipariş yok.": "No open orders at this table.",
+    "Evet, ödendi · masayı kapat": "Yes, paid · close table", "Ödeme alındı · masayı kapat": "Payment taken · close table", "Bu masaya sipariş ekle": "Add order to this table", "Uyarıyı kapat": "Dismiss alert", "7 gün": "7 days", "30 gün": "30 days",
+    "Toplam gelir": "Total revenue", "sipariş · iptaller hariç": "orders · excl. cancelled", "Şu an açık masa": "Open tables now", "Garsonlar": "Waiters", "En çok sipariş": "Most orders", "Masaları:": "Tables:", "atanmadı": "not assigned",
+    "şu an": "now", "sipariş aldı": "orders taken", "Masalarının cirosu": "Revenue from their tables", "Masalarını düzenle": "Edit tables", "Başka garsonun masasını seçerseniz o masa bu garsona geçer.": "Choosing another waiter's table moves it to this waiter.",
+    "Henüz garson eklenmedi. Aşağıdan çalışan ekleyin.": "No waiters yet. Add staff below.", "Çalışan hesapları": "Staff accounts", "Kullanıcı adı:": "Username:", "Evet, kaldır": "Yes, remove", "Yeni çalışan": "New staff member", "ör. Ali": "e.g. Ali",
+    "ör. ali": "e.g. ali", "Şifre (en az 6)": "Password (min. 6)", "Patron (her şeyi görür)": "Owner (sees everything)", "Açılıyor…": "Creating…", "Çalışan girişte işletme kodu": "At login, staff enter the business code",
+    "kendi kullanıcı adı ve şifresini yazar. Kaldırılan çalışanın erişimi hemen kapanır.": "and their own username and password. Removed staff lose access immediately.", "Ayarlar": "Settings",
+    "Kapalıyken müşteri \"şu an sipariş almıyoruz\" görür.": "When closed, customers see \"not taking orders right now\".", "Kapalıyken online sipariş sadece gel-al olur.": "When off, online orders are pick-up only.", "Mutfak ek süresi": "Extra kitchen time",
+    "bekleyen · otomatik +": "waiting · automatic +", "Adını yazın.": "Enter a name.", "eklendi · kullanıcı adı:": "added · username:", "Online sipariş açık": "Online orders on", "Online sipariş kapalı": "Online orders off", "Paket servis açık": "Delivery on",
+    "Sadece gel-al": "Pick-up only", "Çalışan kaldırıldı, erişimi kapandı": "Staff removed, access closed", "gidiyorsunuz": "you're going", "Çalışan uygulaması": "Staff app",
+    /* — kasa / mutfak — */
+    "Bu hesap bu işletmenin kasa hesapları arasında değil.": "This account isn't a counter account of this business.", "Kasa": "Counter", "Kasa · Mutfak": "Counter · Kitchen", "siparişi mutfağa gönderildi": "order sent to kitchen", "PIN yanlış": "Wrong PIN",
+    "süresi:": "time:", "Değişiklik yok": "No changes", "Kaydedildi · basılı fiyat listesini yeniden yazdırmayı unutmayın": "Saved · remember to reprint the price list", "Gidildi": "Handled", "Garson siparişi": "Waiter order",
+    "Tahmini": "Estimated", "Mutfak yoğunluğu": "Kitchen load", "sipariş bekliyor · otomatik": "orders waiting · automatic", "ek yok": "no extra", "müşteriye": "customers see", "normal süre": "normal time", "gösteriliyor": "shown",
+    "Elle ekle:": "Add manually:", "Hazırlanacak": "To prepare", "Kaç dk sonra çıkar?": "Ready in how many min?", "Hazırlandı": "Ready", "İptal edilsin mi? Hesaptan düşer.": "Cancel it? It will be removed from the bill.", "Evet, iptal": "Yes, cancel",
+    "Siparişi iptal et": "Cancel order", "Bekleyen sipariş yok. Masalardan gelen siparişler burada belirir ve ses çıkarır.": "No waiting orders. Orders from tables appear here with a sound.", "Hazırlananlar": "Prepared", "Henüz yok.": "None yet.",
+    "Hesabı görmek için masaya dokunun": "Tap a table to see its bill", "Açık sipariş yok.": "No open orders.", "Hesap fişi yazdır": "Print bill", "Masayı taşı": "Move table", "Bu masada açık sipariş var": "This table has open orders",
+    "siparişleri hangi masaya taşınsın?": "orders: move to which table?", "Dolu masaya taşırsanız siparişler o masanın hesabına eklenir.": "Moving to a busy table adds the orders to its bill.", "Son 7 gün": "Last 7 days", "Son 14 gün": "Last 14 days",
+    "Bu aralıkta sipariş yok.": "No orders in this range.", "QR'dan": "via QR", "Ciro": "Revenue", "iptal hariç": "excl. cancelled", "iptal yok": "no cancellations", "Masa başı hesap": "Average per table", "kapanan masa": "closed tables",
+    "Hazırlanma": "Prep time", "zamanında": "on time", "henüz yok": "none yet", "En çok satanlar": "Best sellers", "Saatlere göre sipariş": "Orders by hour", "Satış dökümü (Excel)": "Sales export (Excel)",
+    "Seçili aralıkta hangi üründen kaç adet satıldı. Adisyon programınıza ya da muhasebeye toplu girmek için.": "How many of each item sold in the selected range. For bulk entry into your POS or accounting.", "İndir (.csv)": "Download (.csv)",
+    "\"Eski siparişleri temizle\" yapılırsa o günlerin raporu da silinir. Pilot bitmeden temizlemeyin, ekran görüntüsünü alın.": "\"Clear old orders\" also deletes those days' reports. Don't clear before the pilot ends; take a screenshot.",
+    "Misafir QR kullanmak istemezse siparişini buradan girin. Mutfağa aynı şekilde düşer, masanın hesabına eklenir.": "If a guest doesn't want to use QR, enter the order here. It goes to the kitchen and onto the table's bill.",
+    "ort.": "avg.", "Menü boş.": "Menu is empty.", "ör. acısız": "e.g. not spicy", "mutfağa gönder": "send to kitchen", "Basılı fiyat listesi": "Printed price list",
+    "Girişte ve masalarda bulunması zorunlu. Fiyat değiştirdiğinizde yeniden yazdırın.": "Required at the entrance and on tables. Reprint when prices change.", "Fiyat listesini yazdır": "Print price list", "Fiyat ve süre düzenleme açık": "Price and time editing unlocked",
+    "Fiyat ve süre değiştirmek için patron PIN'i": "Owner PIN to change prices and times", "Menü boş. Kurulumdan ürün ekleyin.": "Menu is empty. Add items in Setup.", "Değişiklik kaydı": "Change log", "Henüz değişiklik yok.": "No changes yet.",
+    "Kasa ekranı": "Counter screen", "Hangi işletme?": "Which business?", "Bu hesaba bağlı işletme yok. Önce kurulum ekranından işletme oluşturun.": "No business linked to this account. Create one in Setup first.", "Kuruluma git": "Go to Setup",
+    "İşletme bulunamadı": "Business not found", "kodlu işletme kayıtlı değil.": "— no business with this code.", "Sipariş sesini ve ekranın açık kalmasını etkinleştirmek için buraya dokunun": "Tap here to enable order sounds and keep the screen on",
+    "taşındı": "moved", "siparişi iptal edildi": "order cancelled", "dk sonra çıkacak · müşteriye gösterildi": "min until ready · shown to customer", "Tüm sürelere +": "Added +", "dk eklendi": "min to all times", "Elle ek süre kaldırıldı": "Manual extra time removed",
+    "tükendi, menüden kalktı": "sold out, removed from menu", "tekrar menüde": "back on the menu",
+    "İnternet bağlantısı yok. Liste son hâliyle duruyor; telefondan internet paylaşımı açarak devam edebilirsiniz.": "No internet. Showing the last list; you can continue by turning on a phone hotspot.",
+    /* — yönetim — */
+    "İşletme adını yazın.": "Enter the business name.", "İşletme kodu en az 3 karakter olmalı.": "Business code must be at least 3 characters.", "Masa sayısı 1–80 arası olmalı.": "Number of tables must be 1–80.", "Patronun adını yazın.": "Enter the owner's name.",
+    "Kontrol ediliyor…": "Checking…", "Yönetici değil": "Not an admin", "hesabı yönetim ekranını açamaz.": "can't open the admin screen.", "Bugün · tüm işletmeler": "Today · all businesses", "açıldı": "created",
+    "Patrona bu bilgileri verin:": "Give these details to the owner:", "İşletme kodu": "Business code", "Menüyü kur": "Set up menu", "İşletmeler": "Businesses", "Menü boş": "Menu empty", "Menü / QR": "Menu / QR", "Misafir menüsü": "Guest menu",
+    "Henüz işletme yok.": "No businesses yet.", "Yeni işletme aç": "Open a new business", "İşletme adı": "Business name", "ör. Köşe Kahve": "e.g. Corner Coffee", "Masa sayısı": "Number of tables", "Patronun adı": "Owner's name",
+    "Patronun kullanıcı adı": "Owner's username", "ör. mehmet": "e.g. mehmet", "Patronun şifresi (en az 6)": "Owner's password (min. 6)", "İşletmeyi aç": "Create business",
+    "Kod sonradan değişmez; QR kodları ve girişler bu koda bağlıdır. Patron girince kendi çalışanlarını kendisi ekler.": "The code can't be changed later; QR codes and logins depend on it. The owner adds their own staff after logging in.",
+    /* — kurulum — */
+    "İşletme adını yazın": "Enter the business name", "İşletme kodu en az 3 harf olmalı": "Business code must be at least 3 letters", "PIN 4-6 haneli rakam olmalı": "PIN must be 4–6 digits", "Bu kod kullanılıyor, başka bir kod yazın": "This code is taken, enter another",
+    "Menü kaydedildi, telefonlara yansıdı": "Menu saved and synced to phones", "Fotoğraf yükleniyor…": "Uploading photo…", "Fotoğraf eklendi": "Photo added", "Bu dosya bir fotoğraf değil": "This file isn't a photo", "PIN değiştirildi": "PIN changed",
+    "Hesaplar kaydedildi": "Accounts saved", "kapanmış sipariş silindi": "closed orders deleted", "QR kütüphanesi yüklenemedi": "QR library couldn't load", "Görsel oluşturulamadı": "Couldn't create image", "Adanalım · Kurulum": "Adanalım · Setup",
+    "İşletmeleriniz": "Your businesses", "Henüz işletme yok. İlkini aşağıdan oluşturun.": "No businesses yet. Create the first one below.", "Yeni işletme": "New business", "İşletme kodu (QR bağlantısında görünür)": "Business code (shown in the QR link)",
+    "4-6 rakam": "4–6 digits", "Patron PIN'i": "Owner PIN", "Oluşturuluyor…": "Creating…", "Oluştur": "Create", "PIN, kasada fiyat ve süre değiştirmek için istenir.": "The PIN is required to change prices and times at the counter.",
+    "Okutun · seçin · afiyet olsun": "Scan · choose · enjoy", "Bu masayı dene": "Try this table", "açık sipariş": "open orders", "Kasa ekranını aç": "Open counter screen", "Garson uygulaması": "Waiter app", "Müşteri ekranını dene": "Try customer screen",
+    "Kaydedilmedi": "Not saved", "Önce menüyü kaydedin": "Save the menu first", "Fotoğraf ekle": "Add photo", "Fotoğrafı kaldır": "Remove photo", "Yukarı taşı": "Move up", "Aşağı taşı": "Move down", "Fiyat ₺": "Price ₺",
+    "Porsiyon miktarı": "Portion size", "ör. 180 gr et": "e.g. 180 g meat", "Kalori kcal": "Calories kcal", "Süre dk": "Time min", "3D model linki (.glb, isteğe bağlı)": "3D model link (.glb, optional)", "ör. models/adana.glb": "e.g. models/adana.glb",
+    "Kısa açıklama": "Short description", "Alerjenler": "Allergens", "Menü boş. \"Ürün ekle\" ile başlayın ya da örnek menüyü yükleyin.": "Menu is empty. Start with \"Add item\" or load the sample menu.", "Ürün ekle": "Add item", "Örnek menüyü yükle": "Load sample menu",
+    "Menüyü kaydet": "Save menu", "Masa QR kartları": "Table QR cards", "PNG olarak indir": "Download as PNG", "İşletme bilgileri": "Business details", "Yeni patron PIN'i": "New owner PIN", "PIN'i değiştir": "Change PIN", "Kasa hesapları": "Counter accounts",
+    "E-postalar": "E-mails", "Eski siparişleri temizle": "Clear old orders", "Hesabı kapatılmış masaların siparişlerini siler. Açık masalara dokunmaz. Haftada bir yapmanız yeterli.": "Deletes orders of closed tables. Open tables are untouched. Once a week is enough.",
+    "Evet, sil": "Yes, delete", "Kapanmış siparişleri sil": "Delete closed orders", "kodlu işletme yok.": "— no business with this code.", "bu işletmenin hesapları arasında değil.": "isn't one of this business's accounts.", "QR yüklenemedi": "QR couldn't load", "Fotoğraf kaldırıldı": "Photo removed",
+    /* — eksikler — */
+    "Seçin, gönderin; siparişiniz doğrudan mutfağa gitsin.": "Choose and send; your order goes straight to the kitchen.", "siz": "you",
+    "İçermesini istemediklerinizi seçin; bunları içeren yemekler işaretlenir.": "Select what you want to avoid; dishes containing them are marked.",
+    "e basın, kamerayı masaya tutun; tabak gerçek boyutunda masanızda görünür.": ", point the camera at the table; the plate appears at real size.", "Parmağınızla çevirin. Telefonda": "Rotate with your finger. On a phone, tap",
+    "Kullanıcı adı 3–20 karakter olmalı; harf, rakam, nokta, tire (Türkçe karakter yok).": "Username must be 3–20 characters: letters, digits, dot, dash (no Turkish characters).",
+    "Kullanıcı adı 3–20 karakter; harf, rakam, nokta, tire.": "Username: 3–20 characters; letters, digits, dot, dash.", "İndirildi": "Downloaded", "İndirme yapılamadı": "Download failed", "Bu görünümde indirme yapılamıyor": "Downloads aren't available in this view",
+    "Kurulum tamamlanmadı": "Setup not finished", "Sayfayı yenileyin. Sorun sürerse siparişinizi garsonumuza verebilirsiniz.": "Refresh the page. If the problem continues, you can give your order to our waiter.",
+    "js/firebase-config.js dosyasına Firebase bilgileri girilmemiş (README, Adım 2).": "Firebase details are missing in js/firebase-config.js (README, step 2).", "Giriş yöntemi Firebase'de açılmamış (README, Adım 3).": "The sign-in method isn't enabled in Firebase (README, step 3).",
+    "Kasa ve kurulum ekranına girebilecek e-postalar, her satıra bir tane. Hesapları Firebase konsolundan oluşturursunuz (README, Adım 3).": "E-mails allowed into the counter and setup screens, one per line. Create the accounts in the Firebase console (README, step 3).",
+    "Fotoğrafa dokunup yükleyin (telefondan çekilen fotoğraf olur, küçültülür). Süre: ortalama çıkma süresi (dk). Porsiyon miktarı: \"180 gr et\", \"300 ml\" gibi; 1,5 porsiyonda gram ve kalori kendiliğinden 1,5 katı gösterilir. Boş bırakılan alan menüde görünmez. Ürünlerin menüdeki sırasını ↑ ↓ ile değiştirebilirsiniz; kategoriler ilk ürünlerinin sırasıyla görünür.": "Tap the photo to upload (a phone photo works; it's resized). Time: average serving time (min). Portion size: e.g. \"180 g meat\", \"300 ml\"; for 1.5 portions grams and calories are shown ×1.5 automatically. Empty fields don't appear on the menu. Reorder items with ↑ ↓; categories follow the order of their first item.",
+    /* — örnek menü — */
+    "Başlangıçlar": "Starters", "Ana yemekler": "Mains", "Tatlılar": "Desserts", "İçecekler": "Drinks",
+    "Mercimek çorbası": "Lentil soup", "Limon ve kırmızı biberli tereyağı ile": "With lemon and red pepper butter", "Çibörek": "Çibörek (fried meat pastry)", "İnce hamur, kıymalı iç, kızgın yağda": "Thin dough, minced meat filling, deep fried",
+    "Adana kebap": "Adana kebab", "Zırh kıyması, közlenmiş biber ve domates": "Hand-minced meat, grilled pepper and tomato", "Balaban kebap": "Balaban kebab", "Közde köfte, tereyağlı ekmek, yoğurt": "Grilled meatballs, buttered bread, yoghurt",
+    "Tavuk şiş": "Chicken skewer", "Marine edilmiş but, lavaş, sumaklı soğan": "Marinated thigh, lavash, sumac onions", "Kuzu şiş": "Lamb skewer", "Kuzu kuşbaşı, közlenmiş sebze": "Diced lamb, grilled vegetables",
+    "Fıstıklı baklava": "Pistachio baklava", "Antep fıstıklı, şerbetli": "Antep pistachio, in syrup", "Ayran": "Ayran (yoghurt drink)", "Türk kahvesi": "Turkish coffee", "Künefe": "Künefe", "Antep fıstıklı, sıcak servis": "Antep pistachio, served hot",
+    "Met helvası": "Met halva", "Eskişehir'e özgü, tahinli": "Eskişehir specialty, with tahini", "Şalgam": "Şalgam (turnip juice)",
+    "kıyma": "minced meat", "et": "meat", "köfte": "meatballs", "tavuk": "chicken", "kuzu eti": "lamb"
+  };
+  /* Sayı içeren kalıplar (önce bunlar denenir) */
+  var P = [
+    [/^Masa (\d+)$/, "Table $1"], [/^Masa (\d+) hesap$/, "Table $1 bill"], [/^(\d+) masa$/, "$1 tables"], [/^~?(\d+) dk$/, function(m){ return m.replace("dk", "min"); }],
+    [/^(\d+) sipariş$/, "$1 orders"], [/^(\d+) ürün$/, "$1 items"], [/^(\d+) dk sonra çıkar$/, "ready in $1 min"],
+    [/^(.+) ekle$/, function(m, x){ return "Add " + tr(x); }], [/^(.+) azalt$/, function(m, x){ return "Remove one " + tr(x); }]
+  ];
+  var KEYS = Object.keys(D).sort(function(a, b){ return b.length - a.length; });
+  function esc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  var RX = new RegExp("(?<![\\p{L}\\p{N}])(?:" + KEYS.map(esc).join("|") + ")(?![\\p{L}])", "gu");
+
+  var lang = "tr";
+  try { lang = localStorage.getItem("sirala-lang") === "en" ? "en" : "tr"; } catch(e){}
+  var ORIG = new WeakMap(), OUT = new WeakMap(), ATTRS = ["placeholder", "aria-label", "title", "alt"];
+
+  function tr(s){
+    var t = s.trim(); if (!t || !/\p{L}/u.test(t)) return s;
+    var lead = s.slice(0, s.indexOf(t)), tail = s.slice(s.indexOf(t) + t.length);
+    if (Object.prototype.hasOwnProperty.call(D, t)) return lead + D[t] + tail;
+    for (var i = 0; i < P.length; i++) if (P[i][0].test(t)) return lead + t.replace(P[i][0], P[i][1]) + tail;
+    return s.replace(RX, function(m){ return D[m]; });
+  }
+  function doText(n){
+    var p = n.parentNode; if (!p || /^(SCRIPT|STYLE|TEXTAREA)$/.test(p.nodeName) || (p.closest && p.closest("[data-no-i18n]"))) return;
+    var v = n.nodeValue;
+    if (OUT.get(n) !== v) ORIG.set(n, v);            // uygulama metni değiştirdi → yeni asıl
+    var o = ORIG.get(n), w = lang === "en" ? tr(o) : o;
+    if (w !== v) n.nodeValue = w;
+    OUT.set(n, w);
+  }
+  function doEl(el){
+    for (var i = 0; i < ATTRS.length; i++){
+      var a = ATTRS[i]; if (!el.hasAttribute(a)) continue;
+      var k = "data-i18n-" + a, v = el.getAttribute(a);
+      if (el.getAttribute(k + "-out") !== v) el.setAttribute(k, v);
+      var w = lang === "en" ? tr(el.getAttribute(k)) : el.getAttribute(k);
+      if (w !== v) el.setAttribute(a, w);
+      el.setAttribute(k + "-out", w);
+    }
+  }
+  function walk(root){
+    if (root.nodeType === 3) { doText(root); return; }
+    if (root.nodeType !== 1) return;
+    doEl(root);
+    var it = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT), n;
+    while ((n = it.nextNode())) { if (n.nodeType === 3) doText(n); else doEl(n); }
+  }
+
+  /* Dil düğmesi: her ekranın başlığına (ya da giriş kartına) yerleşir */
+  function btnHtml(){ return '<span class="lg-on">' + (lang === "en" ? "EN" : "TR") + '</span><span class="lg-off">' + (lang === "en" ? "TR" : "EN") + '</span>'; }
+  function makeBtn(){
+    var b = document.createElement("button"); b.type = "button"; b.className = "lang-btn"; b.setAttribute("data-no-i18n", "");
+    b.setAttribute("aria-label", lang === "en" ? "Türkçe'ye geç" : "Switch to English"); b.innerHTML = btnHtml(); return b;
+  }
+  function place(){
+    var slots = [[".c-head-in", ".c-table"], [".g-head", ".g-who"], [".s-head-in", null], [".login-card", "first"]];
+    slots.forEach(function(s){
+      document.querySelectorAll(s[0]).forEach(function(h){
+        if (h.querySelector(":scope > .lang-btn, :scope > .lang-slot > .lang-btn")) return;
+        var b = makeBtn();
+        if (s[0] === ".c-head-in" || s[0] === ".g-head") b.classList.add("lang-mini");
+        if (s[1] === "first") { b.classList.add("lang-abs"); h.insertBefore(b, h.firstChild); }
+        else { var ref = s[1] && h.querySelector(":scope > " + s[1]); h.insertBefore(b, ref || null); }
+      });
+    });
+    document.querySelectorAll(".k-head-in").forEach(function(h){
+      if (h.querySelector(".lang-btn")) return;
+      var slot = document.createElement("div"); slot.className = "lang-slot"; slot.appendChild(makeBtn());
+      var link = h.querySelector(":scope > a.btn"); if (link) slot.appendChild(link);
+      h.insertBefore(slot, h.querySelector(":scope > .tabs") ? h.querySelector(":scope > .tabs").nextSibling : null);
+    });
+  }
+  function setLang(l){
+    lang = l; try { localStorage.setItem("sirala-lang", l); } catch(e){}
+    document.documentElement.lang = l;
+    document.querySelectorAll(".lang-btn").forEach(function(b){ b.innerHTML = btnHtml(); b.setAttribute("aria-label", l === "en" ? "Türkçe'ye geç" : "Switch to English"); });
+    walk(document.body);
+    if (window.S && S.toast) S.toast(l === "en" ? "English" : "Türkçe");
+  }
+  document.addEventListener("click", function(e){ var b = e.target.closest && e.target.closest(".lang-btn"); if (b) { e.preventDefault(); e.stopPropagation(); setLang(lang === "en" ? "tr" : "en"); } }, true);
+
+  var busy = false;
+  var mo = new MutationObserver(function(list){
+    if (busy) return; busy = true;
+    try {
+      place();
+      list.forEach(function(m){
+        if (m.type === "characterData") doText(m.target);
+        else if (m.type === "attributes") doEl(m.target);
+        else m.addedNodes.forEach(walk);
+      });
+    } finally { mo.takeRecords(); busy = false; }
+  });
+  function start(){
+    document.documentElement.lang = lang;
+    place(); walk(document.body);
+    mo.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS });
+  }
+  if (document.body) start(); else document.addEventListener("DOMContentLoaded", start);
+  window.SiralaLang = { set: setLang, get: function(){ return lang; }, t: function(s){ return lang === "en" ? tr(s) : s; } };
 })();
 
 </script>
