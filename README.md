@@ -1,6 +1,6 @@
-# Adanalım — QR ile masadan sipariş
+# Mars Zeka — QR Sipariş
 
-Adanalım, restoran ve kafeler için masadan sipariş sistemidir. Misafir masadaki QR kodu okutur, fotoğraflı menüden seçer, siparişini gönderir ve "yaklaşık 20 dk" yazısını görür. Sipariş mutfak/kasa ekranına yazılı düşer. Hesap sonunda garsona ya da kasaya ödenir.
+Mars Zeka, restoran ve kafeler için masadan sipariş sistemidir. Misafir masadaki QR kodu okutur, fotoğraflı menüden seçer, siparişini gönderir ve "yaklaşık 20 dk" yazısını görür. Sipariş mutfak/kasa ekranına yazılı düşer. Hesap sonunda garsona ya da kasaya ödenir.
 
 Misafir uygulama indirmez, hesap açmaz; her telefonun tarayıcısında çalışır.
 

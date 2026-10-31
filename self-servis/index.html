@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d5f57">
-<title>Sırala Canlı Demo</title>
+<title>Mars Zeka Canlı Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
@@ -516,7 +516,7 @@ async function downloadQR(){
     const qc = tmp.querySelector("canvas"); if (qc) x.drawImage(qc, cx + (cw - 460) / 2, cy + 215, 460, 460);
     x.fillStyle = "#0d5f57"; x.font = "700 32px Figtree, system-ui, sans-serif"; x.fillText("Okut · Sipariş ver · Sıranı takip et", mid, cy + 748, mw);
     x.fillStyle = "#4d5b56"; x.font = "500 25px Figtree, system-ui, sans-serif"; x.fillText("Sıran telefonunda ilerler, kasada sadece ödersin.", mid, cy + 794, mw);
-    x.font = "700 22px 'JetBrains Mono', monospace"; x.fillText("Sırala", mid, cy + 852);
+    x.font = "700 22px 'JetBrains Mono', monospace"; x.fillText("Mars Zeka", mid, cy + 852);
   });
   tmp.remove();
   c.toBlob(async blob => {
@@ -636,7 +636,7 @@ function viewSetup(){
   const conn = S.dbState === "ok" ? '<span class="pill st-ready">Sistem bağlı</span>' : S.dbState === "loading" ? '<span class="pill st-wait">Bağlanıyor…</span>' : '<span class="pill st-cancel">Bağlantı yok</span>';
   const d = S.draft || menu();
   const cats = [...new Set(d.map(x => x.cat).filter(Boolean))];
-  return '<header class="s-head"><div class="s-wrap s-head-in"><div class="brand"><span class="logo">#</span><span>Sırala</span></div>' + conn + '</div></header>' +
+  return '<header class="s-head"><div class="s-wrap s-head-in"><div class="brand"><span class="logo">#</span><span>Mars Zeka</span></div>' + conn + '</div></header>' +
   '<main class="s-wrap s-main">' +
     '<section class="s-hero"><div class="s-hero-txt"><span class="eyebrow">Canlı demo · ' + esc(cafeName()) + '</span><h1>Görüşmede böyle göster</h1>' +
       '<ol class="s-steps"><li><b>Kasayı aç.</b> Bu cihazda (laptop ya da tablet) kasa ekranını aç.</li><li><b>QR\'ı okut.</b> Telefonunu kafe sahibine ver, aşağıdaki masa QR\'larından birini okutsun.</li><li><b>Sipariş ver.</b> Sipariş anında kasaya düşer. "Ödendi"ye bastıkça telefondaki sıra ilerler.</li></ol>' +
